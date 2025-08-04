@@ -1,25 +1,4 @@
 #!/usr/bin/env python3
-"""
-Photo Quality Face Recognition with Liveness Detection
-
-This application implements a comprehensive face recognition system with:
-- Real-time face detection using dlib
-- Liveness detection with head pose estimation and blink detection
-- High-quality photo capture with image enhancement
-- DeepFace integration for face analysis
-
-Usage:
-    python main.py
-
-Controls:
-    'q' - Quit application
-    'r' - Restart liveness detection
-
-Requirements:
-    - Camera connected to the system
-    - shape_predictor_68_face_landmarks.dat file in the same directory
-      (Download from: http://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2)
-"""
 
 import cv2
 import sys
@@ -33,7 +12,6 @@ def check_requirements():
     """Check if all required files and dependencies are available"""
     print("Checking requirements...")
     
-    # Check for dlib landmarks file
     landmarks_file = "shape_predictor_68_face_landmarks.dat"
     if not os.path.exists(landmarks_file):
         #print(f"\nERROR: {landmarks_file} not found!")
@@ -42,7 +20,6 @@ def check_requirements():
         #print("Extract the .dat file to the current directory.")
         return False
     
-    # Check camera availability
     test_cap = cv2.VideoCapture(0)
     if not test_cap.isOpened():
         #print("\nERROR: Camera not available!")
@@ -64,7 +41,6 @@ def main():
     
     args = parser.parse_args()
     
-    # Check requirements unless skipped
     if not args.no_check and not check_requirements():
         sys.exit(1)
     
@@ -79,7 +55,6 @@ def main():
         
         print(f"Starting camera (index: {args.camera})...")
         
-        # run the application
         camera_interface.run()
         
     except FileNotFoundError as e:

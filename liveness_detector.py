@@ -545,7 +545,7 @@ class LivenessDetector:
         
         if self.state == LivenessState.COMPLETED:
             font_scale = 1.5
-            color = (0, 255, 255)  
+            color = (0, 255, 255)  #yellow
         elif self.state == LivenessState.CAPTURE_COMPLETE:
             font_scale = 1.5
             color = (0, 255, 0)  

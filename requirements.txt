@@ -1,3 +1,5 @@
+#list not final
+
 opencv-python>=4.8.0
 dlib>=19.24.0
 deepface>=0.0.87
@@ -8,3 +10,7 @@ matplotlib>=3.5.0
 tensorflow>=2.10.0
 Pillow>=9.0.0
 cmake>=3.20.0
+scikit-learn>=1.0.0
+
+# Fingerprint Authentication System
+# (Additional dependencies are in fingerprint_auth/requirements.txt)

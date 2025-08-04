@@ -6,12 +6,13 @@ from imutils import face_utils
 
 class FaceDetector:
     def __init__(self):
+
         # dlib's face detector and facial landmark predictor
         self.detector = dlib.get_frontal_face_detector()
         
         self.predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
         
-        # facial landmark indexes for eyes
+        # facial landmark indexes for eyes, sabi ni claude 
         self.LEFT_EYE_START = 36
         self.LEFT_EYE_END = 42
         self.RIGHT_EYE_START = 42
@@ -20,7 +21,6 @@ class FaceDetector:
         # nose tip index
         self.NOSE_TIP = 30
         
-
         
         # head position estimation points
         self.model_points = np.array([
@@ -46,7 +46,7 @@ class FaceDetector:
     
     def calculate_ear(self, eye): #Eye Aspect Ratio (EAR)
 
-        # using euclidean distances between the 
+        #using euclidean distances between the:
 
         # two sets of vertical eye, x and y coordinates
         A = dist.euclidean(eye[1], eye[5])
@@ -254,62 +254,61 @@ class FaceDetector:
     #    return (left_glasses and right_glasses) or bridge_glasses
     #
     #backup glassess detection, if consistent horizontal lines
-    #def glasses_detection(self, landmarks, frame):
-    #    """Simple backup glasses detection focusing on consistent horizontal lines"""
-    #    try:
-    #        left_eye = landmarks[self.LEFT_EYE_START:self.LEFT_EYE_END]
-    #        right_eye = landmarks[self.RIGHT_EYE_START:self.RIGHT_EYE_END]
-    #        
-    #        # Get a horizontal strip across both eyes where glasses would be
-    #        left_eye_y = int(np.mean(left_eye[:, 1]))
-    #        right_eye_y = int(np.mean(right_eye[:, 1]))
-    #        
-    #        # Average Y position of both eyes
-    #        glasses_y = (left_eye_y + right_eye_y) // 2
-    #        
-    #        # Get X coordinates spanning both eyes
-    #        left_x = int(min(left_eye[:, 0])) - 20
-    #        right_x = int(max(right_eye[:, 0])) + 20
-    #        
-    #        # Extract horizontal strip
-    #        strip_top = max(0, glasses_y - 8)
-    #        strip_bottom = min(frame.shape[0], glasses_y + 8)
-    #        strip_left = max(0, left_x)
-    #        strip_right = min(frame.shape[1], right_x)
-    #        
-    #        glasses_strip = frame[strip_top:strip_bottom, strip_left:strip_right]
-    #        
-    #        if glasses_strip.size == 0:
-    #            return False
+    def glasses_detection(self, landmarks, frame):
+        """Simple backup glasses detection focusing on consistent horizontal lines"""
+        try:
+            left_eye = landmarks[self.LEFT_EYE_START:self.LEFT_EYE_END]
+            right_eye = landmarks[self.RIGHT_EYE_START:self.RIGHT_EYE_END]
             
-            # Convert to grayscale and look for consistent dark horizontal line
-    #        gray_strip = cv2.cvtColor(glasses_strip, cv2.COLOR_BGR2GRAY)
+            # a horizontal strip across both eyes where glasses would be
+            left_eye_y = int(np.mean(left_eye[:, 1]))
+            right_eye_y = int(np.mean(right_eye[:, 1]))
             
-            # Apply threshold to find dark areas
-    #        _, thresh = cv2.threshold(gray_strip, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+            # Average Y position of both eyes
+            glasses_y = (left_eye_y + right_eye_y) // 2
+            
+            # Get X coordinates spanning both eyes
+            left_x = int(min(left_eye[:, 0])) - 20
+            right_x = int(max(right_eye[:, 0])) + 20
+            
+            # Extract horizontal strip
+            strip_top = max(0, glasses_y - 8)
+            strip_bottom = min(frame.shape[0], glasses_y + 8)
+            strip_left = max(0, left_x)
+            strip_right = min(frame.shape[1], right_x)
+            
+            glasses_strip = frame[strip_top:strip_bottom, strip_left:strip_right]
+            
+            if glasses_strip.size == 0:
+                return False
+            
+            # to grayscale and look for consistent dark horizontal line
+            gray_strip = cv2.cvtColor(glasses_strip, cv2.COLOR_BGR2GRAY)
+            
+            # threshold to find dark areas
+            _, thresh = cv2.threshold(gray_strip, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
             
             # Count dark pixels in each row
-    #        dark_pixels_per_row = []
-    #        for row in thresh:
-    #            dark_count = np.sum(row == 0)  # Dark pixels
-    #            dark_pixels_per_row.append(dark_count / len(row))
+            dark_pixels_per_row = []
+            for row in thresh:
+                dark_count = np.sum(row == 0)  # Dark pixels
+                dark_pixels_per_row.append(dark_count / len(row))
             
-            # Check if there's a consistent dark horizontal line
-    #        max_dark_ratio = max(dark_pixels_per_row) if dark_pixels_per_row else 0
+            # consistent dark horizontal line
+            max_dark_ratio = max(dark_pixels_per_row) if dark_pixels_per_row else 0
             
-            # If more than 70% of a horizontal line is dark, likely glasses (less sensitive)
-    #        return max_dark_ratio > 0.8
+            # likely glasses (less sensitive)
+            return max_dark_ratio > 0.8
         
     
             
-    #    except Exception:
-    #        return False
+        except Exception:
+            return False
     
 
     
     #face obstructions
     def check_face_coverage(self, landmarks, frame):
-        """Check for face obstructions: glasses, bangs, masks, etc."""
         issues = []
         
         try:
