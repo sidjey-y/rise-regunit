@@ -1,0 +1,66 @@
+# Face Recognition System Configuration
+
+# Camera Settings #
+camera:
+  default_index: 0
+  width: 640
+  height: 480
+  fps: 30
+
+# Face Detection #
+face_detection:
+  landmarks_file: "shape_predictor_68_face_landmarks.dat"
+  confidence_threshold: 0.5
+  min_face_size: 20
+
+# Eye Detection #
+eye_detection:
+  left_eye_start: 36
+  left_eye_end: 42
+  right_eye_start: 42
+  right_eye_end: 48
+
+  #EAR = Eye Aspect Ratio
+  ear_threshold: 0.25 
+
+# Head pose #
+head_pose:
+  nose_tip_index: 30
+  chin_index: 8
+  left_eye_corner: 36
+  right_eye_corner: 45
+  left_mouth_corner: 48
+  right_mouth_corner: 54
+
+# Liveness Detection #
+liveness:
+  blink_threshold: 0.25
+  head_movement_threshold: 15.0
+  required_blinks: 2
+  detection_timeout: 30  # seconds
+
+# Face Coverage #
+face_coverage:
+  min_face_visibility: 0.8
+  max_glasses_coverage: 0.3
+  min_eye_visibility: 0.7
+
+# Display  #
+display:
+  show_landmarks: true
+  show_face_boundary: true
+  show_ear_value: true
+  show_head_pose: true
+  window_name: "Face Recognition System"
+
+# File paths #
+paths:
+  approved_images: "aproved_img/"
+  models: "./"
+  output: "./output/"
+
+# Logging settings
+logging:
+  level: "INFO"
+  file: "face_recognition.log"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s" 

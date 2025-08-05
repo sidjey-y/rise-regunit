@@ -11,6 +11,4 @@ tensorflow>=2.10.0
 Pillow>=9.0.0
 cmake>=3.20.0
 scikit-learn>=1.0.0
-
-# Fingerprint Authentication System
-# (Additional dependencies are in fingerprint_auth/requirements.txt)
+PyYAML>=6.0
