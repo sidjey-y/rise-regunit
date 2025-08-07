@@ -1,0 +1,17 @@
+2025-08-06 15:57:30,337 - DuplicateDetector - INFO - Duplicate fingerprint detector initialized successfully
+2025-08-06 15:57:30,338 - DuplicateDetector - INFO - Scanning fingerprint data in: fingerprint_data
+2025-08-06 15:57:30,360 - DuplicateDetector - INFO - Found 0 fingerprint files
+2025-08-06 15:57:30,360 - DuplicateDetector - INFO - Duplicate detector cleanup completed
+2025-08-06 16:05:01,487 - DuplicateDetector - INFO - Duplicate fingerprint detector initialized successfully
+2025-08-06 16:05:01,487 - DuplicateDetector - INFO - Scanning fingerprint data in: fingerprint_data
+2025-08-06 16:05:01,508 - DuplicateDetector - INFO - Found 0 fingerprint files
+2025-08-06 16:05:01,508 - DuplicateDetector - INFO - Duplicate detector cleanup completed
+2025-08-06 16:06:29,914 - DuplicateDetector - INFO - Duplicate fingerprint detector initialized successfully
+2025-08-06 16:06:29,914 - DuplicateDetector - INFO - Duplicate fingerprint detector initialized successfully
+2025-08-06 16:06:30,335 - DuplicateDetector - INFO - Scanning fingerprint data in: fingerprint_data
+2025-08-06 16:06:30,335 - DuplicateDetector - INFO - Scanning fingerprint data in: fingerprint_data
+2025-08-06 16:06:32,839 - DuplicateDetector - INFO - Found 0 fingerprint files
+2025-08-06 16:06:32,839 - DuplicateDetector - INFO - Found 0 fingerprint files
+2025-08-06 16:06:33,277 - FingerprintPreprocessor - INFO - FingerprintPreprocessor cleaned up
+2025-08-06 16:06:33,401 - DuplicateDetector - INFO - Duplicate detector cleanup completed
+2025-08-06 16:06:33,401 - DuplicateDetector - INFO - Duplicate detector cleanup completed
