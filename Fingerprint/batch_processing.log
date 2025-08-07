@@ -2892,3 +2892,9 @@
 2025-08-07 13:22:43,128 - BatchProcessor - INFO - Found 480 fingerprint files
 2025-08-07 13:44:42,713 - BatchProcessor - INFO - Found 480 fingerprint files
 2025-08-07 13:45:01,574 - BatchProcessor - INFO - Found 480 fingerprint files
+2025-08-07 13:56:31,571 - BatchProcessor - INFO - Found 480 fingerprint files
+2025-08-07 13:56:49,652 - BatchProcessor - INFO - Found 480 fingerprint files
+2025-08-07 14:01:25,491 - BatchProcessor - INFO - Found 480 fingerprint files
+2025-08-07 14:01:27,935 - BatchProcessor - ERROR - Error comparing minutiae: 'angle'
+2025-08-07 14:06:32,877 - BatchProcessor - INFO - Found 480 fingerprint files
+2025-08-07 14:08:21,589 - BatchProcessor - INFO - Found 480 fingerprint files

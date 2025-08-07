@@ -334,4 +334,8 @@ def main():
             
             result = checker.train_model(args.dataset)
             print("Training Result:")
-            for key, value in result.item
+            for key, value in result.items():
+                print(f"  {key}: {value}")
+
+if __name__ == "__main__":
+    main() 

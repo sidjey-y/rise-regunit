@@ -4256,3 +4256,1049 @@ LINE 1: ...e": [103, 96, 3], "processed_size": [224, 224]}', np.float64...
 2025-08-07 13:45:08,240 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
 2025-08-07 13:45:14,054 - FingerprintPreprocessor - INFO - FingerprintPreprocessor cleaned up
 2025-08-07 13:45:14,118 - FingerprintUniquenessChecker - ERROR - Cleanup error: 'FingerprintUniquenessChecker' object has no attribute 'siamese_network'
+2025-08-07 13:56:21,034 - FingerprintPreprocessor - INFO - Fingerprint preprocessor components initialized
+2025-08-07 13:56:21,200 - FingerprintPreprocessor - INFO - FingerprintPreprocessor initialized successfully
+2025-08-07 13:56:23,630 - FingerprintDatabase - INFO - Database indexes created successfully
+2025-08-07 13:56:23,680 - FingerprintDatabase - INFO - PostgreSQL database connected: fingerprint_db
+2025-08-07 13:56:23,681 - FingerprintDatabase - INFO - PostgreSQL fingerprint database components initialized
+2025-08-07 13:56:23,682 - FingerprintDatabase - INFO - FingerprintDatabase initialized successfully
+2025-08-07 13:56:23,683 - FingerprintUniquenessChecker - INFO - Fingerprint uniqueness checker initialized successfully
+2025-08-07 13:56:31,571 - BatchProcessor - INFO - Found 480 fingerprint files
+2025-08-07 13:56:32,483 - MinutiaeExtractor - INFO - Extracted 21 minutiae points
+2025-08-07 13:56:32,765 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 13:56:33,068 - MinutiaeExtractor - INFO - Extracted 9 minutiae points
+2025-08-07 13:56:33,226 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 13:56:33,568 - MinutiaeExtractor - INFO - Extracted 13 minutiae points
+2025-08-07 13:56:33,705 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 13:56:34,280 - MinutiaeExtractor - INFO - Extracted 13 minutiae points
+2025-08-07 13:56:34,437 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 13:56:34,778 - MinutiaeExtractor - INFO - Extracted 18 minutiae points
+2025-08-07 13:56:34,877 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 13:56:35,310 - MinutiaeExtractor - INFO - Extracted 23 minutiae points
+2025-08-07 13:56:35,486 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 13:56:35,843 - MinutiaeExtractor - INFO - Extracted 24 minutiae points
+2025-08-07 13:56:36,014 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 13:56:36,705 - MinutiaeExtractor - INFO - Extracted 45 minutiae points
+2025-08-07 13:56:36,794 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 13:56:37,235 - MinutiaeExtractor - INFO - Extracted 37 minutiae points
+2025-08-07 13:56:37,384 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 13:56:37,766 - MinutiaeExtractor - INFO - Extracted 17 minutiae points
+2025-08-07 13:56:37,914 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 13:56:49,652 - BatchProcessor - INFO - Found 480 fingerprint files
+2025-08-07 13:56:50,158 - MinutiaeExtractor - INFO - Extracted 21 minutiae points
+2025-08-07 13:56:50,245 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 13:56:50,654 - MinutiaeExtractor - INFO - Extracted 21 minutiae points
+2025-08-07 13:56:50,883 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 13:56:51,433 - MinutiaeExtractor - INFO - Extracted 13 minutiae points
+2025-08-07 13:56:51,502 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 13:56:52,041 - MinutiaeExtractor - INFO - Extracted 13 minutiae points
+2025-08-07 13:56:52,162 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 13:56:52,617 - MinutiaeExtractor - INFO - Extracted 18 minutiae points
+2025-08-07 13:56:52,724 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 13:56:53,625 - MinutiaeExtractor - INFO - Extracted 23 minutiae points
+2025-08-07 13:56:53,761 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 13:56:54,498 - MinutiaeExtractor - INFO - Extracted 24 minutiae points
+2025-08-07 13:56:54,631 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 13:56:55,205 - MinutiaeExtractor - INFO - Extracted 45 minutiae points
+2025-08-07 13:56:55,229 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 13:56:55,559 - MinutiaeExtractor - INFO - Extracted 37 minutiae points
+2025-08-07 13:56:55,620 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 13:56:55,905 - MinutiaeExtractor - INFO - Extracted 17 minutiae points
+2025-08-07 13:56:55,954 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:00:40,792 - FingerprintPreprocessor - INFO - FingerprintPreprocessor cleaned up
+2025-08-07 14:00:40,890 - FingerprintUniquenessChecker - ERROR - Cleanup error: 'FingerprintUniquenessChecker' object has no attribute 'siamese_network'
+2025-08-07 14:01:23,626 - FingerprintPreprocessor - INFO - Fingerprint preprocessor components initialized
+2025-08-07 14:01:23,650 - FingerprintPreprocessor - INFO - FingerprintPreprocessor initialized successfully
+2025-08-07 14:01:25,346 - FingerprintDatabase - INFO - Database indexes created successfully
+2025-08-07 14:01:25,346 - FingerprintDatabase - INFO - PostgreSQL database connected: fingerprint_db
+2025-08-07 14:01:25,347 - FingerprintDatabase - INFO - PostgreSQL fingerprint database components initialized
+2025-08-07 14:01:25,347 - FingerprintDatabase - INFO - FingerprintDatabase initialized successfully
+2025-08-07 14:01:25,348 - FingerprintUniquenessChecker - INFO - Fingerprint uniqueness checker initialized successfully
+2025-08-07 14:01:25,491 - BatchProcessor - INFO - Found 480 fingerprint files
+2025-08-07 14:01:27,015 - MinutiaeExtractor - INFO - Extracted 21 minutiae points
+2025-08-07 14:01:27,015 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:01:27,500 - MinutiaeExtractor - INFO - Extracted 21 minutiae points
+2025-08-07 14:01:27,550 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:01:27,935 - BatchProcessor - ERROR - Error comparing minutiae: 'angle'
+2025-08-07 14:06:30,663 - FingerprintPreprocessor - INFO - Fingerprint preprocessor components initialized
+2025-08-07 14:06:30,663 - FingerprintPreprocessor - INFO - FingerprintPreprocessor initialized successfully
+2025-08-07 14:06:32,803 - FingerprintDatabase - INFO - Database indexes created successfully
+2025-08-07 14:06:32,803 - FingerprintDatabase - INFO - PostgreSQL database connected: fingerprint_db
+2025-08-07 14:06:32,803 - FingerprintDatabase - INFO - PostgreSQL fingerprint database components initialized
+2025-08-07 14:06:32,803 - FingerprintDatabase - INFO - FingerprintDatabase initialized successfully
+2025-08-07 14:06:32,803 - FingerprintUniquenessChecker - INFO - Fingerprint uniqueness checker initialized successfully
+2025-08-07 14:06:32,877 - BatchProcessor - INFO - Found 480 fingerprint files
+2025-08-07 14:06:34,408 - MinutiaeExtractor - INFO - Extracted 21 minutiae points
+2025-08-07 14:06:34,408 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:06:34,721 - MinutiaeExtractor - INFO - Extracted 21 minutiae points
+2025-08-07 14:06:34,788 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:06:38,563 - FingerprintPreprocessor - INFO - FingerprintPreprocessor cleaned up
+2025-08-07 14:06:38,607 - FingerprintUniquenessChecker - ERROR - Cleanup error: 'FingerprintUniquenessChecker' object has no attribute 'siamese_network'
+2025-08-07 14:07:55,537 - FingerprintPreprocessor - INFO - Fingerprint preprocessor components initialized
+2025-08-07 14:07:56,029 - FingerprintPreprocessor - INFO - FingerprintPreprocessor initialized successfully
+2025-08-07 14:08:00,677 - FingerprintDatabase - INFO - Database indexes created successfully
+2025-08-07 14:08:00,760 - FingerprintDatabase - INFO - PostgreSQL database connected: fingerprint_db
+2025-08-07 14:08:00,905 - FingerprintDatabase - INFO - PostgreSQL fingerprint database components initialized
+2025-08-07 14:08:01,530 - FingerprintDatabase - INFO - FingerprintDatabase initialized successfully
+2025-08-07 14:08:01,867 - FingerprintUniquenessChecker - INFO - Fingerprint uniqueness checker initialized successfully
+2025-08-07 14:08:21,589 - BatchProcessor - INFO - Found 480 fingerprint files
+2025-08-07 14:08:23,178 - MinutiaeExtractor - INFO - Extracted 21 minutiae points
+2025-08-07 14:08:23,314 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:24,211 - MinutiaeExtractor - INFO - Extracted 9 minutiae points
+2025-08-07 14:08:24,443 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:25,200 - MinutiaeExtractor - INFO - Extracted 13 minutiae points
+2025-08-07 14:08:25,363 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:26,077 - MinutiaeExtractor - INFO - Extracted 13 minutiae points
+2025-08-07 14:08:26,226 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:27,423 - MinutiaeExtractor - INFO - Extracted 18 minutiae points
+2025-08-07 14:08:27,550 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:28,228 - MinutiaeExtractor - INFO - Extracted 23 minutiae points
+2025-08-07 14:08:28,373 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:29,544 - MinutiaeExtractor - INFO - Extracted 24 minutiae points
+2025-08-07 14:08:29,747 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:30,642 - MinutiaeExtractor - INFO - Extracted 45 minutiae points
+2025-08-07 14:08:30,763 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:31,499 - MinutiaeExtractor - INFO - Extracted 37 minutiae points
+2025-08-07 14:08:31,612 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:32,506 - MinutiaeExtractor - INFO - Extracted 17 minutiae points
+2025-08-07 14:08:32,633 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:33,700 - MinutiaeExtractor - INFO - Extracted 12 minutiae points
+2025-08-07 14:08:33,822 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:34,580 - MinutiaeExtractor - INFO - Extracted 18 minutiae points
+2025-08-07 14:08:34,717 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:35,615 - MinutiaeExtractor - INFO - Extracted 30 minutiae points
+2025-08-07 14:08:35,716 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:36,379 - MinutiaeExtractor - INFO - Extracted 12 minutiae points
+2025-08-07 14:08:36,515 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:37,487 - MinutiaeExtractor - INFO - Extracted 22 minutiae points
+2025-08-07 14:08:37,604 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:38,303 - MinutiaeExtractor - INFO - Extracted 8 minutiae points
+2025-08-07 14:08:38,399 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:39,530 - MinutiaeExtractor - INFO - Extracted 30 minutiae points
+2025-08-07 14:08:39,630 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:40,426 - MinutiaeExtractor - INFO - Extracted 18 minutiae points
+2025-08-07 14:08:40,542 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:41,772 - MinutiaeExtractor - INFO - Extracted 40 minutiae points
+2025-08-07 14:08:41,930 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:42,850 - MinutiaeExtractor - INFO - Extracted 15 minutiae points
+2025-08-07 14:08:42,971 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:44,813 - MinutiaeExtractor - INFO - Extracted 26 minutiae points
+2025-08-07 14:08:45,000 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:45,862 - MinutiaeExtractor - INFO - Extracted 10 minutiae points
+2025-08-07 14:08:45,926 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:46,418 - MinutiaeExtractor - INFO - Extracted 17 minutiae points
+2025-08-07 14:08:46,480 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:46,937 - MinutiaeExtractor - INFO - Extracted 13 minutiae points
+2025-08-07 14:08:47,005 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:47,571 - MinutiaeExtractor - INFO - Extracted 20 minutiae points
+2025-08-07 14:08:47,632 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:48,091 - MinutiaeExtractor - INFO - Extracted 10 minutiae points
+2025-08-07 14:08:48,186 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:48,762 - MinutiaeExtractor - INFO - Extracted 8 minutiae points
+2025-08-07 14:08:48,807 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:49,513 - MinutiaeExtractor - INFO - Extracted 12 minutiae points
+2025-08-07 14:08:49,560 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:50,123 - MinutiaeExtractor - INFO - Extracted 11 minutiae points
+2025-08-07 14:08:50,218 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:50,767 - MinutiaeExtractor - INFO - Extracted 13 minutiae points
+2025-08-07 14:08:50,864 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:51,586 - MinutiaeExtractor - INFO - Extracted 16 minutiae points
+2025-08-07 14:08:51,666 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:52,256 - MinutiaeExtractor - INFO - Extracted 10 minutiae points
+2025-08-07 14:08:52,357 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:52,953 - MinutiaeExtractor - INFO - Extracted 9 minutiae points
+2025-08-07 14:08:53,058 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:53,487 - MinutiaeExtractor - INFO - Extracted 10 minutiae points
+2025-08-07 14:08:53,547 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:54,269 - MinutiaeExtractor - INFO - Extracted 16 minutiae points
+2025-08-07 14:08:54,398 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:55,304 - MinutiaeExtractor - INFO - Extracted 14 minutiae points
+2025-08-07 14:08:55,422 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:56,075 - MinutiaeExtractor - INFO - Extracted 12 minutiae points
+2025-08-07 14:08:56,216 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:57,101 - MinutiaeExtractor - INFO - Extracted 15 minutiae points
+2025-08-07 14:08:57,178 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:57,722 - MinutiaeExtractor - INFO - Extracted 12 minutiae points
+2025-08-07 14:08:57,801 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:58,592 - MinutiaeExtractor - INFO - Extracted 17 minutiae points
+2025-08-07 14:08:58,680 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:59,342 - MinutiaeExtractor - INFO - Extracted 11 minutiae points
+2025-08-07 14:08:59,388 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:08:59,921 - MinutiaeExtractor - INFO - Extracted 10 minutiae points
+2025-08-07 14:09:00,037 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:00,992 - MinutiaeExtractor - INFO - Extracted 22 minutiae points
+2025-08-07 14:09:01,047 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:01,664 - MinutiaeExtractor - INFO - Extracted 9 minutiae points
+2025-08-07 14:09:01,717 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:02,405 - MinutiaeExtractor - INFO - Extracted 25 minutiae points
+2025-08-07 14:09:02,411 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:02,970 - MinutiaeExtractor - INFO - Extracted 14 minutiae points
+2025-08-07 14:09:03,051 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:03,563 - MinutiaeExtractor - INFO - Extracted 13 minutiae points
+2025-08-07 14:09:03,610 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:04,090 - MinutiaeExtractor - INFO - Extracted 10 minutiae points
+2025-08-07 14:09:04,165 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:05,208 - MinutiaeExtractor - INFO - Extracted 26 minutiae points
+2025-08-07 14:09:05,328 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:06,075 - MinutiaeExtractor - INFO - Extracted 22 minutiae points
+2025-08-07 14:09:06,138 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:06,629 - MinutiaeExtractor - INFO - Extracted 18 minutiae points
+2025-08-07 14:09:06,696 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:07,428 - MinutiaeExtractor - INFO - Extracted 8 minutiae points
+2025-08-07 14:09:07,629 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:08,725 - MinutiaeExtractor - INFO - Extracted 16 minutiae points
+2025-08-07 14:09:08,764 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:09,115 - MinutiaeExtractor - INFO - Extracted 7 minutiae points
+2025-08-07 14:09:09,117 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:09,252 - MinutiaeExtractor - INFO - Extracted 14 minutiae points
+2025-08-07 14:09:09,254 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:09,355 - MinutiaeExtractor - INFO - Extracted 9 minutiae points
+2025-08-07 14:09:09,356 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:09,457 - MinutiaeExtractor - INFO - Extracted 14 minutiae points
+2025-08-07 14:09:09,458 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:09,595 - MinutiaeExtractor - INFO - Extracted 9 minutiae points
+2025-08-07 14:09:09,596 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:09,684 - MinutiaeExtractor - INFO - Extracted 16 minutiae points
+2025-08-07 14:09:09,685 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:09,810 - MinutiaeExtractor - INFO - Extracted 14 minutiae points
+2025-08-07 14:09:09,811 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:09,927 - MinutiaeExtractor - INFO - Extracted 23 minutiae points
+2025-08-07 14:09:09,928 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:10,048 - MinutiaeExtractor - INFO - Extracted 7 minutiae points
+2025-08-07 14:09:10,073 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:10,352 - MinutiaeExtractor - INFO - Extracted 3 minutiae points
+2025-08-07 14:09:10,406 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:10,884 - MinutiaeExtractor - INFO - Extracted 5 minutiae points
+2025-08-07 14:09:10,940 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:11,466 - MinutiaeExtractor - INFO - Extracted 10 minutiae points
+2025-08-07 14:09:11,531 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:11,957 - MinutiaeExtractor - INFO - Extracted 17 minutiae points
+2025-08-07 14:09:12,013 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:12,772 - MinutiaeExtractor - INFO - Extracted 6 minutiae points
+2025-08-07 14:09:12,824 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:13,407 - MinutiaeExtractor - INFO - Extracted 17 minutiae points
+2025-08-07 14:09:13,511 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:14,008 - MinutiaeExtractor - INFO - Extracted 7 minutiae points
+2025-08-07 14:09:14,029 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:14,431 - MinutiaeExtractor - INFO - Extracted 11 minutiae points
+2025-08-07 14:09:14,472 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:14,850 - MinutiaeExtractor - INFO - Extracted 10 minutiae points
+2025-08-07 14:09:14,893 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:15,402 - MinutiaeExtractor - INFO - Extracted 4 minutiae points
+2025-08-07 14:09:15,514 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:16,074 - MinutiaeExtractor - INFO - Extracted 3 minutiae points
+2025-08-07 14:09:16,181 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:16,922 - MinutiaeExtractor - INFO - Extracted 2 minutiae points
+2025-08-07 14:09:17,099 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:17,861 - MinutiaeExtractor - INFO - Extracted 7 minutiae points
+2025-08-07 14:09:17,914 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:18,530 - MinutiaeExtractor - INFO - Extracted 26 minutiae points
+2025-08-07 14:09:18,532 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:18,843 - MinutiaeExtractor - INFO - Extracted 3 minutiae points
+2025-08-07 14:09:18,912 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:19,387 - MinutiaeExtractor - INFO - Extracted 4 minutiae points
+2025-08-07 14:09:19,464 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:20,181 - MinutiaeExtractor - INFO - Extracted 7 minutiae points
+2025-08-07 14:09:20,187 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:21,174 - MinutiaeExtractor - INFO - Extracted 53 minutiae points
+2025-08-07 14:09:21,176 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:21,941 - MinutiaeExtractor - INFO - Extracted 13 minutiae points
+2025-08-07 14:09:22,024 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:22,632 - MinutiaeExtractor - INFO - Extracted 6 minutiae points
+2025-08-07 14:09:22,697 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:23,227 - MinutiaeExtractor - INFO - Extracted 5 minutiae points
+2025-08-07 14:09:23,339 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:23,899 - MinutiaeExtractor - INFO - Extracted 3 minutiae points
+2025-08-07 14:09:23,972 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:24,529 - MinutiaeExtractor - INFO - Extracted 22 minutiae points
+2025-08-07 14:09:24,625 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:25,260 - MinutiaeExtractor - INFO - Extracted 48 minutiae points
+2025-08-07 14:09:25,350 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:25,910 - MinutiaeExtractor - INFO - Extracted 5 minutiae points
+2025-08-07 14:09:26,010 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:26,468 - MinutiaeExtractor - INFO - Extracted 10 minutiae points
+2025-08-07 14:09:26,524 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:27,068 - MinutiaeExtractor - INFO - Extracted 19 minutiae points
+2025-08-07 14:09:27,112 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:27,900 - MinutiaeExtractor - INFO - Extracted 27 minutiae points
+2025-08-07 14:09:27,972 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:28,614 - MinutiaeExtractor - INFO - Extracted 19 minutiae points
+2025-08-07 14:09:28,677 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:29,227 - MinutiaeExtractor - INFO - Extracted 23 minutiae points
+2025-08-07 14:09:29,227 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:29,543 - MinutiaeExtractor - INFO - Extracted 19 minutiae points
+2025-08-07 14:09:29,640 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:30,140 - MinutiaeExtractor - INFO - Extracted 6 minutiae points
+2025-08-07 14:09:30,220 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:30,748 - MinutiaeExtractor - INFO - Extracted 22 minutiae points
+2025-08-07 14:09:30,748 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:31,580 - MinutiaeExtractor - INFO - Extracted 21 minutiae points
+2025-08-07 14:09:31,583 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:32,116 - MinutiaeExtractor - INFO - Extracted 11 minutiae points
+2025-08-07 14:09:32,195 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:32,906 - MinutiaeExtractor - INFO - Extracted 23 minutiae points
+2025-08-07 14:09:32,986 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:33,715 - MinutiaeExtractor - INFO - Extracted 28 minutiae points
+2025-08-07 14:09:33,794 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:35,028 - MinutiaeExtractor - INFO - Extracted 25 minutiae points
+2025-08-07 14:09:35,105 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:35,871 - MinutiaeExtractor - INFO - Extracted 23 minutiae points
+2025-08-07 14:09:36,023 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:37,593 - MinutiaeExtractor - INFO - Extracted 7 minutiae points
+2025-08-07 14:09:37,683 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:38,304 - MinutiaeExtractor - INFO - Extracted 18 minutiae points
+2025-08-07 14:09:38,343 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:38,705 - MinutiaeExtractor - INFO - Extracted 12 minutiae points
+2025-08-07 14:09:38,767 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:39,313 - MinutiaeExtractor - INFO - Extracted 19 minutiae points
+2025-08-07 14:09:39,368 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:39,868 - MinutiaeExtractor - INFO - Extracted 15 minutiae points
+2025-08-07 14:09:39,932 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:40,614 - MinutiaeExtractor - INFO - Extracted 20 minutiae points
+2025-08-07 14:09:40,668 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:41,150 - MinutiaeExtractor - INFO - Extracted 20 minutiae points
+2025-08-07 14:09:41,205 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:41,843 - MinutiaeExtractor - INFO - Extracted 22 minutiae points
+2025-08-07 14:09:41,920 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:42,388 - MinutiaeExtractor - INFO - Extracted 20 minutiae points
+2025-08-07 14:09:42,477 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:43,310 - MinutiaeExtractor - INFO - Extracted 17 minutiae points
+2025-08-07 14:09:43,386 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:43,819 - MinutiaeExtractor - INFO - Extracted 9 minutiae points
+2025-08-07 14:09:43,897 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:44,796 - MinutiaeExtractor - INFO - Extracted 15 minutiae points
+2025-08-07 14:09:44,879 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:45,462 - MinutiaeExtractor - INFO - Extracted 6 minutiae points
+2025-08-07 14:09:45,522 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:45,981 - MinutiaeExtractor - INFO - Extracted 18 minutiae points
+2025-08-07 14:09:46,033 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:46,533 - MinutiaeExtractor - INFO - Extracted 27 minutiae points
+2025-08-07 14:09:46,537 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:47,000 - MinutiaeExtractor - INFO - Extracted 9 minutiae points
+2025-08-07 14:09:47,084 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:47,633 - MinutiaeExtractor - INFO - Extracted 15 minutiae points
+2025-08-07 14:09:47,711 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:48,524 - MinutiaeExtractor - INFO - Extracted 23 minutiae points
+2025-08-07 14:09:48,613 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:49,127 - MinutiaeExtractor - INFO - Extracted 16 minutiae points
+2025-08-07 14:09:49,211 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:49,894 - MinutiaeExtractor - INFO - Extracted 10 minutiae points
+2025-08-07 14:09:49,981 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:50,615 - MinutiaeExtractor - INFO - Extracted 9 minutiae points
+2025-08-07 14:09:50,686 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:51,370 - MinutiaeExtractor - INFO - Extracted 12 minutiae points
+2025-08-07 14:09:51,438 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:52,230 - MinutiaeExtractor - INFO - Extracted 20 minutiae points
+2025-08-07 14:09:52,320 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:52,812 - MinutiaeExtractor - INFO - Extracted 16 minutiae points
+2025-08-07 14:09:52,916 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:53,783 - MinutiaeExtractor - INFO - Extracted 15 minutiae points
+2025-08-07 14:09:53,895 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:54,809 - MinutiaeExtractor - INFO - Extracted 10 minutiae points
+2025-08-07 14:09:54,996 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:55,917 - MinutiaeExtractor - INFO - Extracted 17 minutiae points
+2025-08-07 14:09:56,152 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:57,181 - MinutiaeExtractor - INFO - Extracted 13 minutiae points
+2025-08-07 14:09:57,334 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:58,232 - MinutiaeExtractor - INFO - Extracted 19 minutiae points
+2025-08-07 14:09:58,462 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:09:59,742 - MinutiaeExtractor - INFO - Extracted 21 minutiae points
+2025-08-07 14:09:59,895 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:00,806 - MinutiaeExtractor - INFO - Extracted 18 minutiae points
+2025-08-07 14:10:00,923 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:02,182 - MinutiaeExtractor - INFO - Extracted 24 minutiae points
+2025-08-07 14:10:02,364 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:03,366 - MinutiaeExtractor - INFO - Extracted 20 minutiae points
+2025-08-07 14:10:03,558 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:04,602 - MinutiaeExtractor - INFO - Extracted 37 minutiae points
+2025-08-07 14:10:04,706 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:05,500 - MinutiaeExtractor - INFO - Extracted 24 minutiae points
+2025-08-07 14:10:05,563 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:06,468 - MinutiaeExtractor - INFO - Extracted 6 minutiae points
+2025-08-07 14:10:06,606 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:07,709 - MinutiaeExtractor - INFO - Extracted 18 minutiae points
+2025-08-07 14:10:07,814 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:08,572 - MinutiaeExtractor - INFO - Extracted 13 minutiae points
+2025-08-07 14:10:08,700 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:09,973 - MinutiaeExtractor - INFO - Extracted 30 minutiae points
+2025-08-07 14:10:10,188 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:11,022 - MinutiaeExtractor - INFO - Extracted 12 minutiae points
+2025-08-07 14:10:11,193 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:12,312 - MinutiaeExtractor - INFO - Extracted 5 minutiae points
+2025-08-07 14:10:12,427 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:13,484 - MinutiaeExtractor - INFO - Extracted 4 minutiae points
+2025-08-07 14:10:13,607 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:14,162 - MinutiaeExtractor - INFO - Extracted 5 minutiae points
+2025-08-07 14:10:14,284 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:14,868 - MinutiaeExtractor - INFO - Extracted 16 minutiae points
+2025-08-07 14:10:14,911 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:15,368 - MinutiaeExtractor - INFO - Extracted 19 minutiae points
+2025-08-07 14:10:15,449 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:16,023 - MinutiaeExtractor - INFO - Extracted 14 minutiae points
+2025-08-07 14:10:16,108 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:16,628 - MinutiaeExtractor - INFO - Extracted 16 minutiae points
+2025-08-07 14:10:16,750 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:17,498 - MinutiaeExtractor - INFO - Extracted 28 minutiae points
+2025-08-07 14:10:17,632 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:18,305 - MinutiaeExtractor - INFO - Extracted 33 minutiae points
+2025-08-07 14:10:18,460 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:19,564 - MinutiaeExtractor - INFO - Extracted 10 minutiae points
+2025-08-07 14:10:19,708 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:20,880 - MinutiaeExtractor - INFO - Extracted 18 minutiae points
+2025-08-07 14:10:21,008 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:21,924 - MinutiaeExtractor - INFO - Extracted 16 minutiae points
+2025-08-07 14:10:22,059 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:23,028 - MinutiaeExtractor - INFO - Extracted 12 minutiae points
+2025-08-07 14:10:23,248 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:24,095 - MinutiaeExtractor - INFO - Extracted 27 minutiae points
+2025-08-07 14:10:24,173 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:24,818 - MinutiaeExtractor - INFO - Extracted 8 minutiae points
+2025-08-07 14:10:24,920 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:25,533 - MinutiaeExtractor - INFO - Extracted 16 minutiae points
+2025-08-07 14:10:25,602 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:26,560 - MinutiaeExtractor - INFO - Extracted 7 minutiae points
+2025-08-07 14:10:26,709 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:27,275 - MinutiaeExtractor - INFO - Extracted 14 minutiae points
+2025-08-07 14:10:27,336 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:28,053 - MinutiaeExtractor - INFO - Extracted 34 minutiae points
+2025-08-07 14:10:28,160 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:29,038 - MinutiaeExtractor - INFO - Extracted 30 minutiae points
+2025-08-07 14:10:29,134 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:29,739 - MinutiaeExtractor - INFO - Extracted 9 minutiae points
+2025-08-07 14:10:29,811 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:30,295 - MinutiaeExtractor - INFO - Extracted 6 minutiae points
+2025-08-07 14:10:30,351 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:30,845 - MinutiaeExtractor - INFO - Extracted 9 minutiae points
+2025-08-07 14:10:30,891 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:31,394 - MinutiaeExtractor - INFO - Extracted 23 minutiae points
+2025-08-07 14:10:31,412 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:31,719 - MinutiaeExtractor - INFO - Extracted 31 minutiae points
+2025-08-07 14:10:31,796 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:32,275 - MinutiaeExtractor - INFO - Extracted 17 minutiae points
+2025-08-07 14:10:32,334 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:32,817 - MinutiaeExtractor - INFO - Extracted 10 minutiae points
+2025-08-07 14:10:32,893 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:33,364 - MinutiaeExtractor - INFO - Extracted 23 minutiae points
+2025-08-07 14:10:33,441 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:33,920 - MinutiaeExtractor - INFO - Extracted 14 minutiae points
+2025-08-07 14:10:33,979 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:34,535 - MinutiaeExtractor - INFO - Extracted 15 minutiae points
+2025-08-07 14:10:34,607 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:35,476 - MinutiaeExtractor - INFO - Extracted 13 minutiae points
+2025-08-07 14:10:35,566 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:36,594 - MinutiaeExtractor - INFO - Extracted 18 minutiae points
+2025-08-07 14:10:36,672 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:37,290 - MinutiaeExtractor - INFO - Extracted 10 minutiae points
+2025-08-07 14:10:37,334 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:37,821 - MinutiaeExtractor - INFO - Extracted 16 minutiae points
+2025-08-07 14:10:37,850 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:38,312 - MinutiaeExtractor - INFO - Extracted 10 minutiae points
+2025-08-07 14:10:38,366 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:38,848 - MinutiaeExtractor - INFO - Extracted 9 minutiae points
+2025-08-07 14:10:38,895 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:39,357 - MinutiaeExtractor - INFO - Extracted 12 minutiae points
+2025-08-07 14:10:39,397 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:40,008 - MinutiaeExtractor - INFO - Extracted 36 minutiae points
+2025-08-07 14:10:40,083 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:40,556 - MinutiaeExtractor - INFO - Extracted 10 minutiae points
+2025-08-07 14:10:40,635 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:41,256 - MinutiaeExtractor - INFO - Extracted 34 minutiae points
+2025-08-07 14:10:41,311 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:41,905 - MinutiaeExtractor - INFO - Extracted 24 minutiae points
+2025-08-07 14:10:41,921 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:42,225 - MinutiaeExtractor - INFO - Extracted 24 minutiae points
+2025-08-07 14:10:42,262 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:42,727 - MinutiaeExtractor - INFO - Extracted 20 minutiae points
+2025-08-07 14:10:42,771 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:43,286 - MinutiaeExtractor - INFO - Extracted 28 minutiae points
+2025-08-07 14:10:43,349 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:44,043 - MinutiaeExtractor - INFO - Extracted 26 minutiae points
+2025-08-07 14:10:44,106 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:44,621 - MinutiaeExtractor - INFO - Extracted 29 minutiae points
+2025-08-07 14:10:44,679 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:45,167 - MinutiaeExtractor - INFO - Extracted 20 minutiae points
+2025-08-07 14:10:45,240 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:45,720 - MinutiaeExtractor - INFO - Extracted 36 minutiae points
+2025-08-07 14:10:45,763 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:46,389 - MinutiaeExtractor - INFO - Extracted 22 minutiae points
+2025-08-07 14:10:46,452 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:47,942 - MinutiaeExtractor - INFO - Extracted 5 minutiae points
+2025-08-07 14:10:48,042 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:48,579 - MinutiaeExtractor - INFO - Extracted 17 minutiae points
+2025-08-07 14:10:48,661 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:49,293 - MinutiaeExtractor - INFO - Extracted 26 minutiae points
+2025-08-07 14:10:49,368 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:49,931 - MinutiaeExtractor - INFO - Extracted 16 minutiae points
+2025-08-07 14:10:49,981 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:50,454 - MinutiaeExtractor - INFO - Extracted 25 minutiae points
+2025-08-07 14:10:50,514 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:51,140 - MinutiaeExtractor - INFO - Extracted 36 minutiae points
+2025-08-07 14:10:51,220 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:51,934 - MinutiaeExtractor - INFO - Extracted 13 minutiae points
+2025-08-07 14:10:51,996 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:52,504 - MinutiaeExtractor - INFO - Extracted 15 minutiae points
+2025-08-07 14:10:52,568 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:53,461 - MinutiaeExtractor - INFO - Extracted 29 minutiae points
+2025-08-07 14:10:53,537 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:54,433 - MinutiaeExtractor - INFO - Extracted 19 minutiae points
+2025-08-07 14:10:54,508 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:55,215 - MinutiaeExtractor - INFO - Extracted 19 minutiae points
+2025-08-07 14:10:55,294 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:55,639 - MinutiaeExtractor - INFO - Extracted 14 minutiae points
+2025-08-07 14:10:55,722 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:56,364 - MinutiaeExtractor - INFO - Extracted 16 minutiae points
+2025-08-07 14:10:56,489 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:57,227 - MinutiaeExtractor - INFO - Extracted 13 minutiae points
+2025-08-07 14:10:57,372 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:58,276 - MinutiaeExtractor - INFO - Extracted 25 minutiae points
+2025-08-07 14:10:58,367 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:10:59,181 - MinutiaeExtractor - INFO - Extracted 20 minutiae points
+2025-08-07 14:10:59,436 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:01,697 - MinutiaeExtractor - INFO - Extracted 8 minutiae points
+2025-08-07 14:11:01,744 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:01,957 - MinutiaeExtractor - INFO - Extracted 19 minutiae points
+2025-08-07 14:11:01,972 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:02,093 - MinutiaeExtractor - INFO - Extracted 15 minutiae points
+2025-08-07 14:11:02,093 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:02,227 - MinutiaeExtractor - INFO - Extracted 28 minutiae points
+2025-08-07 14:11:02,242 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:02,325 - MinutiaeExtractor - INFO - Extracted 9 minutiae points
+2025-08-07 14:11:02,325 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:02,415 - MinutiaeExtractor - INFO - Extracted 16 minutiae points
+2025-08-07 14:11:02,415 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:02,531 - MinutiaeExtractor - INFO - Extracted 24 minutiae points
+2025-08-07 14:11:02,546 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:02,600 - MinutiaeExtractor - INFO - Extracted 7 minutiae points
+2025-08-07 14:11:02,600 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:02,722 - MinutiaeExtractor - INFO - Extracted 15 minutiae points
+2025-08-07 14:11:02,737 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:02,802 - MinutiaeExtractor - INFO - Extracted 11 minutiae points
+2025-08-07 14:11:02,802 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:02,876 - MinutiaeExtractor - INFO - Extracted 9 minutiae points
+2025-08-07 14:11:02,876 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:02,952 - MinutiaeExtractor - INFO - Extracted 12 minutiae points
+2025-08-07 14:11:02,952 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:02,995 - MinutiaeExtractor - INFO - Extracted 6 minutiae points
+2025-08-07 14:11:02,995 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:03,058 - MinutiaeExtractor - INFO - Extracted 18 minutiae points
+2025-08-07 14:11:03,058 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:03,149 - MinutiaeExtractor - INFO - Extracted 11 minutiae points
+2025-08-07 14:11:03,149 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:03,239 - MinutiaeExtractor - INFO - Extracted 19 minutiae points
+2025-08-07 14:11:03,239 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:03,346 - MinutiaeExtractor - INFO - Extracted 21 minutiae points
+2025-08-07 14:11:03,346 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:03,437 - MinutiaeExtractor - INFO - Extracted 11 minutiae points
+2025-08-07 14:11:03,523 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:04,412 - MinutiaeExtractor - INFO - Extracted 19 minutiae points
+2025-08-07 14:11:04,517 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:06,170 - MinutiaeExtractor - INFO - Extracted 63 minutiae points
+2025-08-07 14:11:06,329 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:07,193 - MinutiaeExtractor - INFO - Extracted 8 minutiae points
+2025-08-07 14:11:07,286 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:08,545 - MinutiaeExtractor - INFO - Extracted 30 minutiae points
+2025-08-07 14:11:08,684 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:09,690 - MinutiaeExtractor - INFO - Extracted 18 minutiae points
+2025-08-07 14:11:09,877 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:11,201 - MinutiaeExtractor - INFO - Extracted 38 minutiae points
+2025-08-07 14:11:11,400 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:12,364 - MinutiaeExtractor - INFO - Extracted 5 minutiae points
+2025-08-07 14:11:12,493 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:13,225 - MinutiaeExtractor - INFO - Extracted 5 minutiae points
+2025-08-07 14:11:13,299 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:13,878 - MinutiaeExtractor - INFO - Extracted 11 minutiae points
+2025-08-07 14:11:14,015 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:14,813 - MinutiaeExtractor - INFO - Extracted 6 minutiae points
+2025-08-07 14:11:14,933 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:15,618 - MinutiaeExtractor - INFO - Extracted 17 minutiae points
+2025-08-07 14:11:15,697 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:16,389 - MinutiaeExtractor - INFO - Extracted 35 minutiae points
+2025-08-07 14:11:16,479 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:17,043 - MinutiaeExtractor - INFO - Extracted 5 minutiae points
+2025-08-07 14:11:17,106 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:17,656 - MinutiaeExtractor - INFO - Extracted 13 minutiae points
+2025-08-07 14:11:17,750 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:18,311 - MinutiaeExtractor - INFO - Extracted 11 minutiae points
+2025-08-07 14:11:18,439 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:19,419 - MinutiaeExtractor - INFO - Extracted 30 minutiae points
+2025-08-07 14:11:19,560 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:20,440 - MinutiaeExtractor - INFO - Extracted 7 minutiae points
+2025-08-07 14:11:20,542 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:21,194 - MinutiaeExtractor - INFO - Extracted 11 minutiae points
+2025-08-07 14:11:21,320 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:22,180 - MinutiaeExtractor - INFO - Extracted 15 minutiae points
+2025-08-07 14:11:22,238 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:22,862 - MinutiaeExtractor - INFO - Extracted 6 minutiae points
+2025-08-07 14:11:23,022 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:23,867 - MinutiaeExtractor - INFO - Extracted 16 minutiae points
+2025-08-07 14:11:23,959 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:24,819 - MinutiaeExtractor - INFO - Extracted 17 minutiae points
+2025-08-07 14:11:24,897 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:25,372 - MinutiaeExtractor - INFO - Extracted 28 minutiae points
+2025-08-07 14:11:25,468 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:26,061 - MinutiaeExtractor - INFO - Extracted 21 minutiae points
+2025-08-07 14:11:26,123 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:26,720 - MinutiaeExtractor - INFO - Extracted 44 minutiae points
+2025-08-07 14:11:26,802 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:27,484 - MinutiaeExtractor - INFO - Extracted 19 minutiae points
+2025-08-07 14:11:27,612 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:28,437 - MinutiaeExtractor - INFO - Extracted 12 minutiae points
+2025-08-07 14:11:28,570 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:29,353 - MinutiaeExtractor - INFO - Extracted 17 minutiae points
+2025-08-07 14:11:29,479 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:30,166 - MinutiaeExtractor - INFO - Extracted 19 minutiae points
+2025-08-07 14:11:30,280 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:31,145 - MinutiaeExtractor - INFO - Extracted 6 minutiae points
+2025-08-07 14:11:31,271 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:32,026 - MinutiaeExtractor - INFO - Extracted 31 minutiae points
+2025-08-07 14:11:32,128 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:32,881 - MinutiaeExtractor - INFO - Extracted 12 minutiae points
+2025-08-07 14:11:32,968 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:33,571 - MinutiaeExtractor - INFO - Extracted 7 minutiae points
+2025-08-07 14:11:33,665 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:34,268 - MinutiaeExtractor - INFO - Extracted 22 minutiae points
+2025-08-07 14:11:34,382 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:35,202 - MinutiaeExtractor - INFO - Extracted 29 minutiae points
+2025-08-07 14:11:35,324 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:36,620 - MinutiaeExtractor - INFO - Extracted 38 minutiae points
+2025-08-07 14:11:36,787 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:37,774 - MinutiaeExtractor - INFO - Extracted 15 minutiae points
+2025-08-07 14:11:37,947 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:39,023 - MinutiaeExtractor - INFO - Extracted 8 minutiae points
+2025-08-07 14:11:39,220 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:39,988 - MinutiaeExtractor - INFO - Extracted 8 minutiae points
+2025-08-07 14:11:40,098 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:40,940 - MinutiaeExtractor - INFO - Extracted 3 minutiae points
+2025-08-07 14:11:41,097 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:42,148 - MinutiaeExtractor - INFO - Extracted 35 minutiae points
+2025-08-07 14:11:42,366 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:43,674 - MinutiaeExtractor - INFO - Extracted 19 minutiae points
+2025-08-07 14:11:43,825 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:44,817 - MinutiaeExtractor - INFO - Extracted 36 minutiae points
+2025-08-07 14:11:44,907 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:45,583 - MinutiaeExtractor - INFO - Extracted 18 minutiae points
+2025-08-07 14:11:45,668 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:46,406 - MinutiaeExtractor - INFO - Extracted 40 minutiae points
+2025-08-07 14:11:46,520 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:47,368 - MinutiaeExtractor - INFO - Extracted 21 minutiae points
+2025-08-07 14:11:47,446 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:48,469 - MinutiaeExtractor - INFO - Extracted 15 minutiae points
+2025-08-07 14:11:48,629 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:49,351 - MinutiaeExtractor - INFO - Extracted 8 minutiae points
+2025-08-07 14:11:49,509 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:50,253 - MinutiaeExtractor - INFO - Extracted 9 minutiae points
+2025-08-07 14:11:50,381 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:50,998 - MinutiaeExtractor - INFO - Extracted 5 minutiae points
+2025-08-07 14:11:51,145 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:52,403 - MinutiaeExtractor - INFO - Extracted 31 minutiae points
+2025-08-07 14:11:52,554 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:53,295 - MinutiaeExtractor - INFO - Extracted 16 minutiae points
+2025-08-07 14:11:53,438 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:54,121 - MinutiaeExtractor - INFO - Extracted 20 minutiae points
+2025-08-07 14:11:54,242 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:54,951 - MinutiaeExtractor - INFO - Extracted 24 minutiae points
+2025-08-07 14:11:55,092 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:55,837 - MinutiaeExtractor - INFO - Extracted 21 minutiae points
+2025-08-07 14:11:55,977 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:56,853 - MinutiaeExtractor - INFO - Extracted 17 minutiae points
+2025-08-07 14:11:56,980 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:58,002 - MinutiaeExtractor - INFO - Extracted 5 minutiae points
+2025-08-07 14:11:58,133 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:11:59,167 - MinutiaeExtractor - INFO - Extracted 4 minutiae points
+2025-08-07 14:11:59,305 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:00,044 - MinutiaeExtractor - INFO - Extracted 8 minutiae points
+2025-08-07 14:12:00,166 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:00,840 - MinutiaeExtractor - INFO - Extracted 9 minutiae points
+2025-08-07 14:12:00,987 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:02,286 - MinutiaeExtractor - INFO - Extracted 18 minutiae points
+2025-08-07 14:12:02,499 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:03,540 - MinutiaeExtractor - INFO - Extracted 37 minutiae points
+2025-08-07 14:12:03,709 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:04,730 - MinutiaeExtractor - INFO - Extracted 20 minutiae points
+2025-08-07 14:12:04,838 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:05,717 - MinutiaeExtractor - INFO - Extracted 10 minutiae points
+2025-08-07 14:12:05,838 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:06,575 - MinutiaeExtractor - INFO - Extracted 8 minutiae points
+2025-08-07 14:12:06,690 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:07,706 - MinutiaeExtractor - INFO - Extracted 49 minutiae points
+2025-08-07 14:12:07,866 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:09,063 - MinutiaeExtractor - INFO - Extracted 22 minutiae points
+2025-08-07 14:12:09,223 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:10,009 - MinutiaeExtractor - INFO - Extracted 16 minutiae points
+2025-08-07 14:12:10,163 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:10,923 - MinutiaeExtractor - INFO - Extracted 19 minutiae points
+2025-08-07 14:12:11,032 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:11,813 - MinutiaeExtractor - INFO - Extracted 16 minutiae points
+2025-08-07 14:12:11,923 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:12,825 - MinutiaeExtractor - INFO - Extracted 22 minutiae points
+2025-08-07 14:12:13,024 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:14,269 - MinutiaeExtractor - INFO - Extracted 20 minutiae points
+2025-08-07 14:12:14,500 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:15,251 - MinutiaeExtractor - INFO - Extracted 18 minutiae points
+2025-08-07 14:12:15,578 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:16,238 - MinutiaeExtractor - INFO - Extracted 17 minutiae points
+2025-08-07 14:12:16,366 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:16,968 - MinutiaeExtractor - INFO - Extracted 17 minutiae points
+2025-08-07 14:12:17,071 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:17,696 - MinutiaeExtractor - INFO - Extracted 15 minutiae points
+2025-08-07 14:12:17,802 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:18,601 - MinutiaeExtractor - INFO - Extracted 31 minutiae points
+2025-08-07 14:12:18,691 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:19,301 - MinutiaeExtractor - INFO - Extracted 12 minutiae points
+2025-08-07 14:12:19,402 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:19,939 - MinutiaeExtractor - INFO - Extracted 12 minutiae points
+2025-08-07 14:12:20,064 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:20,803 - MinutiaeExtractor - INFO - Extracted 15 minutiae points
+2025-08-07 14:12:20,945 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:21,661 - MinutiaeExtractor - INFO - Extracted 17 minutiae points
+2025-08-07 14:12:21,845 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:22,931 - MinutiaeExtractor - INFO - Extracted 18 minutiae points
+2025-08-07 14:12:23,089 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:23,898 - MinutiaeExtractor - INFO - Extracted 15 minutiae points
+2025-08-07 14:12:24,032 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:24,891 - MinutiaeExtractor - INFO - Extracted 21 minutiae points
+2025-08-07 14:12:25,036 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:25,726 - MinutiaeExtractor - INFO - Extracted 21 minutiae points
+2025-08-07 14:12:25,836 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:26,600 - MinutiaeExtractor - INFO - Extracted 16 minutiae points
+2025-08-07 14:12:26,794 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:27,781 - MinutiaeExtractor - INFO - Extracted 13 minutiae points
+2025-08-07 14:12:27,978 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:28,783 - MinutiaeExtractor - INFO - Extracted 11 minutiae points
+2025-08-07 14:12:28,846 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:29,626 - MinutiaeExtractor - INFO - Extracted 17 minutiae points
+2025-08-07 14:12:29,737 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:30,567 - MinutiaeExtractor - INFO - Extracted 13 minutiae points
+2025-08-07 14:12:30,743 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:31,485 - MinutiaeExtractor - INFO - Extracted 23 minutiae points
+2025-08-07 14:12:31,625 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:32,261 - MinutiaeExtractor - INFO - Extracted 12 minutiae points
+2025-08-07 14:12:32,394 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:33,126 - MinutiaeExtractor - INFO - Extracted 13 minutiae points
+2025-08-07 14:12:33,241 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:33,991 - MinutiaeExtractor - INFO - Extracted 13 minutiae points
+2025-08-07 14:12:34,090 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:34,898 - MinutiaeExtractor - INFO - Extracted 8 minutiae points
+2025-08-07 14:12:35,064 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:36,149 - MinutiaeExtractor - INFO - Extracted 13 minutiae points
+2025-08-07 14:12:36,290 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:37,313 - MinutiaeExtractor - INFO - Extracted 25 minutiae points
+2025-08-07 14:12:37,441 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:38,156 - MinutiaeExtractor - INFO - Extracted 14 minutiae points
+2025-08-07 14:12:38,247 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:38,892 - MinutiaeExtractor - INFO - Extracted 15 minutiae points
+2025-08-07 14:12:39,024 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:39,951 - MinutiaeExtractor - INFO - Extracted 9 minutiae points
+2025-08-07 14:12:40,072 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:40,897 - MinutiaeExtractor - INFO - Extracted 8 minutiae points
+2025-08-07 14:12:41,022 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:41,736 - MinutiaeExtractor - INFO - Extracted 20 minutiae points
+2025-08-07 14:12:41,857 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:42,867 - MinutiaeExtractor - INFO - Extracted 5 minutiae points
+2025-08-07 14:12:42,961 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:43,821 - MinutiaeExtractor - INFO - Extracted 32 minutiae points
+2025-08-07 14:12:43,869 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:44,293 - MinutiaeExtractor - INFO - Extracted 16 minutiae points
+2025-08-07 14:12:44,389 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:44,907 - MinutiaeExtractor - INFO - Extracted 9 minutiae points
+2025-08-07 14:12:44,978 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:45,555 - MinutiaeExtractor - INFO - Extracted 14 minutiae points
+2025-08-07 14:12:45,615 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:46,176 - MinutiaeExtractor - INFO - Extracted 19 minutiae points
+2025-08-07 14:12:46,231 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:46,819 - MinutiaeExtractor - INFO - Extracted 12 minutiae points
+2025-08-07 14:12:46,872 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:47,544 - MinutiaeExtractor - INFO - Extracted 20 minutiae points
+2025-08-07 14:12:47,655 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:48,208 - MinutiaeExtractor - INFO - Extracted 19 minutiae points
+2025-08-07 14:12:48,208 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:48,616 - MinutiaeExtractor - INFO - Extracted 17 minutiae points
+2025-08-07 14:12:48,744 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:49,278 - MinutiaeExtractor - INFO - Extracted 16 minutiae points
+2025-08-07 14:12:49,345 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:49,946 - MinutiaeExtractor - INFO - Extracted 7 minutiae points
+2025-08-07 14:12:50,021 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:50,601 - MinutiaeExtractor - INFO - Extracted 4 minutiae points
+2025-08-07 14:12:50,691 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:53,053 - MinutiaeExtractor - INFO - Extracted 26 minutiae points
+2025-08-07 14:12:53,101 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:53,774 - MinutiaeExtractor - INFO - Extracted 23 minutiae points
+2025-08-07 14:12:53,816 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:54,342 - MinutiaeExtractor - INFO - Extracted 35 minutiae points
+2025-08-07 14:12:54,386 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:54,899 - MinutiaeExtractor - INFO - Extracted 25 minutiae points
+2025-08-07 14:12:55,070 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:55,880 - MinutiaeExtractor - INFO - Extracted 19 minutiae points
+2025-08-07 14:12:56,011 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:56,639 - MinutiaeExtractor - INFO - Extracted 15 minutiae points
+2025-08-07 14:12:56,719 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:57,678 - MinutiaeExtractor - INFO - Extracted 7 minutiae points
+2025-08-07 14:12:57,771 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:12:58,333 - MinutiaeExtractor - INFO - Extracted 18 minutiae points
+2025-08-07 14:12:58,337 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:00,047 - MinutiaeExtractor - INFO - Extracted 10 minutiae points
+2025-08-07 14:13:00,212 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:00,845 - MinutiaeExtractor - INFO - Extracted 15 minutiae points
+2025-08-07 14:13:00,968 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:02,205 - MinutiaeExtractor - INFO - Extracted 18 minutiae points
+2025-08-07 14:13:02,305 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:02,957 - MinutiaeExtractor - INFO - Extracted 16 minutiae points
+2025-08-07 14:13:03,037 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:03,619 - MinutiaeExtractor - INFO - Extracted 14 minutiae points
+2025-08-07 14:13:03,703 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:04,238 - MinutiaeExtractor - INFO - Extracted 12 minutiae points
+2025-08-07 14:13:04,319 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:04,739 - MinutiaeExtractor - INFO - Extracted 7 minutiae points
+2025-08-07 14:13:04,803 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:05,422 - MinutiaeExtractor - INFO - Extracted 36 minutiae points
+2025-08-07 14:13:05,510 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:06,728 - MinutiaeExtractor - INFO - Extracted 11 minutiae points
+2025-08-07 14:13:06,798 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:07,283 - MinutiaeExtractor - INFO - Extracted 20 minutiae points
+2025-08-07 14:13:07,323 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:07,784 - MinutiaeExtractor - INFO - Extracted 29 minutiae points
+2025-08-07 14:13:07,854 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:08,969 - MinutiaeExtractor - INFO - Extracted 17 minutiae points
+2025-08-07 14:13:09,034 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:09,859 - MinutiaeExtractor - INFO - Extracted 18 minutiae points
+2025-08-07 14:13:09,945 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:10,483 - MinutiaeExtractor - INFO - Extracted 6 minutiae points
+2025-08-07 14:13:10,563 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:11,091 - MinutiaeExtractor - INFO - Extracted 22 minutiae points
+2025-08-07 14:13:11,166 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:11,974 - MinutiaeExtractor - INFO - Extracted 17 minutiae points
+2025-08-07 14:13:12,057 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:12,702 - MinutiaeExtractor - INFO - Extracted 12 minutiae points
+2025-08-07 14:13:12,766 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:13,390 - MinutiaeExtractor - INFO - Extracted 21 minutiae points
+2025-08-07 14:13:13,390 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:13,683 - MinutiaeExtractor - INFO - Extracted 24 minutiae points
+2025-08-07 14:13:13,721 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:14,173 - MinutiaeExtractor - INFO - Extracted 21 minutiae points
+2025-08-07 14:13:14,227 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:14,660 - MinutiaeExtractor - INFO - Extracted 30 minutiae points
+2025-08-07 14:13:14,713 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:15,347 - MinutiaeExtractor - INFO - Extracted 27 minutiae points
+2025-08-07 14:13:15,368 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:15,913 - MinutiaeExtractor - INFO - Extracted 26 minutiae points
+2025-08-07 14:13:15,955 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:16,446 - MinutiaeExtractor - INFO - Extracted 3 minutiae points
+2025-08-07 14:13:16,498 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:16,900 - MinutiaeExtractor - INFO - Extracted 4 minutiae points
+2025-08-07 14:13:16,941 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:17,220 - MinutiaeExtractor - INFO - Extracted 8 minutiae points
+2025-08-07 14:13:17,236 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:17,625 - MinutiaeExtractor - INFO - Extracted 4 minutiae points
+2025-08-07 14:13:17,727 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:18,135 - MinutiaeExtractor - INFO - Extracted 12 minutiae points
+2025-08-07 14:13:18,213 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:18,717 - MinutiaeExtractor - INFO - Extracted 12 minutiae points
+2025-08-07 14:13:18,796 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:19,360 - MinutiaeExtractor - INFO - Extracted 4 minutiae points
+2025-08-07 14:13:19,450 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:20,045 - MinutiaeExtractor - INFO - Extracted 5 minutiae points
+2025-08-07 14:13:20,118 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:20,873 - MinutiaeExtractor - INFO - Extracted 2 minutiae points
+2025-08-07 14:13:21,033 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:22,102 - MinutiaeExtractor - INFO - Extracted 25 minutiae points
+2025-08-07 14:13:22,319 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:23,321 - MinutiaeExtractor - INFO - Extracted 23 minutiae points
+2025-08-07 14:13:23,455 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:24,303 - MinutiaeExtractor - INFO - Extracted 12 minutiae points
+2025-08-07 14:13:24,480 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:25,310 - MinutiaeExtractor - INFO - Extracted 31 minutiae points
+2025-08-07 14:13:25,465 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:26,226 - MinutiaeExtractor - INFO - Extracted 13 minutiae points
+2025-08-07 14:13:26,342 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:27,339 - MinutiaeExtractor - INFO - Extracted 44 minutiae points
+2025-08-07 14:13:27,498 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:28,394 - MinutiaeExtractor - INFO - Extracted 36 minutiae points
+2025-08-07 14:13:28,511 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:29,255 - MinutiaeExtractor - INFO - Extracted 15 minutiae points
+2025-08-07 14:13:29,437 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:30,411 - MinutiaeExtractor - INFO - Extracted 19 minutiae points
+2025-08-07 14:13:30,545 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:31,410 - MinutiaeExtractor - INFO - Extracted 30 minutiae points
+2025-08-07 14:13:31,537 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:32,308 - MinutiaeExtractor - INFO - Extracted 30 minutiae points
+2025-08-07 14:13:32,415 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:33,413 - MinutiaeExtractor - INFO - Extracted 24 minutiae points
+2025-08-07 14:13:33,597 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:34,195 - MinutiaeExtractor - INFO - Extracted 4 minutiae points
+2025-08-07 14:13:34,291 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:34,902 - MinutiaeExtractor - INFO - Extracted 8 minutiae points
+2025-08-07 14:13:35,054 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:37,108 - MinutiaeExtractor - INFO - Extracted 16 minutiae points
+2025-08-07 14:13:37,264 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:38,462 - MinutiaeExtractor - INFO - Extracted 9 minutiae points
+2025-08-07 14:13:38,674 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:39,755 - MinutiaeExtractor - INFO - Extracted 47 minutiae points
+2025-08-07 14:13:39,852 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:40,696 - MinutiaeExtractor - INFO - Extracted 23 minutiae points
+2025-08-07 14:13:40,810 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:41,606 - MinutiaeExtractor - INFO - Extracted 19 minutiae points
+2025-08-07 14:13:41,740 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:42,516 - MinutiaeExtractor - INFO - Extracted 27 minutiae points
+2025-08-07 14:13:42,633 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:43,428 - MinutiaeExtractor - INFO - Extracted 20 minutiae points
+2025-08-07 14:13:43,516 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:44,618 - MinutiaeExtractor - INFO - Extracted 21 minutiae points
+2025-08-07 14:13:44,815 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:45,572 - MinutiaeExtractor - INFO - Extracted 9 minutiae points
+2025-08-07 14:13:45,725 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:46,473 - MinutiaeExtractor - INFO - Extracted 13 minutiae points
+2025-08-07 14:13:46,637 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:47,455 - MinutiaeExtractor - INFO - Extracted 13 minutiae points
+2025-08-07 14:13:47,578 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:48,388 - MinutiaeExtractor - INFO - Extracted 18 minutiae points
+2025-08-07 14:13:48,532 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:49,355 - MinutiaeExtractor - INFO - Extracted 23 minutiae points
+2025-08-07 14:13:49,496 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:50,432 - MinutiaeExtractor - INFO - Extracted 24 minutiae points
+2025-08-07 14:13:50,572 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:51,474 - MinutiaeExtractor - INFO - Extracted 45 minutiae points
+2025-08-07 14:13:51,592 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:52,521 - MinutiaeExtractor - INFO - Extracted 37 minutiae points
+2025-08-07 14:13:52,782 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:53,668 - MinutiaeExtractor - INFO - Extracted 17 minutiae points
+2025-08-07 14:13:53,857 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:55,063 - MinutiaeExtractor - INFO - Extracted 16 minutiae points
+2025-08-07 14:13:55,182 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:56,518 - MinutiaeExtractor - INFO - Extracted 10 minutiae points
+2025-08-07 14:13:56,669 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:57,673 - MinutiaeExtractor - INFO - Extracted 9 minutiae points
+2025-08-07 14:13:57,793 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:13:59,370 - MinutiaeExtractor - INFO - Extracted 10 minutiae points
+2025-08-07 14:13:59,550 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:00,554 - MinutiaeExtractor - INFO - Extracted 16 minutiae points
+2025-08-07 14:14:00,638 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:01,184 - MinutiaeExtractor - INFO - Extracted 14 minutiae points
+2025-08-07 14:14:01,298 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:01,918 - MinutiaeExtractor - INFO - Extracted 12 minutiae points
+2025-08-07 14:14:02,005 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:03,144 - MinutiaeExtractor - INFO - Extracted 15 minutiae points
+2025-08-07 14:14:03,322 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:04,298 - MinutiaeExtractor - INFO - Extracted 12 minutiae points
+2025-08-07 14:14:04,419 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:05,668 - MinutiaeExtractor - INFO - Extracted 17 minutiae points
+2025-08-07 14:14:05,870 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:07,512 - MinutiaeExtractor - INFO - Extracted 21 minutiae points
+2025-08-07 14:14:07,699 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:08,879 - MinutiaeExtractor - INFO - Extracted 21 minutiae points
+2025-08-07 14:14:08,931 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:10,505 - MinutiaeExtractor - INFO - Extracted 13 minutiae points
+2025-08-07 14:14:10,586 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:11,292 - MinutiaeExtractor - INFO - Extracted 13 minutiae points
+2025-08-07 14:14:11,406 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:12,209 - MinutiaeExtractor - INFO - Extracted 18 minutiae points
+2025-08-07 14:14:12,331 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:13,165 - MinutiaeExtractor - INFO - Extracted 23 minutiae points
+2025-08-07 14:14:13,314 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:14,364 - MinutiaeExtractor - INFO - Extracted 24 minutiae points
+2025-08-07 14:14:14,579 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:15,730 - MinutiaeExtractor - INFO - Extracted 45 minutiae points
+2025-08-07 14:14:15,878 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:16,753 - MinutiaeExtractor - INFO - Extracted 37 minutiae points
+2025-08-07 14:14:16,891 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:17,613 - MinutiaeExtractor - INFO - Extracted 17 minutiae points
+2025-08-07 14:14:17,799 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:18,863 - MinutiaeExtractor - INFO - Extracted 15 minutiae points
+2025-08-07 14:14:19,057 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:19,492 - MinutiaeExtractor - INFO - Extracted 19 minutiae points
+2025-08-07 14:14:19,595 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:20,440 - MinutiaeExtractor - INFO - Extracted 33 minutiae points
+2025-08-07 14:14:20,552 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:21,109 - MinutiaeExtractor - INFO - Extracted 22 minutiae points
+2025-08-07 14:14:21,263 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:22,063 - MinutiaeExtractor - INFO - Extracted 21 minutiae points
+2025-08-07 14:14:22,224 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:23,322 - MinutiaeExtractor - INFO - Extracted 13 minutiae points
+2025-08-07 14:14:23,452 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:24,325 - MinutiaeExtractor - INFO - Extracted 16 minutiae points
+2025-08-07 14:14:24,448 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:25,352 - MinutiaeExtractor - INFO - Extracted 17 minutiae points
+2025-08-07 14:14:25,452 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:26,581 - MinutiaeExtractor - INFO - Extracted 17 minutiae points
+2025-08-07 14:14:26,702 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:27,643 - MinutiaeExtractor - INFO - Extracted 15 minutiae points
+2025-08-07 14:14:27,811 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:29,186 - MinutiaeExtractor - INFO - Extracted 64 minutiae points
+2025-08-07 14:14:29,321 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:30,113 - MinutiaeExtractor - INFO - Extracted 5 minutiae points
+2025-08-07 14:14:30,243 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:31,019 - MinutiaeExtractor - INFO - Extracted 19 minutiae points
+2025-08-07 14:14:31,129 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:31,845 - MinutiaeExtractor - INFO - Extracted 8 minutiae points
+2025-08-07 14:14:32,055 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:32,800 - MinutiaeExtractor - INFO - Extracted 17 minutiae points
+2025-08-07 14:14:32,947 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:34,188 - MinutiaeExtractor - INFO - Extracted 21 minutiae points
+2025-08-07 14:14:34,357 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:35,301 - MinutiaeExtractor - INFO - Extracted 16 minutiae points
+2025-08-07 14:14:35,427 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:36,299 - MinutiaeExtractor - INFO - Extracted 35 minutiae points
+2025-08-07 14:14:36,400 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:37,260 - MinutiaeExtractor - INFO - Extracted 34 minutiae points
+2025-08-07 14:14:37,394 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:38,176 - MinutiaeExtractor - INFO - Extracted 22 minutiae points
+2025-08-07 14:14:38,179 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:38,586 - MinutiaeExtractor - INFO - Extracted 11 minutiae points
+2025-08-07 14:14:38,650 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:39,329 - MinutiaeExtractor - INFO - Extracted 6 minutiae points
+2025-08-07 14:14:39,462 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:40,082 - MinutiaeExtractor - INFO - Extracted 16 minutiae points
+2025-08-07 14:14:40,135 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:40,687 - MinutiaeExtractor - INFO - Extracted 21 minutiae points
+2025-08-07 14:14:40,689 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:41,265 - MinutiaeExtractor - INFO - Extracted 14 minutiae points
+2025-08-07 14:14:41,352 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:42,285 - MinutiaeExtractor - INFO - Extracted 16 minutiae points
+2025-08-07 14:14:42,374 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:43,021 - MinutiaeExtractor - INFO - Extracted 18 minutiae points
+2025-08-07 14:14:43,110 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:43,439 - MinutiaeExtractor - INFO - Extracted 17 minutiae points
+2025-08-07 14:14:43,538 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:44,067 - MinutiaeExtractor - INFO - Extracted 25 minutiae points
+2025-08-07 14:14:44,144 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:44,790 - MinutiaeExtractor - INFO - Extracted 20 minutiae points
+2025-08-07 14:14:44,901 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:45,515 - MinutiaeExtractor - INFO - Extracted 14 minutiae points
+2025-08-07 14:14:45,569 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:46,144 - MinutiaeExtractor - INFO - Extracted 17 minutiae points
+2025-08-07 14:14:46,249 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:46,736 - MinutiaeExtractor - INFO - Extracted 18 minutiae points
+2025-08-07 14:14:46,828 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:47,570 - MinutiaeExtractor - INFO - Extracted 20 minutiae points
+2025-08-07 14:14:47,572 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:48,168 - MinutiaeExtractor - INFO - Extracted 25 minutiae points
+2025-08-07 14:14:48,265 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:48,890 - MinutiaeExtractor - INFO - Extracted 8 minutiae points
+2025-08-07 14:14:48,952 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:49,444 - MinutiaeExtractor - INFO - Extracted 14 minutiae points
+2025-08-07 14:14:49,501 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:49,884 - MinutiaeExtractor - INFO - Extracted 9 minutiae points
+2025-08-07 14:14:49,886 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:50,077 - MinutiaeExtractor - INFO - Extracted 17 minutiae points
+2025-08-07 14:14:50,078 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:50,252 - MinutiaeExtractor - INFO - Extracted 14 minutiae points
+2025-08-07 14:14:50,261 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:50,559 - MinutiaeExtractor - INFO - Extracted 21 minutiae points
+2025-08-07 14:14:50,569 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:50,856 - MinutiaeExtractor - INFO - Extracted 7 minutiae points
+2025-08-07 14:14:50,937 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:51,480 - MinutiaeExtractor - INFO - Extracted 23 minutiae points
+2025-08-07 14:14:51,550 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:51,982 - MinutiaeExtractor - INFO - Extracted 7 minutiae points
+2025-08-07 14:14:52,074 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:52,621 - MinutiaeExtractor - INFO - Extracted 16 minutiae points
+2025-08-07 14:14:52,718 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:53,343 - MinutiaeExtractor - INFO - Extracted 16 minutiae points
+2025-08-07 14:14:53,408 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:53,857 - MinutiaeExtractor - INFO - Extracted 7 minutiae points
+2025-08-07 14:14:53,937 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:54,486 - MinutiaeExtractor - INFO - Extracted 16 minutiae points
+2025-08-07 14:14:54,596 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:55,179 - MinutiaeExtractor - INFO - Extracted 8 minutiae points
+2025-08-07 14:14:55,263 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined
+2025-08-07 14:14:56,161 - MinutiaeExtractor - INFO - Extracted 22 minutiae points
+2025-08-07 14:14:56,235 - FingerprintDatabase - ERROR - Error checking duplicates: name 'embedding' is not defined

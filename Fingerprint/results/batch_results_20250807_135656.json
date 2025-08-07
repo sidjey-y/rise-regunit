@@ -1,0 +1,1926 @@
+[
+  {
+    "success": true,
+    "subject_id": "48",
+    "finger_type": "index",
+    "hand_side": "left",
+    "quality_score": 0.8312702320371372,
+    "is_duplicate": false,
+    "duplicate_count": 0,
+    "max_similarity": 0.0,
+    "best_match": null,
+    "stored": true,
+    "minutiae_count": 21,
+    "minutiae": [
+      {
+        "x": 41,
+        "y": 51,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 108,
+        "y": 72,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 94,
+        "y": 164,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 169,
+        "y": 177,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 85,
+        "y": 184,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 211,
+        "y": 184,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 30,
+        "y": 189,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 212,
+        "y": 194,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 40,
+        "y": 198,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 24,
+        "y": 200,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 78,
+        "y": 203,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 211,
+        "y": 205,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 107,
+        "y": 212,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 131,
+        "y": 213,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 136,
+        "y": 102,
+        "theta": 0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 136,
+        "y": 117,
+        "theta": -0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 30,
+        "y": 151,
+        "theta": -0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 171,
+        "y": 153,
+        "theta": 0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 123,
+        "y": 195,
+        "theta": 0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 138,
+        "y": 205,
+        "theta": 2.356194490192345,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 121,
+        "y": 210,
+        "theta": -2.819842099193151,
+        "type": "bifurcation",
+        "quality": 1.0
+      }
+    ],
+    "preprocessing_metadata": {
+      "original_size": [
+        103,
+        96,
+        3
+      ],
+      "target_size": [
+        224,
+        224
+      ],
+      "normalization_applied": true
+    },
+    "filename": "1__M_Left_index_finger",
+    "gender": "M",
+    "processing_time": "2025-08-07T13:56:50.340937"
+  },
+  {
+    "success": true,
+    "subject_id": "48",
+    "finger_type": "little",
+    "hand_side": "left",
+    "quality_score": 0.8312702320371372,
+    "is_duplicate": false,
+    "duplicate_count": 0,
+    "max_similarity": 0.0,
+    "best_match": null,
+    "stored": true,
+    "minutiae_count": 21,
+    "minutiae": [
+      {
+        "x": 41,
+        "y": 51,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 108,
+        "y": 72,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 94,
+        "y": 164,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 169,
+        "y": 177,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 85,
+        "y": 184,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 211,
+        "y": 184,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 30,
+        "y": 189,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 212,
+        "y": 194,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 40,
+        "y": 198,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 24,
+        "y": 200,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 78,
+        "y": 203,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 211,
+        "y": 205,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 107,
+        "y": 212,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 131,
+        "y": 213,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 136,
+        "y": 102,
+        "theta": 0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 136,
+        "y": 117,
+        "theta": -0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 30,
+        "y": 151,
+        "theta": -0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 171,
+        "y": 153,
+        "theta": 0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 123,
+        "y": 195,
+        "theta": 0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 138,
+        "y": 205,
+        "theta": 2.356194490192345,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 121,
+        "y": 210,
+        "theta": -2.819842099193151,
+        "type": "bifurcation",
+        "quality": 1.0
+      }
+    ],
+    "preprocessing_metadata": {
+      "original_size": [
+        103,
+        96,
+        3
+      ],
+      "target_size": [
+        224,
+        224
+      ],
+      "normalization_applied": true
+    },
+    "filename": "1__M_Left_little_finger",
+    "gender": "M",
+    "processing_time": "2025-08-07T13:56:50.963879"
+  },
+  {
+    "success": true,
+    "subject_id": "48",
+    "finger_type": "middle",
+    "hand_side": "left",
+    "quality_score": 0.8744485446041664,
+    "is_duplicate": false,
+    "duplicate_count": 0,
+    "max_similarity": 0.0,
+    "best_match": null,
+    "stored": true,
+    "minutiae_count": 13,
+    "minutiae": [
+      {
+        "x": 107,
+        "y": 102,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 145,
+        "y": 141,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 17,
+        "y": 153,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 146,
+        "y": 159,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 169,
+        "y": 168,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 39,
+        "y": 179,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 184,
+        "y": 180,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 173,
+        "y": 188,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 19,
+        "y": 203,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 160,
+        "y": 211,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 120,
+        "y": 213,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 107,
+        "y": 20,
+        "theta": -0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 80,
+        "y": 212,
+        "theta": 1.5707963267948966,
+        "type": "bifurcation",
+        "quality": 1.0
+      }
+    ],
+    "preprocessing_metadata": {
+      "original_size": [
+        103,
+        96,
+        3
+      ],
+      "target_size": [
+        224,
+        224
+      ],
+      "normalization_applied": true
+    },
+    "filename": "1__M_Left_middle_finger",
+    "gender": "M",
+    "processing_time": "2025-08-07T13:56:51.587770"
+  },
+  {
+    "success": true,
+    "subject_id": "48",
+    "finger_type": "ring",
+    "hand_side": "left",
+    "quality_score": 0.8283500243894124,
+    "is_duplicate": false,
+    "duplicate_count": 0,
+    "max_similarity": 0.0,
+    "best_match": null,
+    "stored": true,
+    "minutiae_count": 13,
+    "minutiae": [
+      {
+        "x": 65,
+        "y": 71,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 139,
+        "y": 139,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 34,
+        "y": 169,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 160,
+        "y": 171,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 34,
+        "y": 187,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 174,
+        "y": 191,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 80,
+        "y": 198,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 24,
+        "y": 203,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 76,
+        "y": 208,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 108,
+        "y": 75,
+        "theta": -0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 139,
+        "y": 107,
+        "theta": 0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 34,
+        "y": 151,
+        "theta": 0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 49,
+        "y": 199,
+        "theta": 0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      }
+    ],
+    "preprocessing_metadata": {
+      "original_size": [
+        103,
+        96,
+        3
+      ],
+      "target_size": [
+        224,
+        224
+      ],
+      "normalization_applied": true
+    },
+    "filename": "1__M_Left_ring_finger",
+    "gender": "M",
+    "processing_time": "2025-08-07T13:56:52.234740"
+  },
+  {
+    "success": true,
+    "subject_id": "48",
+    "finger_type": "thumb",
+    "hand_side": "left",
+    "quality_score": 0.9331625506842545,
+    "is_duplicate": false,
+    "duplicate_count": 0,
+    "max_similarity": 0.0,
+    "best_match": null,
+    "stored": true,
+    "minutiae_count": 18,
+    "minutiae": [
+      {
+        "x": 58,
+        "y": 64,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 107,
+        "y": 69,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 209,
+        "y": 100,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 207,
+        "y": 156,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 55,
+        "y": 164,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 38,
+        "y": 182,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 25,
+        "y": 198,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 148,
+        "y": 198,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 187,
+        "y": 199,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 197,
+        "y": 199,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 208,
+        "y": 199,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 59,
+        "y": 208,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 209,
+        "y": 209,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 196,
+        "y": 210,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 134,
+        "y": 213,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 160,
+        "y": 213,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 107,
+        "y": 11,
+        "theta": -0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 106,
+        "y": 112,
+        "theta": -0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      }
+    ],
+    "preprocessing_metadata": {
+      "original_size": [
+        103,
+        96,
+        3
+      ],
+      "target_size": [
+        224,
+        224
+      ],
+      "normalization_applied": true
+    },
+    "filename": "1__M_Left_thumb_finger",
+    "gender": "M",
+    "processing_time": "2025-08-07T13:56:52.727245"
+  },
+  {
+    "success": true,
+    "subject_id": "48",
+    "finger_type": "index",
+    "hand_side": "right",
+    "quality_score": 0.8539289288662977,
+    "is_duplicate": false,
+    "duplicate_count": 0,
+    "max_similarity": 0.0,
+    "best_match": null,
+    "stored": true,
+    "minutiae_count": 23,
+    "minutiae": [
+      {
+        "x": 108,
+        "y": 66,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 201,
+        "y": 139,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 157,
+        "y": 157,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 37,
+        "y": 172,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 84,
+        "y": 179,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 66,
+        "y": 185,
+        "theta": 3.141592653589793,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 177,
+        "y": 190,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 91,
+        "y": 192,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 20,
+        "y": 197,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 109,
+        "y": 205,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 96,
+        "y": 208,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 158,
+        "y": 210,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 45,
+        "y": 211,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 63,
+        "y": 211,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 74,
+        "y": 211,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 191,
+        "y": 211,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 24,
+        "y": 213,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 108,
+        "y": 19,
+        "theta": -0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 145,
+        "y": 105,
+        "theta": 0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 145,
+        "y": 115,
+        "theta": -0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 157,
+        "y": 128,
+        "theta": 0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 38,
+        "y": 139,
+        "theta": 0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 85,
+        "y": 202,
+        "theta": 2.356194490192345,
+        "type": "bifurcation",
+        "quality": 1.0
+      }
+    ],
+    "preprocessing_metadata": {
+      "original_size": [
+        103,
+        96,
+        3
+      ],
+      "target_size": [
+        224,
+        224
+      ],
+      "normalization_applied": true
+    },
+    "filename": "1__M_Right_index_finger",
+    "gender": "M",
+    "processing_time": "2025-08-07T13:56:53.905122"
+  },
+  {
+    "success": true,
+    "subject_id": "48",
+    "finger_type": "little",
+    "hand_side": "right",
+    "quality_score": 0.7701600131285993,
+    "is_duplicate": false,
+    "duplicate_count": 0,
+    "max_similarity": 0.0,
+    "best_match": null,
+    "stored": true,
+    "minutiae_count": 24,
+    "minutiae": [
+      {
+        "x": 108,
+        "y": 41,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 180,
+        "y": 114,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 115,
+        "y": 122,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 122,
+        "y": 133,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 180,
+        "y": 145,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 93,
+        "y": 156,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 122,
+        "y": 161,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 130,
+        "y": 168,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 181,
+        "y": 176,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 51,
+        "y": 184,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 69,
+        "y": 187,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 81,
+        "y": 187,
+        "theta": 3.141592653589793,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 180,
+        "y": 188,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 34,
+        "y": 190,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 131,
+        "y": 205,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 190,
+        "y": 206,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 18,
+        "y": 211,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 43,
+        "y": 109,
+        "theta": 0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 155,
+        "y": 166,
+        "theta": 2.356194490192345,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 113,
+        "y": 167,
+        "theta": 2.356194490192345,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 103,
+        "y": 168,
+        "theta": 2.356194490192345,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 132,
+        "y": 193,
+        "theta": -0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 164,
+        "y": 197,
+        "theta": 2.356194490192345,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 100,
+        "y": 200,
+        "theta": 0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      }
+    ],
+    "preprocessing_metadata": {
+      "original_size": [
+        103,
+        96,
+        3
+      ],
+      "target_size": [
+        224,
+        224
+      ],
+      "normalization_applied": true
+    },
+    "filename": "1__M_Right_little_finger",
+    "gender": "M",
+    "processing_time": "2025-08-07T13:56:54.706449"
+  },
+  {
+    "success": true,
+    "subject_id": "48",
+    "finger_type": "middle",
+    "hand_side": "right",
+    "quality_score": 0.7886998292962384,
+    "is_duplicate": false,
+    "duplicate_count": 0,
+    "max_similarity": 0.0,
+    "best_match": null,
+    "stored": true,
+    "minutiae_count": 45,
+    "minutiae": [
+      {
+        "x": 212,
+        "y": 67,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 208,
+        "y": 78,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 56,
+        "y": 86,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 210,
+        "y": 88,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 212,
+        "y": 100,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 52,
+        "y": 114,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 178,
+        "y": 123,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 209,
+        "y": 123,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 211,
+        "y": 133,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 116,
+        "y": 138,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 179,
+        "y": 139,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 131,
+        "y": 140,
+        "theta": -0.7853981633974483,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 207,
+        "y": 146,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 111,
+        "y": 148,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 162,
+        "y": 150,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 145,
+        "y": 155,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 112,
+        "y": 158,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 200,
+        "y": 172,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 211,
+        "y": 172,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 145,
+        "y": 174,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 159,
+        "y": 176,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 116,
+        "y": 179,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 36,
+        "y": 184,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 146,
+        "y": 185,
+        "theta": -0.7853981633974483,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 136,
+        "y": 191,
+        "theta": 3.141592653589793,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 97,
+        "y": 193,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 190,
+        "y": 194,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 210,
+        "y": 205,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 163,
+        "y": 206,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 15,
+        "y": 209,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 149,
+        "y": 210,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 182,
+        "y": 213,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 106,
+        "y": 26,
+        "theta": -0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 171,
+        "y": 92,
+        "theta": 0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 52,
+        "y": 98,
+        "theta": -0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 178,
+        "y": 101,
+        "theta": 0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 128,
+        "y": 153,
+        "theta": 0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 191,
+        "y": 154,
+        "theta": 0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 96,
+        "y": 155,
+        "theta": 0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 159,
+        "y": 163,
+        "theta": -0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 51,
+        "y": 168,
+        "theta": -0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 80,
+        "y": 192,
+        "theta": 0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 108,
+        "y": 193,
+        "theta": 2.356194490192345,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 177,
+        "y": 195,
+        "theta": 0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 127,
+        "y": 212,
+        "theta": 1.5707963267948966,
+        "type": "bifurcation",
+        "quality": 1.0
+      }
+    ],
+    "preprocessing_metadata": {
+      "original_size": [
+        103,
+        96,
+        3
+      ],
+      "target_size": [
+        224,
+        224
+      ],
+      "normalization_applied": true
+    },
+    "filename": "1__M_Right_middle_finger",
+    "gender": "M",
+    "processing_time": "2025-08-07T13:56:55.254157"
+  },
+  {
+    "success": true,
+    "subject_id": "48",
+    "finger_type": "ring",
+    "hand_side": "right",
+    "quality_score": 0.8028225215375373,
+    "is_duplicate": false,
+    "duplicate_count": 0,
+    "max_similarity": 0.0,
+    "best_match": null,
+    "stored": true,
+    "minutiae_count": 37,
+    "minutiae": [
+      {
+        "x": 77,
+        "y": 84,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 202,
+        "y": 110,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 210,
+        "y": 124,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 117,
+        "y": 137,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 202,
+        "y": 153,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 153,
+        "y": 155,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 186,
+        "y": 165,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 114,
+        "y": 170,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 205,
+        "y": 170,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 47,
+        "y": 171,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 145,
+        "y": 171,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 41,
+        "y": 180,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 141,
+        "y": 182,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 191,
+        "y": 186,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 66,
+        "y": 189,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 108,
+        "y": 189,
+        "theta": 3.141592653589793,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 155,
+        "y": 189,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 200,
+        "y": 191,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 171,
+        "y": 192,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 190,
+        "y": 197,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 18,
+        "y": 202,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 141,
+        "y": 206,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 179,
+        "y": 208,
+        "theta": 3.141592653589793,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 192,
+        "y": 208,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 71,
+        "y": 212,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 116,
+        "y": 212,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 106,
+        "y": 57,
+        "theta": -0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 46,
+        "y": 119,
+        "theta": 0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 177,
+        "y": 129,
+        "theta": 0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 186,
+        "y": 141,
+        "theta": 0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 47,
+        "y": 143,
+        "theta": -2.356194490192345,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 133,
+        "y": 175,
+        "theta": 0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 189,
+        "y": 176,
+        "theta": -0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 160,
+        "y": 179,
+        "theta": 2.356194490192345,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 154,
+        "y": 199,
+        "theta": 2.356194490192345,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 126,
+        "y": 205,
+        "theta": 0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 162,
+        "y": 209,
+        "theta": -2.356194490192345,
+        "type": "bifurcation",
+        "quality": 1.0
+      }
+    ],
+    "preprocessing_metadata": {
+      "original_size": [
+        103,
+        96,
+        3
+      ],
+      "target_size": [
+        224,
+        224
+      ],
+      "normalization_applied": true
+    },
+    "filename": "1__M_Right_ring_finger",
+    "gender": "M",
+    "processing_time": "2025-08-07T13:56:55.630818"
+  },
+  {
+    "success": true,
+    "subject_id": "48",
+    "finger_type": "thumb",
+    "hand_side": "right",
+    "quality_score": 0.9134591498456486,
+    "is_duplicate": false,
+    "duplicate_count": 0,
+    "max_similarity": 0.0,
+    "best_match": null,
+    "stored": true,
+    "minutiae_count": 17,
+    "minutiae": [
+      {
+        "x": 107,
+        "y": 67,
+        "theta": -1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 204,
+        "y": 107,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 209,
+        "y": 124,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 61,
+        "y": 154,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 198,
+        "y": 154,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 146,
+        "y": 155,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 209,
+        "y": 175,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 176,
+        "y": 187,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 207,
+        "y": 188,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 106,
+        "y": 197,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 66,
+        "y": 203,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 210,
+        "y": 208,
+        "theta": 1.5707963267948966,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 135,
+        "y": 209,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 41,
+        "y": 211,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 200,
+        "y": 213,
+        "theta": 0.0,
+        "type": "ending",
+        "quality": 1.0
+      },
+      {
+        "x": 107,
+        "y": 16,
+        "theta": -0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      },
+      {
+        "x": 106,
+        "y": 111,
+        "theta": -0.7853981633974483,
+        "type": "bifurcation",
+        "quality": 1.0
+      }
+    ],
+    "preprocessing_metadata": {
+      "original_size": [
+        103,
+        96,
+        3
+      ],
+      "target_size": [
+        224,
+        224
+      ],
+      "normalization_applied": true
+    },
+    "filename": "1__M_Right_thumb_finger",
+    "gender": "M",
+    "processing_time": "2025-08-07T13:56:56.000411"
+  }
+]

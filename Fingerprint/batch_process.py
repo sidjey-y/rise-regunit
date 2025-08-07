@@ -268,8 +268,8 @@ class BatchFingerprintProcessor:
                     file2['minutiae']
                 )
                 
-                # Check if it's a duplicate (similarity > 0.8)
-                if similarity > 0.8:
+                # Check if it's a duplicate (threshold set to 0.8 for strict detection)
+                if similarity > 0.8:  # Set to 0.8 for strict duplicate detection
                     duplicate_info = {
                         'file1': file1['file_info'],
                         'file2': file2['file_info'],
@@ -293,6 +293,7 @@ class BatchFingerprintProcessor:
     def compare_minutiae(self, minutiae1: List[Dict], minutiae2: List[Dict]) -> float:
         """
         Compare two sets of minutiae points and return similarity score.
+        Enhanced algorithm for better duplicate detection.
         
         Args:
             minutiae1: First set of minutiae points
@@ -305,43 +306,69 @@ class BatchFingerprintProcessor:
             if not minutiae1 or not minutiae2:
                 return 0.0
             
-            # Extract coordinates and angles
-            points1 = [(m['x'], m['y'], m['angle']) for m in minutiae1]
-            points2 = [(m['x'], m['y'], m['angle']) for m in minutiae2]
+            # Extract coordinates and angles (using 'theta' field)
+            points1 = [(m['x'], m['y'], m['theta']) for m in minutiae1]
+            points2 = [(m['x'], m['y'], m['theta']) for m in minutiae2]
             
-            # Simple similarity based on point count and distribution
+            # Count similarity (how many points are similar)
             count_similarity = min(len(points1), len(points2)) / max(len(points1), len(points2))
             
-            # Calculate spatial similarity (simplified)
-            # This is a basic implementation - in practice you'd use more sophisticated algorithms
+            # Enhanced spatial similarity calculation
             spatial_similarity = 0.0
             if len(points1) > 0 and len(points2) > 0:
-                # Calculate average distance between points
+                # Use more points for comparison (up to 10)
+                max_points = min(10, len(points1), len(points2))
                 total_distance = 0
                 comparisons = 0
                 
-                for p1 in points1[:5]:  # Compare first 5 points to avoid too many comparisons
+                for p1 in points1[:max_points]:
                     min_distance = float('inf')
-                    for p2 in points2[:5]:
+                    for p2 in points2[:max_points]:
+                        # Calculate Euclidean distance
                         dist = ((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2)**0.5
+                        
+                        # Calculate angle difference (normalized)
                         angle_diff = abs(p1[2] - p2[2]) % 360
                         if angle_diff > 180:
                             angle_diff = 360 - angle_diff
                         
-                        # Combined distance (spatial + angular)
-                        combined_dist = dist + angle_diff * 0.1
-                        min_distance = min(min_distance, combined_dist)
+                        # Normalize angle difference to 0-1 scale
+                        angle_similarity = 1 - (angle_diff / 180)
+                        
+                        # Combined similarity (spatial + angular)
+                        # Give more weight to spatial position
+                        combined_similarity = (1 - dist/200) * 0.7 + angle_similarity * 0.3
+                        combined_similarity = max(0, combined_similarity)  # Ensure non-negative
+                        
+                        min_distance = max(min_distance, combined_similarity)
                     
                     total_distance += min_distance
                     comparisons += 1
                 
                 if comparisons > 0:
-                    avg_distance = total_distance / comparisons
-                    # Convert distance to similarity (lower distance = higher similarity)
-                    spatial_similarity = max(0, 1 - avg_distance / 100)
+                    spatial_similarity = total_distance / comparisons
             
-            # Combined similarity score
-            similarity = (count_similarity * 0.4 + spatial_similarity * 0.6)
+            # Pattern similarity (check if overall pattern is similar)
+            pattern_similarity = 0.0
+            if len(points1) >= 3 and len(points2) >= 3:
+                # Calculate center of mass for both sets
+                center1 = (sum(p[0] for p in points1[:5])/len(points1[:5]), 
+                          sum(p[1] for p in points1[:5])/len(points1[:5]))
+                center2 = (sum(p[0] for p in points2[:5])/len(points2[:5]), 
+                          sum(p[1] for p in points2[:5])/len(points2[:5]))
+                
+                # Distance between centers
+                center_dist = ((center1[0] - center2[0])**2 + (center1[1] - center2[1])**2)**0.5
+                pattern_similarity = max(0, 1 - center_dist/300)
+            
+            # Combined similarity score with adjusted weights
+            similarity = (count_similarity * 0.3 + 
+                         spatial_similarity * 0.5 + 
+                         pattern_similarity * 0.2)
+            
+            # Boost similarity for very similar patterns
+            if count_similarity > 0.8 and spatial_similarity > 0.7:
+                similarity = min(1.0, similarity * 1.2)
             
             return min(1.0, max(0.0, similarity))
             
