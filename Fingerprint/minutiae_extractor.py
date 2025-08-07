@@ -15,17 +15,7 @@ class MinutiaeExtractor:
         self.logger = logging.getLogger(self.__class__.__name__)
         
     def extract_minutiae(self, image: np.ndarray) -> List[Dict[str, Any]]:
-        """
-        Extract minutiae points from fingerprint image.
-        
-        Args:
-            image: Preprocessed fingerprint image
-            
-        Returns:
-            List of minutiae points with (x, y, theta) coordinates
-        """
         try:
-            # Convert to grayscale if needed
             if len(image.shape) == 3:
                 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
             else:
@@ -59,7 +49,6 @@ class MinutiaeExtractor:
         return enhanced
     
     def _detect_minutiae(self, image: np.ndarray) -> List[Dict[str, Any]]:
-        """Detect minutiae points using ridge ending and bifurcation detection"""
         minutiae = []
         
         # Apply ridge detection
@@ -158,7 +147,11 @@ class MinutiaeExtractor:
         kernel = np.ones((3, 3), np.uint8)
         skeleton = np.zeros_like(image)
         
-        while True:
+        max_iterations = 100  # Prevent infinite loops
+        iteration_count = 0
+        prev_pixel_count = cv2.countNonZero(image)
+        
+        while iteration_count < max_iterations:
             # Erode
             eroded = cv2.erode(image, kernel)
             # Open
@@ -170,8 +163,17 @@ class MinutiaeExtractor:
             # Update image
             image = eroded.copy()
             
-            if cv2.countNonZero(image) == 0:
+            current_pixel_count = cv2.countNonZero(image)
+            
+            # Break if no pixels left or no change in pixel count for safety
+            if current_pixel_count == 0 or current_pixel_count == prev_pixel_count:
                 break
+                
+            prev_pixel_count = current_pixel_count
+            iteration_count += 1
+            
+        if iteration_count >= max_iterations:
+            self.logger.warning(f"Skeletonization reached maximum iterations ({max_iterations})")
         
         return skeleton
     

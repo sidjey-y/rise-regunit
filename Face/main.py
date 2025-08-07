@@ -65,12 +65,12 @@ class FaceRecognitionSystem:
             return False
         test_cap.release()
         
-        self.logger.info("✓ All requirements met!")
+        self.logger.info("[OK] All requirements met!")
         return True
     
     def run(self, camera_index: Optional[int] = None, skip_checks: bool = False) -> None:
         try:
-            # Check requirements unless skipped
+            #check requirements unless skipped
             if not skip_checks and not self.check_requirements():
                 sys.exit(1)
             
@@ -82,7 +82,7 @@ class FaceRecognitionSystem:
             
             self.logger.info(f"Starting camera (index: {camera_index})...")
             
-            self.camera_interface.run()
+            self.camera_interface.run(camera_index)
             
         except FileNotFoundError as e:
             self.logger.error(f"Required file not found: {e}")

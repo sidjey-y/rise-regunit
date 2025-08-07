@@ -255,7 +255,8 @@ class FingerprintDatabase(BaseProcessor):
                 return {'success': False, 'error': 'Minutiae data required'}
             
             # Check cache first
-            cache_key = f"duplicate_check_{hash(embedding.tobytes())}"
+            minutiae_str = json.dumps(minutiae, sort_keys=True)
+            cache_key = f"duplicate_check_{hash(minutiae_str)}"
             if cache_key in self.cache:
                 return self.cache[cache_key]
             
@@ -273,11 +274,16 @@ class FingerprintDatabase(BaseProcessor):
                     if subject_id and record.subject_id == subject_id:
                         continue
                     
-                    # Convert stored embedding back to numpy array
-                    stored_embedding = np.frombuffer(record.embedding, dtype=embedding.dtype)
+                    # Parse stored minutiae data
+                    try:
+                        stored_minutiae = json.loads(record.minutiae_data)
+                        if not stored_minutiae:
+                            continue
+                    except (json.JSONDecodeError, TypeError):
+                        continue
                     
-                    # Calculate similarity
-                    similarity = self._calculate_similarity(embedding, stored_embedding)
+                    # Calculate similarity using minutiae comparison
+                    similarity = self._compare_minutiae_similarity(minutiae, stored_minutiae)
                     
                     if similarity >= self.similarity_threshold:
                         duplicates.append({
@@ -463,6 +469,70 @@ class FingerprintDatabase(BaseProcessor):
         similarity = np.dot(embedding1_norm, embedding2_norm)
         
         return max(0.0, min(1.0, similarity))
+    
+    def _compare_minutiae_similarity(self, minutiae1: List[Dict], minutiae2: List[Dict]) -> float:
+        """
+        Compare two sets of minutiae points and return similarity score.
+        
+        Args:
+            minutiae1: First set of minutiae points
+            minutiae2: Second set of minutiae points
+            
+        Returns:
+            float: Similarity score between 0 and 1
+        """
+        try:
+            if not minutiae1 or not minutiae2:
+                return 0.0
+            
+            # Extract coordinates and angles
+            points1 = [(m.get('x', 0), m.get('y', 0), m.get('theta', 0)) for m in minutiae1]
+            points2 = [(m.get('x', 0), m.get('y', 0), m.get('theta', 0)) for m in minutiae2]
+            
+            # Count similarity (how many points are similar)
+            count_similarity = min(len(points1), len(points2)) / max(len(points1), len(points2))
+            
+            # Spatial similarity calculation
+            spatial_similarity = 0.0
+            if len(points1) > 0 and len(points2) > 0:
+                max_points = min(5, len(points1), len(points2))  # Limit to 5 points for performance
+                total_similarity = 0
+                comparisons = 0
+                
+                for p1 in points1[:max_points]:
+                    max_similarity = 0.0
+                    for p2 in points2[:max_points]:
+                        # Calculate Euclidean distance
+                        dist = ((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2)**0.5
+                        
+                        # Calculate angle difference (normalized)
+                        angle_diff = abs(p1[2] - p2[2]) % 360
+                        if angle_diff > 180:
+                            angle_diff = 360 - angle_diff
+                        
+                        # Normalize angle difference to 0-1 scale
+                        angle_similarity = 1 - (angle_diff / 180)
+                        
+                        # Combined similarity (spatial + angular)
+                        combined_similarity = (1 - dist/200) * 0.7 + angle_similarity * 0.3
+                        combined_similarity = max(0, combined_similarity)
+                        
+                        max_similarity = max(max_similarity, combined_similarity)
+                    
+                    total_similarity += max_similarity
+                    comparisons += 1
+                
+                if comparisons > 0:
+                    spatial_similarity = total_similarity / comparisons
+            
+            # Combined similarity score
+            similarity = (count_similarity * 0.3 + spatial_similarity * 0.7)
+            
+            return min(1.0, max(0.0, similarity))
+            
+        except Exception as e:
+            self.logger.error(f"Error comparing minutiae: {e}")
+            return 0.0
     
     def _cache_result(self, key: str, result: Dict[str, Any]) -> None:
         """

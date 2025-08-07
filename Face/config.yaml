@@ -1,19 +1,19 @@
-# Face Recognition System Configuration
+# Photo Quality and Face Recognition Config#
 
-# Camera Settings #
+# CAMERA SETTINGS #
 camera:
   default_index: 0
   width: 640
   height: 480
   fps: 30
 
-# Face Detection #
+# FACE DETECTION #
 face_detection:
   landmarks_file: "shape_predictor_68_face_landmarks.dat"
   confidence_threshold: 0.5
-  min_face_size: 20
+  min_face_size: 20 #can change to 20-30
 
-# Eye Detection #
+# EYE DETECTION #
 eye_detection:
   left_eye_start: 36
   left_eye_end: 42
@@ -23,7 +23,7 @@ eye_detection:
   #EAR = Eye Aspect Ratio
   ear_threshold: 0.25 
 
-# Head pose #
+# HEAD POSE #
 head_pose:
   nose_tip_index: 30
   chin_index: 8
@@ -32,14 +32,14 @@ head_pose:
   left_mouth_corner: 48
   right_mouth_corner: 54
 
-# Liveness Detection #
+# LIVENESS DETECTION #
 liveness:
   blink_threshold: 0.25
   head_movement_threshold: 15.0
   required_blinks: 2
   detection_timeout: 30  # seconds
 
-# Face Coverage #
+# FACE COVERAGE #
 face_coverage:
   min_face_visibility: 0.8
   max_glasses_coverage: 0.3

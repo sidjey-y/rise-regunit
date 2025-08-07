@@ -1,5 +1,6 @@
-#list not final
+# Face Recognition and Embedding Extraction Dependencies
 
+# Core dependencies
 opencv-python>=4.8.0
 dlib>=19.24.0
 deepface>=0.0.87
@@ -12,3 +13,8 @@ Pillow>=9.0.0
 cmake>=3.20.0
 scikit-learn>=1.0.0
 PyYAML>=6.0
+
+# Additional dependencies for face embedding extraction
+retina-face>=0.0.13
+mtcnn>=0.1.1
+face-recognition>=1.3.0

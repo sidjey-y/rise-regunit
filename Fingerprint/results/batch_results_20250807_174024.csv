@@ -1,0 +1,11 @@
+filename,subject_id,finger_type,hand_side,gender,quality_score,is_duplicate,max_similarity,duplicate_count,stored,processing_time
+1__M_Left_index_finger,48,index,left,M,0.8312702320371372,False,0.0,0,True,2025-08-07T17:40:23.580307
+1__M_Left_little_finger,48,little,left,M,0.8312702320371372,False,0.0,0,True,2025-08-07T17:40:23.675871
+1__M_Left_middle_finger,48,middle,left,M,0.8744485446041664,False,0.0,0,True,2025-08-07T17:40:23.739784
+1__M_Left_ring_finger,48,ring,left,M,0.8283500243894124,False,0.0,0,True,2025-08-07T17:40:23.802197
+1__M_Left_thumb_finger,48,thumb,left,M,0.9331625506842545,False,0.0,0,True,2025-08-07T17:40:23.877678
+1__M_Right_index_finger,48,index,right,M,0.8539289288662977,False,0.0,0,True,2025-08-07T17:40:23.963844
+1__M_Right_little_finger,48,little,right,M,0.7701600131285993,False,0.0,0,True,2025-08-07T17:40:24.042028
+1__M_Right_middle_finger,48,middle,right,M,0.7886998292962384,False,0.0,0,True,2025-08-07T17:40:24.172990
+1__M_Right_ring_finger,48,ring,right,M,0.8028225215375373,False,0.0,0,True,2025-08-07T17:40:24.275223
+1__M_Right_thumb_finger,48,thumb,right,M,0.9134591498456486,False,0.0,0,True,2025-08-07T17:40:24.350460

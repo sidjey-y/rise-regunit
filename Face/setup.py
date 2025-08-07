@@ -46,8 +46,6 @@ def check_cmake():
         return False
 
 def main():
-
-    
     success = True
     
     if not check_cmake():

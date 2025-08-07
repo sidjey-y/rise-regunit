@@ -1,0 +1,132 @@
+2025-08-06 10:46:44,178 - FaceDetector - ERROR - Failed to initialize FaceDetector: 'ConfigManager' object has no attribute 'get_head_pose_config'
+2025-08-06 10:46:44,292 - FaceRecognitionSystem - ERROR - Face detector initialization failed
+2025-08-06 10:52:11,487 - FaceDetector - INFO - Face detection components initialized
+2025-08-06 10:52:11,779 - FaceDetector - INFO - FaceDetector initialized successfully
+2025-08-06 10:52:12,005 - FaceRecognitionSystem - INFO - Face recognition system initialized successfully
+2025-08-06 10:52:12,134 - FaceRecognitionSystem - INFO - Checking system requirements...
+2025-08-06 10:54:44,961 - FaceRecognitionSystem - INFO - Starting camera (index: 0)...
+2025-08-06 11:02:23,425 - FaceDetector - INFO - Face detection components initialized
+2025-08-06 11:02:23,614 - FaceDetector - INFO - FaceDetector initialized successfully
+2025-08-06 11:02:23,841 - FaceRecognitionSystem - INFO - Face recognition system initialized successfully
+2025-08-06 11:02:24,007 - FaceRecognitionSystem - INFO - Checking system requirements...
+2025-08-06 11:04:48,464 - FaceRecognitionSystem - INFO - Starting camera (index: 0)...
+2025-08-06 11:10:14,293 - FaceDetector - INFO - FaceDetector cleaned up
+2025-08-06 11:10:14,309 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-06 11:10:14,309 - FaceDetector - INFO - FaceDetector cleaned up
+2025-08-06 11:10:14,309 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-06 11:18:27,795 - FaceDetector - INFO - Face detection components initialized
+2025-08-06 11:18:28,812 - FaceDetector - INFO - FaceDetector initialized successfully
+2025-08-06 11:18:29,078 - FaceRecognitionSystem - INFO - Face recognition system initialized successfully
+2025-08-06 11:18:29,219 - FaceRecognitionSystem - INFO - Checking system requirements...
+2025-08-06 11:20:16,701 - FaceRecognitionSystem - INFO - [OK] All requirements met!
+2025-08-06 11:20:17,520 - FaceRecognitionSystem - INFO - Starting camera (index: 0)...
+2025-08-06 11:26:34,910 - FaceDetector - INFO - FaceDetector cleaned up
+2025-08-06 11:26:35,329 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-06 11:26:35,330 - FaceDetector - INFO - FaceDetector cleaned up
+2025-08-06 11:26:35,331 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-06 11:29:38,161 - FaceDetector - INFO - Face detection components initialized
+2025-08-06 11:29:38,305 - FaceDetector - INFO - FaceDetector initialized successfully
+2025-08-06 11:29:38,413 - FaceRecognitionSystem - INFO - Face recognition system initialized successfully
+2025-08-06 11:29:38,752 - FaceRecognitionSystem - INFO - Checking system requirements...
+2025-08-06 11:31:50,288 - FaceRecognitionSystem - INFO - [OK] All requirements met!
+2025-08-06 11:31:50,459 - FaceRecognitionSystem - INFO - Starting camera (index: 0)...
+2025-08-06 11:37:53,242 - FaceDetector - INFO - FaceDetector cleaned up
+2025-08-06 11:37:53,334 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-06 11:37:53,396 - FaceDetector - INFO - FaceDetector cleaned up
+2025-08-06 11:37:53,447 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-06 11:45:03,273 - FaceDetector - INFO - Face detection components initialized
+2025-08-06 11:45:03,279 - FaceDetector - INFO - FaceDetector initialized successfully
+2025-08-06 11:45:03,295 - FaceRecognitionSystem - INFO - Face recognition system initialized successfully
+2025-08-06 11:45:03,295 - FaceRecognitionSystem - INFO - Checking system requirements...
+2025-08-06 11:46:50,895 - FaceRecognitionSystem - INFO - [OK] All requirements met!
+2025-08-06 11:46:51,048 - FaceRecognitionSystem - INFO - Starting camera (index: 0)...
+2025-08-06 11:59:19,920 - FaceDetector - INFO - Face detection components initialized
+2025-08-06 11:59:19,920 - FaceDetector - INFO - FaceDetector initialized successfully
+2025-08-06 11:59:19,920 - FaceRecognitionSystem - INFO - Face recognition system initialized successfully
+2025-08-06 11:59:19,920 - FaceRecognitionSystem - INFO - Checking system requirements...
+2025-08-06 11:59:23,730 - FaceRecognitionSystem - INFO - [OK] All requirements met!
+2025-08-06 11:59:23,730 - FaceRecognitionSystem - INFO - Starting camera (index: 0)...
+2025-08-06 12:01:04,394 - FaceDetector - INFO - FaceDetector cleaned up
+2025-08-06 12:01:04,394 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-06 12:01:04,395 - FaceDetector - INFO - FaceDetector cleaned up
+2025-08-06 12:01:04,395 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-06 12:01:44,457 - FaceDetector - INFO - Face detection components initialized
+2025-08-06 12:01:44,457 - FaceDetector - INFO - FaceDetector initialized successfully
+2025-08-06 12:01:44,457 - FaceRecognitionSystem - INFO - Face recognition system initialized successfully
+2025-08-06 12:01:44,457 - FaceRecognitionSystem - INFO - Checking system requirements...
+2025-08-06 12:01:47,665 - FaceRecognitionSystem - INFO - [OK] All requirements met!
+2025-08-06 12:01:47,666 - FaceRecognitionSystem - INFO - Starting camera (index: 0)...
+2025-08-06 12:03:24,796 - FaceDetector - INFO - FaceDetector cleaned up
+2025-08-06 12:03:24,797 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-06 12:03:24,797 - FaceDetector - INFO - FaceDetector cleaned up
+2025-08-06 12:03:24,798 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-06 12:05:04,281 - FaceDetector - INFO - Face detection components initialized
+2025-08-06 12:05:04,281 - FaceDetector - INFO - FaceDetector initialized successfully
+2025-08-06 12:05:04,281 - FaceRecognitionSystem - INFO - Face recognition system initialized successfully
+2025-08-06 12:05:04,281 - FaceRecognitionSystem - INFO - Checking system requirements...
+2025-08-06 12:05:07,386 - FaceRecognitionSystem - INFO - [OK] All requirements met!
+2025-08-06 12:05:07,386 - FaceRecognitionSystem - INFO - Starting camera (index: 0)...
+2025-08-06 12:05:45,928 - FaceDetector - INFO - FaceDetector cleaned up
+2025-08-06 12:05:45,928 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-06 12:05:45,929 - FaceDetector - INFO - FaceDetector cleaned up
+2025-08-06 12:05:45,929 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-06 12:07:53,109 - FaceDetector - INFO - Face detection components initialized
+2025-08-06 12:07:53,156 - FaceDetector - INFO - FaceDetector initialized successfully
+2025-08-06 12:07:53,157 - FaceRecognitionSystem - INFO - Face recognition system initialized successfully
+2025-08-06 12:07:53,157 - FaceRecognitionSystem - INFO - Checking system requirements...
+2025-08-06 12:07:56,500 - FaceRecognitionSystem - INFO - [OK] All requirements met!
+2025-08-06 12:07:56,500 - FaceRecognitionSystem - INFO - Starting camera (index: 0)...
+2025-08-06 12:09:30,491 - FaceDetector - INFO - FaceDetector cleaned up
+2025-08-06 12:09:30,491 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-06 12:09:30,491 - FaceDetector - INFO - FaceDetector cleaned up
+2025-08-06 12:09:30,491 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-06 12:10:15,380 - FaceDetector - INFO - Face detection components initialized
+2025-08-06 12:10:15,380 - FaceDetector - INFO - FaceDetector initialized successfully
+2025-08-06 12:10:15,381 - FaceRecognitionSystem - INFO - Face recognition system initialized successfully
+2025-08-06 12:10:15,381 - FaceRecognitionSystem - INFO - Checking system requirements...
+2025-08-06 12:10:18,681 - FaceRecognitionSystem - INFO - [OK] All requirements met!
+2025-08-06 12:10:18,682 - FaceRecognitionSystem - INFO - Starting camera (index: 0)...
+2025-08-06 12:12:29,901 - FaceDetector - INFO - FaceDetector cleaned up
+2025-08-06 12:12:29,901 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-06 12:12:29,902 - FaceDetector - INFO - FaceDetector cleaned up
+2025-08-06 12:12:29,902 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-06 12:12:42,417 - FaceDetector - INFO - Face detection components initialized
+2025-08-06 12:12:42,417 - FaceDetector - INFO - FaceDetector initialized successfully
+2025-08-06 12:12:42,418 - FaceRecognitionSystem - INFO - Face recognition system initialized successfully
+2025-08-06 12:12:42,418 - FaceRecognitionSystem - INFO - Checking system requirements...
+2025-08-06 12:12:45,504 - FaceRecognitionSystem - INFO - [OK] All requirements met!
+2025-08-06 12:12:45,506 - FaceRecognitionSystem - INFO - Starting camera (index: 0)...
+2025-08-06 12:15:53,957 - FaceDetector - INFO - FaceDetector cleaned up
+2025-08-06 12:15:53,958 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-06 12:15:53,959 - FaceDetector - INFO - FaceDetector cleaned up
+2025-08-06 12:15:53,960 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-06 12:16:13,356 - FaceDetector - INFO - Face detection components initialized
+2025-08-06 12:16:13,356 - FaceDetector - INFO - FaceDetector initialized successfully
+2025-08-06 12:16:13,357 - FaceRecognitionSystem - INFO - Face recognition system initialized successfully
+2025-08-06 12:16:13,357 - FaceRecognitionSystem - INFO - Checking system requirements...
+2025-08-06 12:16:16,633 - FaceRecognitionSystem - INFO - [OK] All requirements met!
+2025-08-06 12:16:16,633 - FaceRecognitionSystem - INFO - Starting camera (index: 0)...
+2025-08-06 12:19:44,682 - FaceDetector - INFO - FaceDetector cleaned up
+2025-08-06 12:19:44,698 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-06 12:19:44,699 - FaceDetector - INFO - FaceDetector cleaned up
+2025-08-06 12:19:44,699 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-06 12:25:26,508 - FaceDetector - INFO - Face detection components initialized
+2025-08-06 12:25:26,508 - FaceDetector - INFO - FaceDetector initialized successfully
+2025-08-06 12:25:26,508 - FaceRecognitionSystem - INFO - Face recognition system initialized successfully
+2025-08-06 12:25:26,508 - FaceRecognitionSystem - INFO - Checking system requirements...
+2025-08-06 12:25:30,309 - FaceRecognitionSystem - INFO - [OK] All requirements met!
+2025-08-06 12:25:30,309 - FaceRecognitionSystem - INFO - Starting camera (index: 0)...
+2025-08-06 12:25:40,256 - FaceDetector - INFO - FaceDetector cleaned up
+2025-08-06 12:25:40,256 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-06 12:25:40,256 - FaceDetector - INFO - FaceDetector cleaned up
+2025-08-06 12:25:40,256 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-06 12:26:05,753 - FaceDetector - INFO - Face detection components initialized
+2025-08-06 12:26:05,753 - FaceDetector - INFO - FaceDetector initialized successfully
+2025-08-06 12:26:05,754 - FaceRecognitionSystem - INFO - Face recognition system initialized successfully
+2025-08-06 12:26:05,754 - FaceRecognitionSystem - INFO - Checking system requirements...
+2025-08-06 12:26:09,406 - FaceRecognitionSystem - INFO - [OK] All requirements met!
+2025-08-06 12:26:09,407 - FaceRecognitionSystem - INFO - Starting camera (index: 0)...
+2025-08-06 12:28:11,117 - FaceDetector - INFO - FaceDetector cleaned up
+2025-08-06 12:28:11,118 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-06 12:28:11,118 - FaceDetector - INFO - FaceDetector cleaned up
+2025-08-06 12:28:11,119 - FaceRecognitionSystem - INFO - System cleanup completed

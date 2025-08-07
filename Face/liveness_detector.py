@@ -158,9 +158,11 @@ class LivenessDetector:
         if not face_is_valid:
             self.face_stable_count = 0
             if self.state != LivenessState.WAITING_FOR_FACE:
+
                 # reset if face becomes invalid during liveness check
                 self.state = LivenessState.WAITING_FOR_FACE
                 self.step_start_time = current_time
+
                 #reset all progress
                 self.completed_steps = {
                     'face_detected': False,
@@ -172,6 +174,7 @@ class LivenessDetector:
         
         
         if self.state == LivenessState.SHOW_GUIDELINES:
+            
             # automatic progression based on compliance
             return self.state
 

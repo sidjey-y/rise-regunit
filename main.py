@@ -9,26 +9,19 @@ from liveness_detector import LivenessDetector
 from camera_interface import CameraInterface
 
 def check_requirements():
-    """Check if all required files and dependencies are available"""
     print("Checking requirements...")
     
     landmarks_file = "shape_predictor_68_face_landmarks.dat"
     if not os.path.exists(landmarks_file):
-        #print(f"\nERROR: {landmarks_file} not found!")
-        #print("Please download it from:")
-        #print("http://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2")
-        #print("Extract the .dat file to the current directory.")
         return False
     
     test_cap = cv2.VideoCapture(0)
     if not test_cap.isOpened():
-        #print("\nERROR: Camera not available!")
-        #print("Please ensure a camera is connected and not being used by another application.")
         test_cap.release()
         return False
     test_cap.release()
     
-    print("✓ All requirements met!")
+    print("All requirements met!")
     return True
 
 def main():

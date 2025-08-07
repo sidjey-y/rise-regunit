@@ -10,9 +10,21 @@ class FaceDetector:
         # dlib's face detector and facial landmark predictor
         self.detector = dlib.get_frontal_face_detector()
         
-        self.predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
         
-        # facial landmark indexes for eyes, sabi ni claude 
+        self.predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat") #hugging face
+        
+        # Facial Landmarks Map
+        #- Jaw: points 0-16
+        #- Right eyebrow: points 17-21
+        #- Left eyebrow: points 22-26
+        #- Nose bridge: points 27-30
+        #- Lower nose: points 31-35
+        #- Right eye: points 36-41
+        #- Left eye: points 42-47
+        #- Outer lip: points 48-59
+        #- Inner lip: points 60-67
+
+        # facial landmark indexes for eyes
         self.LEFT_EYE_START = 36
         self.LEFT_EYE_END = 42
         self.RIGHT_EYE_START = 42
@@ -22,20 +34,19 @@ class FaceDetector:
         self.NOSE_TIP = 30
         
         
-        # head position estimation points
+        # head position estimation points, for pnp
         self.model_points = np.array([
-            (0.0, 0.0, 0.0),             # Nose tip
-            (0.0, -330.0, -65.0),        # Chin
-            (-225.0, 170.0, -135.0),     # Left eye left corner
-            (225.0, 170.0, -135.0),      # Right eye right corner
-            (-150.0, -150.0, -125.0),    # Left Mouth corner
-            (150.0, -150.0, -125.0)      # Right mouth corner
+            (0.0, 0.0, 0.0),             # Nose tip, ref point
+            (0.0, -330.0, -65.0),        # Chin, straight down slightly back
+            (-225.0, 170.0, -135.0),     # Left eye left corner, > left, up, back (close open)
+            (225.0, 170.0, -135.0),      # Right eye right corner > right up, back 
+            (-150.0, -150.0, -125.0),    # Left Mouth corner > left, down, back
+            (150.0, -150.0, -125.0)      # Right mouth corner > right, down, back
         ])
         
     def detect_faces(self, frame):
-
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        faces = self.detector(gray)
+        faces = self.detector(gray) #green boundary, using dlib
         return faces, gray
     
     def get_landmarks(self, gray, face):
@@ -44,18 +55,19 @@ class FaceDetector:
         landmarks = face_utils.shape_to_np(landmarks)
         return landmarks
     
+    #vertical n horizontal distance between eye n landmark
     def calculate_ear(self, eye): #Eye Aspect Ratio (EAR)
 
         #using euclidean distances between the:
 
-        # two sets of vertical eye, x and y coordinates
+        # two sets of vertical eye, x and y coordinates, vertical
         A = dist.euclidean(eye[1], eye[5])
         B = dist.euclidean(eye[2], eye[4])
         
         # between the horizontal eye landmark (x, y)-coordinates
         C = dist.euclidean(eye[0], eye[3])
         
-        # eye aspect ratio
+        # eye aspect ratio, larger> eye open > higher ear value
         ear = (A + B) / (2.0 * C)
         return ear
     
@@ -118,15 +130,16 @@ class FaceDetector:
             #Euler angles
             sy = np.sqrt(rotation_matrix[0,0] * rotation_matrix[0,0] + rotation_matrix[1,0] * rotation_matrix[1,0])
             singular = sy < 1e-6
-            
-            if not singular:
-                x = np.arctan2(rotation_matrix[2,1], rotation_matrix[2,2])
-                y = np.arctan2(-rotation_matrix[2,0], sy)
-                z = np.arctan2(rotation_matrix[1,0], rotation_matrix[0,0])
-            else:
+
+
+            if not singular:#for normal head position, covnert matrix into angles
+                x = np.arctan2(rotation_matrix[2,1], rotation_matrix[2,2]) #pitch
+                y = np.arctan2(-rotation_matrix[2,0], sy) #left right, yaw
+                z = np.arctan2(rotation_matrix[1,0], rotation_matrix[0,0]) #tilting side to side
+            else: #exterme angles
                 x = np.arctan2(-rotation_matrix[1,2], rotation_matrix[1,1])
                 y = np.arctan2(-rotation_matrix[2,0], sy)
-                z = 0
+                z = 0 #
             
             #degrees
             pitch = np.degrees(x) #updown
@@ -253,6 +266,7 @@ class FaceDetector:
     #    # glasses detected, found on both eyes OR nose bridge
     #    return (left_glasses and right_glasses) or bridge_glasses
     #
+
     #backup glassess detection, if consistent horizontal lines
     def glasses_detection(self, landmarks, frame):
         """Simple backup glasses detection focusing on consistent horizontal lines"""
@@ -267,11 +281,11 @@ class FaceDetector:
             # Average Y position of both eyes
             glasses_y = (left_eye_y + right_eye_y) // 2
             
-            # Get X coordinates spanning both eyes
+            # X coordinates spanning both eyes
             left_x = int(min(left_eye[:, 0])) - 20
             right_x = int(max(right_eye[:, 0])) + 20
             
-            # Extract horizontal strip
+            # extract horizontal strip
             strip_top = max(0, glasses_y - 8)
             strip_bottom = min(frame.shape[0], glasses_y + 8)
             strip_left = max(0, left_x)
@@ -309,6 +323,7 @@ class FaceDetector:
     
     #face obstructions
     def check_face_coverage(self, landmarks, frame):
+        """Check for face obstructions: glasses, bangs, masks, etc."""
         issues = []
         
         try:

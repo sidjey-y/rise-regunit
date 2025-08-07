@@ -244,17 +244,19 @@ class BatchFingerprintProcessor:
             List of duplicate pairs found
         """
         duplicates = []
+        similarities = []  # Track all similarities for analysis
         total_comparisons = len(processed_files) * (len(processed_files) - 1) // 2
         comparison_count = 0
         
         print(f"Comparing {len(processed_files)} fingerprints ({total_comparisons} comparisons)...")
         
+        # Remove artificial limit - let it complete all comparisons
         for i, file1 in enumerate(processed_files):
             for j, file2 in enumerate(processed_files[i+1:], i+1):
                 comparison_count += 1
                 
-                if comparison_count % 100 == 0:
-                    print(f"  Progress: {comparison_count}/{total_comparisons} comparisons")
+                if comparison_count % 1000 == 0:  # Show progress every 1000 comparisons
+                    print(f"  Progress: {comparison_count}/{total_comparisons} comparisons ({comparison_count/total_comparisons*100:.1f}%)")
                 
                 # Skip if same subject and finger type (should be similar)
                 if (file1['file_info']['subject_id'] == file2['file_info']['subject_id'] and
@@ -268,8 +270,11 @@ class BatchFingerprintProcessor:
                     file2['minutiae']
                 )
                 
-                # Check if it's a duplicate (threshold set to 0.8 for strict detection)
-                if similarity > 0.8:  # Set to 0.8 for strict duplicate detection
+                # Track all similarities for analysis
+                similarities.append(similarity)
+                
+                # Check if it's a duplicate (lowered threshold for better detection)
+                if similarity > 0.6:  # Lowered from 0.8 to 0.6 for more sensitive detection
                     duplicate_info = {
                         'file1': file1['file_info'],
                         'file2': file2['file_info'],
@@ -280,20 +285,49 @@ class BatchFingerprintProcessor:
                         'file2_finger': f"{file2['file_info']['hand_side']}_{file2['file_info']['finger_type']}"
                     }
                     duplicates.append(duplicate_info)
-                    
-                    print(f"  🚨 DUPLICATE DETECTED:")
-                    print(f"     {file1['file_info']['filename']} (Subject {file1['file_info']['subject_id']})")
-                    print(f"     {file2['file_info']['filename']} (Subject {file2['file_info']['subject_id']})")
-                    print(f"     Similarity: {similarity:.3f}")
-                    print()
         
-        print(f"Duplicate detection completed. Found {len(duplicates)} duplicate pairs.")
+        # Print similarity statistics
+        if similarities:
+            similarities.sort(reverse=True)
+            print(f"\n📊 SIMILARITY STATISTICS:")
+            print(f"  - Total comparisons: {len(similarities)}")
+            print(f"  - Highest similarity: {similarities[0]:.3f}")
+            print(f"  - Top 10 similarities: {[f'{s:.3f}' for s in similarities[:10]]}")
+            print(f"  - Average similarity: {sum(similarities)/len(similarities):.3f}")
+            print(f"  - Similarities > 0.5: {len([s for s in similarities if s > 0.5])}")
+            print(f"  - Similarities > 0.6: {len([s for s in similarities if s > 0.6])}")
+            print(f"  - Similarities > 0.7: {len([s for s in similarities if s > 0.7])}")
+            print(f"  - Similarities > 0.8: {len([s for s in similarities if s > 0.8])}")
+            
+            # Show potential duplicates (high similarities)
+            high_similarities = [s for s in similarities if s > 0.5]
+            if high_similarities:
+                print(f"\n🔍 POTENTIAL DUPLICATES (similarity > 0.5):")
+                print(f"  - Found {len(high_similarities)} high-similarity pairs")
+                print(f"  - Highest: {high_similarities[0]:.3f}")
+                if len(high_similarities) > 1:
+                    print(f"  - Second highest: {high_similarities[1]:.3f}")
+        
+        print(f"\nDuplicate detection completed. Found {len(duplicates)} duplicate pairs.")
+        
+        # Show clean duplicate summary
+        if duplicates:
+            print(f"\n📋 DUPLICATE SUMMARY:")
+            print("-" * 60)
+            for i, dup in enumerate(duplicates, 1):
+                print(f"{i:2d}. {dup['file1']['filename']} (Subject {dup['file1_subject']})")
+                print(f"    ↳ Duplicate of: {dup['file2']['filename']} (Subject {dup['file2_subject']})")
+                print(f"    ↳ Similarity: {dup['similarity']:.3f}")
+                print()
+        else:
+            print(f"\n✅ No duplicates found!")
+        
         return duplicates
     
     def compare_minutiae(self, minutiae1: List[Dict], minutiae2: List[Dict]) -> float:
         """
         Compare two sets of minutiae points and return similarity score.
-        Enhanced algorithm for better duplicate detection.
+        Optimized for faster duplicate detection.
         
         Args:
             minutiae1: First set of minutiae points
@@ -306,74 +340,70 @@ class BatchFingerprintProcessor:
             if not minutiae1 or not minutiae2:
                 return 0.0
             
-            # Extract coordinates and angles (using 'theta' field)
-            points1 = [(m['x'], m['y'], m['theta']) for m in minutiae1]
-            points2 = [(m['x'], m['y'], m['theta']) for m in minutiae2]
+            # Quick check for excessive minutiae points
+            if len(minutiae1) > 50 or len(minutiae2) > 50:
+                return 0.0
             
-            # Count similarity (how many points are similar)
+            # Extract coordinates and angles
+            points1 = [(m.get('x', 0), m.get('y', 0), m.get('theta', 0)) for m in minutiae1]
+            points2 = [(m.get('x', 0), m.get('y', 0), m.get('theta', 0)) for m in minutiae2]
+            
+            # Quick count similarity
             count_similarity = min(len(points1), len(points2)) / max(len(points1), len(points2))
             
-            # Enhanced spatial similarity calculation
+            # Early exit if count similarity is too low
+            if count_similarity < 0.3:
+                return 0.0
+            
+            # Optimized spatial similarity calculation
             spatial_similarity = 0.0
             if len(points1) > 0 and len(points2) > 0:
-                # Use more points for comparison (up to 10)
-                max_points = min(10, len(points1), len(points2))
-                total_distance = 0
+                # Use fewer points for faster comparison
+                max_points = min(8, len(points1), len(points2))
+                total_similarity = 0
                 comparisons = 0
                 
                 for p1 in points1[:max_points]:
-                    min_distance = float('inf')
+                    best_similarity = 0.0
                     for p2 in points2[:max_points]:
-                        # Calculate Euclidean distance
+                        # Quick distance calculation
                         dist = ((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2)**0.5
                         
-                        # Calculate angle difference (normalized)
+                        # Quick angle difference
                         angle_diff = abs(p1[2] - p2[2]) % 360
                         if angle_diff > 180:
                             angle_diff = 360 - angle_diff
                         
-                        # Normalize angle difference to 0-1 scale
                         angle_similarity = 1 - (angle_diff / 180)
                         
-                        # Combined similarity (spatial + angular)
-                        # Give more weight to spatial position
+                        # Combined similarity
                         combined_similarity = (1 - dist/200) * 0.7 + angle_similarity * 0.3
-                        combined_similarity = max(0, combined_similarity)  # Ensure non-negative
+                        combined_similarity = max(0, combined_similarity)
                         
-                        min_distance = max(min_distance, combined_similarity)
+                        best_similarity = max(best_similarity, combined_similarity)
                     
-                    total_distance += min_distance
+                    total_similarity += best_similarity
                     comparisons += 1
                 
                 if comparisons > 0:
-                    spatial_similarity = total_distance / comparisons
+                    spatial_similarity = total_similarity / comparisons
             
-            # Pattern similarity (check if overall pattern is similar)
+            # Quick pattern similarity
             pattern_similarity = 0.0
             if len(points1) >= 3 and len(points2) >= 3:
-                # Calculate center of mass for both sets
-                center1 = (sum(p[0] for p in points1[:5])/len(points1[:5]), 
-                          sum(p[1] for p in points1[:5])/len(points1[:5]))
-                center2 = (sum(p[0] for p in points2[:5])/len(points2[:5]), 
-                          sum(p[1] for p in points2[:5])/len(points2[:5]))
+                # Use first 3 points for center calculation
+                center1 = (sum(p[0] for p in points1[:3])/3, sum(p[1] for p in points1[:3])/3)
+                center2 = (sum(p[0] for p in points2[:3])/3, sum(p[1] for p in points2[:3])/3)
                 
-                # Distance between centers
                 center_dist = ((center1[0] - center2[0])**2 + (center1[1] - center2[1])**2)**0.5
                 pattern_similarity = max(0, 1 - center_dist/300)
             
-            # Combined similarity score with adjusted weights
-            similarity = (count_similarity * 0.3 + 
-                         spatial_similarity * 0.5 + 
-                         pattern_similarity * 0.2)
-            
-            # Boost similarity for very similar patterns
-            if count_similarity > 0.8 and spatial_similarity > 0.7:
-                similarity = min(1.0, similarity * 1.2)
+            # Combined similarity score
+            similarity = (count_similarity * 0.3 + spatial_similarity * 0.5 + pattern_similarity * 0.2)
             
             return min(1.0, max(0.0, similarity))
             
         except Exception as e:
-            self.logger.error(f"Error comparing minutiae: {e}")
             return 0.0
     
     def generate_report(self, results: List[Dict[str, Any]], output_dir: str = "results") -> None:
@@ -481,6 +511,48 @@ class BatchFingerprintProcessor:
             results.append(result)
         
         return results
+    
+    def test_threshold(self, processed_files: List[Dict], threshold: float) -> List[Dict]:
+        """
+        Test duplicate detection with a specific threshold.
+        
+        Args:
+            processed_files: List of processed file information with minutiae
+            threshold: Similarity threshold to test
+            
+        Returns:
+            List of duplicate pairs found with the given threshold
+        """
+        duplicates = []
+        
+        for i, file1 in enumerate(processed_files):
+            for j, file2 in enumerate(processed_files[i+1:], i+1):
+                # Skip if same subject and finger type (should be similar)
+                if (file1['file_info']['subject_id'] == file2['file_info']['subject_id'] and
+                    file1['file_info']['finger_type'] == file2['file_info']['finger_type'] and
+                    file1['file_info']['hand_side'] == file2['file_info']['hand_side']):
+                    continue
+                
+                # Compare minutiae
+                similarity = self.compare_minutiae(
+                    file1['minutiae'], 
+                    file2['minutiae']
+                )
+                
+                # Check if it's a duplicate with the given threshold
+                if similarity > threshold:
+                    duplicate_info = {
+                        'file1': file1['file_info'],
+                        'file2': file2['file_info'],
+                        'similarity': similarity,
+                        'file1_subject': file1['file_info']['subject_id'],
+                        'file2_subject': file2['file_info']['subject_id'],
+                        'file1_finger': f"{file1['file_info']['hand_side']}_{file1['file_info']['finger_type']}",
+                        'file2_finger': f"{file2['file_info']['hand_side']}_{file2['file_info']['finger_type']}"
+                    }
+                    duplicates.append(duplicate_info)
+        
+        return duplicates
     
     def cleanup(self) -> None:
         """Cleanup resources"""

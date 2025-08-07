@@ -158,16 +158,6 @@ class FingerprintUniquenessChecker:
             return {'success': False, 'error': str(e)}
     
     def compare_fingerprints(self, image_path1: str, image_path2: str) -> Dict[str, Any]:
-        """
-        Compare two fingerprints directly.
-        
-        Args:
-            image_path1: Path to first fingerprint image
-            image_path2: Path to second fingerprint image
-            
-        Returns:
-            dict: Comparison results
-        """
         try:
             # Load images
             image1 = cv2.imread(image_path1)
@@ -202,7 +192,6 @@ class FingerprintUniquenessChecker:
                 'quality_score_2': quality2,
                 'average_quality': (quality1 + quality2) / 2.0
             }
-            
             return results
             
         except Exception as e:
@@ -210,18 +199,7 @@ class FingerprintUniquenessChecker:
             return {'success': False, 'error': str(e)}
     
     def train_model(self, dataset_path: str) -> Dict[str, Any]:
-        """
-        Train the Siamese network model.
-        
-        Args:
-            dataset_path: Path to training dataset
-            
-        Returns:
-            dict: Training results
-        """
         try:
-            # This is a simplified training implementation
-            # In practice, you would need to implement proper data loading and training
             self.logger.info("Training functionality requires implementation of data loading")
             return {
                 'success': False,
@@ -339,3 +317,6 @@ def main():
 
 if __name__ == "__main__":
     main() 
+
+    #to do
+    # 

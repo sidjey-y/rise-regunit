@@ -1,0 +1,28 @@
+2025-08-06 14:40:56,306 - __main__ - ERROR - Input image not found: face_embeddings.jpg
+2025-08-06 14:42:28,668 - __main__ - INFO - Initializing face embedding extractor with VGG-Face model
+2025-08-06 14:43:43,134 - FaceEmbeddingExtractor - INFO - Face embedding extractor initialized with VGG-Face model
+2025-08-06 14:43:43,147 - __main__ - INFO - Verifying face quality of raw_pic/face_embeddings.jpg
+2025-08-06 14:43:44,799 - __main__ - INFO - Face quality assessment: {'image_path': 'raw_pic/face_embeddings.jpg', 'faces_detected': 1, 'image_size': (368, 298, 3), 'is_suitable': True, 'recommendations': []}
+2025-08-06 14:43:44,799 - __main__ - INFO - Extracting embedding from raw_pic/face_embeddings.jpg
+2025-08-06 14:43:44,820 - FaceEmbeddingExtractor - ERROR - Error extracting embedding from raw_pic/face_embeddings.jpg: represent() got an unexpected keyword argument 'model'
+2025-08-06 14:43:44,820 - __main__ - ERROR - Failed to extract embedding from input image
+2025-08-06 14:55:50,967 - __main__ - INFO - Initializing face embedding extractor with VGG-Face model
+2025-08-06 14:55:50,971 - FaceEmbeddingExtractor - INFO - Face embedding extractor initialized with VGG-Face model
+2025-08-06 14:55:50,972 - __main__ - INFO - Verifying face quality of raw_pic/face_embeddings.jpg
+2025-08-06 14:55:52,200 - __main__ - INFO - Face quality assessment: {'image_path': 'raw_pic/face_embeddings.jpg', 'faces_detected': 1, 'image_size': (368, 298, 3), 'is_suitable': True, 'recommendations': []}
+2025-08-06 14:55:52,200 - __main__ - INFO - Extracting embedding from raw_pic/face_embeddings.jpg
+2025-08-06 14:56:13,597 - FaceEmbeddingExtractor - INFO - Successfully extracted embedding from raw_pic/face_embeddings.jpg
+2025-08-06 14:56:13,691 - __main__ - INFO - Successfully extracted embedding (shape: (1,))
+2025-08-06 14:56:13,692 - __main__ - INFO - Extracting embeddings from approved images in aproved_img
+2025-08-06 14:56:15,419 - FaceEmbeddingExtractor - INFO - Successfully extracted embedding from aproved_img\lastname_firstname_20250806_122711.jpg
+2025-08-06 14:56:15,433 - FaceEmbeddingExtractor - INFO - Extracted embedding from lastname_firstname_20250806_122711.jpg
+2025-08-06 14:56:15,434 - FaceEmbeddingExtractor - INFO - Extracted 1 embeddings from aproved_img
+2025-08-06 14:56:15,434 - __main__ - INFO - Extracted 1 embeddings from approved images
+2025-08-06 14:56:15,435 - __main__ - INFO - Comparing input image with approved images
+2025-08-06 14:56:16,540 - FaceEmbeddingExtractor - INFO - Successfully extracted embedding from raw_pic/face_embeddings.jpg
+2025-08-06 14:56:17,829 - FaceEmbeddingExtractor - INFO - Successfully extracted embedding from aproved_img\lastname_firstname_20250806_122711.jpg
+2025-08-06 14:56:17,830 - FaceEmbeddingExtractor - INFO - Extracted embedding from lastname_firstname_20250806_122711.jpg
+2025-08-06 14:56:17,830 - FaceEmbeddingExtractor - INFO - Extracted 1 embeddings from aproved_img
+2025-08-06 14:56:17,831 - FaceEmbeddingExtractor - ERROR - Error calculating similarity: unsupported operand type(s) for *: 'dict' and 'dict'
+2025-08-06 14:56:17,831 - FaceEmbeddingExtractor - INFO - Comparison completed. Best match: None (similarity: 0.000)
+2025-08-06 14:56:17,836 - __main__ - INFO - Face embedding extraction and comparison completed successfully

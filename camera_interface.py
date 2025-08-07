@@ -82,7 +82,6 @@ class CameraInterface:
         
         # Save raw cropped image
         cv2.imwrite(filepath, cropped_frame, [cv2.IMWRITE_JPEG_QUALITY, 100])
-        print(f"✅ Raw image captured and saved successfully")
         
         # preprocessed copy for quality analysis
         preprocessed_frame = self.apply_minimal_preprocessing(cropped_frame.copy())
@@ -111,10 +110,14 @@ class CameraInterface:
         
         # calculate crop area , include shoulders
         padding_x = int(face_width * 0.5)
-        # space above the head, cropped
+
+
+        # space above the head, cropped #
         padding_top = int(face_height * 0.6)  
         # space for shoulders, cropped
-        padding_bottom = int(face_height * 0.8)  
+        padding_bottom = int(face_height * 0.8) 
+        
+         
         
         #  crop boundaries #
         crop_left = max(0, face_left - padding_x)
