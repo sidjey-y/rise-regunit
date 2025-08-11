@@ -685,8 +685,25 @@ class CameraInterface:
                                 try:
                                     if landmarks_list and len(landmarks_list) > 0:
                                         # Capture photo BEFORE UI drawing to get clean image
-                                        self.capture_photo(frame, landmarks_list[0])
-                                        print("✅ Photo captured successfully! Moving to completion...")
+                                        captured_photo = self.capture_photo(frame, landmarks_list[0])
+                                        print("✅ Photo captured successfully! Starting quality check...")
+                                        
+                                        # 🔍 QUALITY CHECK - Analyze captured photo
+                                        try:
+                                            quality_issues = self.face_detector.analyze_captured_photo_quality(captured_photo, landmarks_list[0])
+                                            
+                                            if quality_issues:
+                                                print(f"⚠️  Quality Issues Detected: {len(quality_issues)} issues")
+                                                self.liveness_detector.start_photo_review(quality_issues)
+                                            else:
+                                                print("✅ PHOTO QUALITY APPROVED - PROCESS COMPLETE")
+                                                self.liveness_detector.mark_capture_complete()
+                                                
+                                        except Exception as e:
+                                            print(f"Error in quality check: {e}")
+                                            # Continue without quality check if it fails
+                                            self.liveness_detector.mark_capture_complete()
+                                        
                                     else:
                                         self.capture_photo(frame, None)
                                         print("✅ Photo captured successfully! Moving to completion...")
@@ -750,6 +767,15 @@ class CameraInterface:
                         # Reset None frame counter on successful frame
                         consecutive_none_frames = 0
                     
+                    # 🔍 AUTO-PROCEED FROM PHOTO REVIEW (after quality check)
+                    if (state and hasattr(state, 'name') and 
+                        state.name == 'PHOTO_REVIEW' and 
+                        not self.liveness_detector.has_photo_quality_issues()):
+                        # Quality check completed successfully, auto-proceed
+                        if time.time() - self.liveness_detector.photo_review_start_time > 3:  # 3 seconds delay
+                            print("✅ Quality check completed - Auto-proceeding to completion...")
+                            self.liveness_detector.mark_capture_complete()
+                    
 
                     
                     # Display frame
@@ -758,7 +784,7 @@ class CameraInterface:
                         if frame is not None:
                             h, w = frame.shape[:2]
                             help_text = [
-                                "Q: Quit | R: Reset | M: Manual Advance | S: Skip to Complete"
+                                "Q: Quit | R: Reset | M: Manual Advance | S: Skip to Complete | A: Approve Photo"
                             ]
                             for i, text in enumerate(help_text):
                                 y_pos = h - 20 - (len(help_text) - 1 - i) * 20
@@ -808,6 +834,14 @@ class CameraInterface:
                                 if self.liveness_detector.state.name in ['LOOK_LEFT', 'LOOK_RIGHT', 'BLINK']:
                                     self.liveness_detector.state = self.liveness_detector.LivenessState.COMPLETED
                                     print("EMERGENCY: Skipped to COMPLETED state")
+                        elif key == ord('a') or key == ord('A'):
+                            # Approve photo and proceed (when in photo review)
+                            if (hasattr(self.liveness_detector, 'state') and 
+                                self.liveness_detector.state.name == 'PHOTO_REVIEW'):
+                                print("✅ Manual approval - Proceeding to completion...")
+                                self.liveness_detector.mark_capture_complete()
+                            else:
+                                print("Manual approval only available during photo review")
                     except Exception as e:
                         print(f"Error in key handling: {e}")
                         consecutive_errors += 1
