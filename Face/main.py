@@ -5,6 +5,7 @@ import sys
 import os
 import argparse
 import logging
+import signal
 from typing import Optional
 from config_manager import ConfigManager
 from face_detector import FaceDetector
@@ -12,7 +13,6 @@ from liveness_detector import LivenessDetector
 from camera_interface import CameraInterface
 
 class FaceRecognitionSystem:
-
     
     def __init__(self, config_path: str = "config.yaml"):
         self.config_path = config_path
@@ -21,7 +21,19 @@ class FaceRecognitionSystem:
         self.liveness_detector = None
         self.camera_interface = None
         self.logger = logging.getLogger(self.__class__.__name__)
+        self._shutdown_requested = False
         
+        # Set up signal handlers for graceful shutdown
+        signal.signal(signal.SIGINT, self._signal_handler)
+        signal.signal(signal.SIGTERM, self._signal_handler)
+    
+    def _signal_handler(self, signum, frame):
+        """Handle shutdown signals gracefully"""
+        print(f"\nReceived signal {signum}. Shutting down gracefully...")
+        self._shutdown_requested = True
+        if self.camera_interface:
+            self.camera_interface.stop()
+    
     def initialize(self) -> bool:
         try:
             self.config_manager = ConfigManager(self.config_path)
@@ -81,6 +93,17 @@ class FaceRecognitionSystem:
             camera_index = camera_config.get('default_index', 0)
             
             self.logger.info(f"Starting camera (index: {camera_index})...")
+            print("\n" + "="*60)
+            print("FACE RECOGNITION SYSTEM STARTED")
+            print("="*60)
+            print("Controls:")
+            print("  Q or ESC - Quit the application")
+            print("  F - Toggle fullscreen mode")
+            print("  R - Reset liveness detection")
+            print("  A - Approve photo (during review)")
+            print("="*60)
+            print("Press Ctrl+C to force quit if needed")
+            print("="*60 + "\n")
             
             self.camera_interface.run(camera_index)
             

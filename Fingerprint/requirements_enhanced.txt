@@ -1,0 +1,12 @@
+# Enhanced Duplicate Detection Requirements
+# Install these packages for better AI-based finger type detection
+
+# Core requirements
+numpy>=1.21.0
+opencv-python>=4.5.0
+
+# Optional: For better machine learning capabilities
+scikit-learn>=1.0.0
+scipy>=1.7.0
+
+# Install with: pip install -r requirements_enhanced.txt

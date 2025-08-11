@@ -1,4 +1,4 @@
-# Photo Quality and Face Recognition Config#
+# Debug Configuration with Adjusted Head Pose Thresholds
 
 # CAMERA SETTINGS #
 camera:
@@ -11,7 +11,7 @@ camera:
 face_detection:
   landmarks_file: "shape_predictor_68_face_landmarks.dat"
   confidence_threshold: 0.5
-  min_face_size: 20 #can change to 20-30
+  min_face_size: 20
 
 # EYE DETECTION #
 eye_detection:
@@ -19,11 +19,9 @@ eye_detection:
   left_eye_end: 42
   right_eye_start: 42
   right_eye_end: 48
+  ear_threshold: 0.25
 
-  #EAR = Eye Aspect Ratio
-  ear_threshold: 0.25 
-
-# HEAD POSE #
+# HEAD POSE - ADJUSTED THRESHOLDS #
 head_pose:
   nose_tip_index: 30
   chin_index: 8
@@ -32,12 +30,12 @@ head_pose:
   left_mouth_corner: 48
   right_mouth_corner: 54
 
-# LIVENESS DETECTION #
+# LIVENESS DETECTION - ADJUSTED #
 liveness:
   blink_threshold: 0.25
-  head_movement_threshold: 8.0  # Reduced from 15.0 to 8.0 degrees for better detection
+  head_movement_threshold: 8.0  # Reduced from 15.0 to 8.0 degrees
   required_blinks: 2
-  detection_timeout: 30  # seconds
+  detection_timeout: 30
 
 # FACE COVERAGE #
 face_coverage:
@@ -45,13 +43,13 @@ face_coverage:
   max_glasses_coverage: 0.3
   min_eye_visibility: 0.7
 
-# Display  #
+# Display #
 display:
   show_landmarks: true
   show_face_boundary: true
   show_ear_value: true
   show_head_pose: true
-  window_name: "Face Recognition System"
+  window_name: "Face Recognition System - Debug Mode"
 
 # File paths #
 paths:
@@ -61,6 +59,9 @@ paths:
 
 # Logging settings
 logging:
-  level: "INFO"
-  file: "face_recognition.log"
-  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s" 
+  level: "DEBUG"  # Changed to DEBUG for more detailed logging
+  file: "face_recognition_debug.log"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+
+

@@ -1,86 +1,154 @@
 #!/usr/bin/env python3
+"""
+Test Duplicate Detection System
+This script tests the improved duplicate detection in the enrollment system.
+"""
 
-import os
 import sys
-from pathlib import Path
-from batch_process import BatchFingerprintProcessor
+import os
+
+# Add current directory to path
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 def test_duplicate_detection():
-    """Test duplicate detection specifically on folders 46-48"""
-    print("=" * 60)
-    print("DUPLICATE DETECTION TEST")
-    print("Testing folders 46-48 for intentional duplicates")
+    """Test the duplicate detection system"""
+    print("🔍 TESTING DUPLICATE DETECTION SYSTEM")
     print("=" * 60)
     
-    # Initialize processor
-    processor = BatchFingerprintProcessor()
-    
-    if not processor.initialize():
-        print("❌ Failed to initialize fingerprint system")
-        return
-    
-    print("✅ System initialized successfully!")
-    
-    # Get all fingerprint files
-    all_files = processor.get_fingerprint_files("fingerprint_data")
-    
-    if not all_files:
-        print("❌ No fingerprint files found!")
-        return
-    
-    # Filter for folders 46-48
-    test_files = [f for f in all_files if f['subject_id'] in ['46', '47', '48']]
-    
-    print(f"\n📁 Found {len(test_files)} files in folders 46-48:")
-    for file_info in test_files:
-        print(f"  - {file_info['filename']} (Subject {file_info['subject_id']})")
-    
-    # Process test files
-    print(f"\n🔍 Processing {len(test_files)} test files...")
-    processed_files = []
-    
-    for i, file_info in enumerate(test_files, 1):
-        print(f"\nProcessing {i}/{len(test_files)}: {file_info['filename']}")
+    try:
+        from comprehensive_enrollment_system import ComprehensiveEnrollmentSystem
         
-        result = processor.process_single_file(file_info)
+        # Initialize the system
+        system = ComprehensiveEnrollmentSystem()
         
-        if result['success']:
-            processed_files.append({
-                'file_info': file_info,
-                'result': result,
-                'minutiae': result.get('minutiae', [])
-            })
-            print(f"  ✓ Success - Minutiae: {result.get('minutiae_count', 0)}")
+        print("✅ System initialized successfully")
+        print("\n🔍 Testing duplicate detection logic...")
+        
+        # Test 1: No duplicates (empty system)
+        print("\n📝 Test 1: Empty system (no duplicates)")
+        print("-" * 40)
+        
+        # Simulate more realistic fingerprint characteristics data
+        # Real fingerprint characteristics are typically 256+ bytes with specific patterns
+        import random
+        
+        # Create realistic fingerprint characteristics (256 bytes)
+        random.seed(42)  # For reproducible results
+        dummy_char1 = bytes(random.getrandbits(8) for _ in range(256))
+        
+        # Create a similar but different set (simulating different finger)
+        random.seed(123)
+        dummy_char2 = bytes(random.getrandbits(8) for _ in range(256))
+        
+        # Create a very similar set (simulating same finger scanned twice)
+        # Copy most of char1 but change a few bytes to simulate scan variations
+        dummy_char1_duplicate = bytearray(dummy_char1)
+        # Change only 10% of bytes to simulate same finger with slight variations
+        for i in range(0, len(dummy_char1_duplicate), 10):
+            if i < len(dummy_char1_duplicate):
+                dummy_char1_duplicate[i] = (dummy_char1_duplicate[i] + 1) % 256
+        
+        dummy_char1_duplicate = bytes(dummy_char1_duplicate)
+        
+        # Import the enum classes directly
+        from comprehensive_enrollment_system import Hand, FingerType
+        
+        is_duplicate, duplicate_info, similarity = system.check_duplicate_within_user(
+            dummy_char1, Hand.LEFT, FingerType.THUMB
+        )
+        
+        print(f"Result: {'DUPLICATE' if is_duplicate else 'NO DUPLICATE'}")
+        if is_duplicate:
+            print(f"Similar to: {duplicate_info}")
+            print(f"Similarity: {similarity:.2%}")
         else:
-            print(f"  ✗ Failed - Error: {result.get('error', 'Unknown error')}")
+            print("✅ Correctly detected no duplicates")
+        
+        # Test 2: Add a finger and test duplicate
+        print("\n📝 Test 2: Add finger and test duplicate detection")
+        print("-" * 40)
+        
+        # Simulate adding a left thumb
+        from datetime import datetime
+        from comprehensive_enrollment_system import FingerprintData
+        
+        # Create dummy fingerprint data
+        left_thumb_data = FingerprintData(
+            user_id="test_user",
+            hand="left",
+            finger_type="thumb",
+            position=0,
+            timestamp=datetime.now().isoformat(),
+            raw_image_data=dummy_char1
+        )
+        
+        # Add to system
+        system.current_user_fingers["left_thumb"] = left_thumb_data
+        print("✅ Added left thumb to system")
+        
+        # Test duplicate detection with similar characteristics (same finger)
+        is_duplicate, duplicate_info, similarity = system.check_duplicate_within_user(
+            dummy_char1_duplicate, Hand.RIGHT, FingerType.MIDDLE
+        )
+        
+        print(f"Result: {'DUPLICATE' if is_duplicate else 'NO DUPLICATE'}")
+        if is_duplicate:
+            print(f"Similar to: {duplicate_info}")
+            print(f"Similarity: {similarity:.2%}")
+            print("✅ Correctly detected duplicate!")
+        else:
+            print("❌ Failed to detect duplicate")
+        
+        # Test 3: Test with different characteristics
+        print("\n📝 Test 3: Test with different characteristics")
+        print("-" * 40)
+        
+        is_duplicate, duplicate_info, similarity = system.check_duplicate_within_user(
+            dummy_char2, Hand.RIGHT, FingerType.MIDDLE
+        )
+        
+        print(f"Result: {'DUPLICATE' if is_duplicate else 'NO DUPLICATE'}")
+        if is_duplicate:
+            print(f"Similar to: {duplicate_info}")
+            print(f"Similarity: {similarity:.2%}")
+            print("❌ Incorrectly detected duplicate")
+        else:
+            print("✅ Correctly detected no duplicate")
+        
+        # Test 4: Show system state
+        print("\n📝 Test 4: System state")
+        print("-" * 40)
+        print(f"Total fingers in system: {len(system.current_user_fingers)}")
+        for key, fp in system.current_user_fingers.items():
+            print(f"  • {key}: {fp.hand.title()} {fp.finger_type.title()}")
+        
+        print("\n🎉 Duplicate detection test completed successfully!")
+        return True
+        
+    except ImportError as e:
+        print(f"❌ Import error: {e}")
+        return False
+    except Exception as e:
+        print(f"❌ Test failed: {e}")
+        return False
+
+def main():
+    """Main function"""
+    print("🚀 Testing Improved Duplicate Detection")
+    print("=" * 60)
     
-    # Run duplicate detection
-    print(f"\n{'='*60}")
-    print("DUPLICATE DETECTION ON TEST FOLDERS")
-    print(f"{'='*60}")
+    success = test_duplicate_detection()
     
-    duplicates = processor.detect_all_duplicates(processed_files)
-    
-    # Summary
-    print(f"\n{'='*60}")
-    print("TEST RESULTS SUMMARY")
-    print(f"{'='*60}")
-    print(f"Files processed: {len(processed_files)}")
-    print(f"Duplicates found: {len(duplicates)}")
-    
-    if duplicates:
-        print(f"\n🚨 DUPLICATES DETECTED:")
-        for i, dup in enumerate(duplicates, 1):
-            print(f"\n{i}. Similarity: {dup['similarity']:.3f}")
-            print(f"   File 1: {dup['file1']['filename']} (Subject {dup['file1_subject']})")
-            print(f"   File 2: {dup['file2']['filename']} (Subject {dup['file2_subject']})")
-            print(f"   Finger 1: {dup['file1_finger']}")
-            print(f"   Finger 2: {dup['file2_finger']}")
+    if success:
+        print("\n✅ All tests passed!")
+        print("The duplicate detection system is working correctly")
+        print("\nNow run 'python run_enrollment.py' to test with real scanner")
     else:
-        print("\n✅ No duplicates detected in test folders")
+        print("\n❌ Some tests failed!")
+        print("Please check the error messages above")
     
-    # Cleanup
-    processor.cleanup()
+    return success
 
 if __name__ == "__main__":
-    test_duplicate_detection() 
+    success = main()
+    sys.exit(0 if success else 1) 

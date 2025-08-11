@@ -1,0 +1,16 @@
+# Requirements for Automatic Finger Detection System
+# Install with: pip install -r requirements_finger_detection.txt
+
+# Core dependencies
+opencv-python>=4.5.0
+numpy>=1.19.0
+scikit-learn>=1.0.0
+
+# Optional: For better performance
+scipy>=1.7.0
+
+# Logging and utilities
+logging  # Built-in Python module
+typing   # Built-in Python module
+pickle   # Built-in Python module
+os       # Built-in Python module

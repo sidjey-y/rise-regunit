@@ -46,8 +46,19 @@ class CameraInterface:
             self.cap.read()
             
     def release_camera(self):
-        if self.cap:
-            self.cap.release()
+        try:
+            if hasattr(self, 'cap') and self.cap:
+                if self.cap.isOpened():
+                    self.cap.release()
+                    print("Camera released successfully")
+                self.cap = None
+        except Exception as e:
+            print(f"Error releasing camera: {e}")
+        finally:
+            # Ensure camera is released
+            if hasattr(self, 'cap') and self.cap:
+                self.cap.release()
+                self.cap = None
             
     def start_capture_countdown(self):
         #capture countdown
@@ -322,119 +333,140 @@ class CameraInterface:
             process_every_n_frames = 2  # Process every 2nd frame for better performance
             is_fullscreen = True  # Start in fullscreen mode
             while self.is_running:
-                ret, frame = self.cap.read()
-                if not ret:
-                    print("Failed to capture frame")
-                    break
-                
-                # mirroring
-                frame = cv2.flip(frame, 1)
-                
-                frame_count += 1
-                if frame_count % 30 == 0:  # Print every 30 frames (about 1 second)
-                    print(f"")
-                
-                # Simple face detection like reference file
-                faces, gray = self.face_detector.detect_faces(frame)
-                landmarks_list = []
-                
-                for face in faces:
-                    landmarks = self.face_detector.get_landmarks(gray, face)
-                    landmarks_list.append(landmarks)
-                
-                # liveness detection
-                state = self.liveness_detector.update(frame, faces, landmarks_list)
-                
-                #compliance checking
-                if state.name in ['WAITING_FOR_FACE'] and len(faces) == 1 and len(landmarks_list) == 1:
-                    compliance_status = self.face_detector.get_compliance_status(landmarks_list[0], frame)
-                    if self.liveness_detector.should_return_to_guidelines(compliance_status):
+                try:
+                    ret, frame = self.cap.read()
+                    if not ret:
+                        print("Failed to capture frame")
+                        break
+                    
+                    # Check if we should stop (for external shutdown requests)
+                    if not self.is_running:
+                        print("Shutdown requested - stopping camera loop...")
+                        break
+                    
+                    # mirroring
+                    frame = cv2.flip(frame, 1)
+                    
+                    frame_count += 1
+                    if frame_count % 30 == 0:  # Print every 30 frames (about 1 second)
+                        print(f"")
+                    
+                    # Simple face detection like reference file
+                    faces, gray = self.face_detector.detect_faces(frame)
+                    landmarks_list = []
+                    
+                    for face in faces:
+                        landmarks = self.face_detector.get_landmarks(gray, face)
+                        landmarks_list.append(landmarks)
+                    
+                    # liveness detection
+                    state = self.liveness_detector.update(frame, faces, landmarks_list)
+                    
+                    #compliance checking
+                    if state.name in ['WAITING_FOR_FACE'] and len(faces) == 1 and len(landmarks_list) == 1:
+                        compliance_status = self.face_detector.get_compliance_status(landmarks_list[0], frame)
+                        if self.liveness_detector.should_return_to_guidelines(compliance_status):
 
-                        # go back to guidelines if critical violations
+                            # go back to guidelines if critical violations
+                            self.liveness_detector.reset()
+                            self.capture_countdown = 0
+                            self.photo_captured = False
+                            self.captured_frame = None
+                            self.preprocessed_frame = None
+                    
+                    # if liveness check completed
+                    if state.name == 'COMPLETED' and self.capture_countdown == 0:
+                        self.start_capture_countdown()
+                    
+                    if self.capture_countdown > 0:
+                        should_capture = self.update_countdown()
+                        if should_capture and len(landmarks_list) > 0:
+                            captured_photo = self.capture_photo(frame, landmarks_list[0])
+                            
+                            # preprocessed captured photo quality check
+                            quality_issues = self.face_detector.analyze_captured_photo_quality(captured_photo, landmarks_list[0])
+                            
+                            # clean deleted
+                            self.preprocessed_frame = None
+                            
+                            if quality_issues:
+                                print(f"\nQuality Issues Detected")
+                                self.liveness_detector.start_photo_review(quality_issues)
+                            else:
+                                print("\nPHOTO APPROVED - PROCESS COMPLETE")
+                                self.liveness_detector.mark_capture_complete()
+                    
+                    frame = self.draw_ui_elements(frame, faces, landmarks_list, state)
+                    
+                    if state.name == 'PHOTO_REVIEW' and not self.liveness_detector.has_photo_quality_issues():
+                        if time.time() - self.liveness_detector.photo_review_start_time > 2:
+                            self.liveness_detector.mark_capture_complete()
+                    
+                    # Apply scaling for better text readability in fullscreen
+                    display_frame = self.scale_frame_for_display(frame)
+                    cv2.imshow(window_name, display_frame)
+                    
+                    # Increase waitKey delay for better key detection (30ms instead of 1ms)
+                    key = cv2.waitKey(30) & 0xFF
+                    
+                    # Multiple exit options for better reliability
+                    if key in [ord('q'), ord('Q'), 27]:  # 'q', 'Q', or ESC key
+                        print("Exit key detected - shutting down camera...")
+                        break
+                    elif key == ord('f') or key == ord('F'):
+                        # Toggle fullscreen
+                        if not is_fullscreen:
+                            cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+                            is_fullscreen = True
+                            print("Switched to fullscreen mode")
+                        else:
+                            cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_NORMAL)
+                            cv2.resizeWindow(window_name, 1024, 768)
+                            is_fullscreen = False
+                            print("Exited fullscreen mode")
+                    elif key == ord('r'):
+                        # restart the entire process
                         self.liveness_detector.reset()
                         self.capture_countdown = 0
                         self.photo_captured = False
                         self.captured_frame = None
                         self.preprocessed_frame = None
-                
-                # if liveness check completed
-                if state.name == 'COMPLETED' and self.capture_countdown == 0:
-                    self.start_capture_countdown()
-                
-                if self.capture_countdown > 0:
-                    should_capture = self.update_countdown()
-                    if should_capture and len(landmarks_list) > 0:
-                        captured_photo = self.capture_photo(frame, landmarks_list[0])
-                        
-                        # preprocessed captured photo quality check
-                        quality_issues = self.face_detector.analyze_captured_photo_quality(captured_photo, landmarks_list[0])
-                        
-                        # clean deleted
+                    elif key == ord('a') and state.name == 'PHOTO_REVIEW':
+                        self.liveness_detector.mark_capture_complete()
+                    
+                    # Check if window was closed manually (this helps with exit issues)
+                    if cv2.getWindowProperty(window_name, cv2.WND_PROP_VISIBLE) < 1:
+                        print("Window was closed - shutting down camera...")
+                        break
+                    
+                    # auto-restart on failure
+                    if state.name == 'FAILED':
+                        time.sleep(2)  # 2 seconds before restarting , adjust
+                        self.liveness_detector.reset()
+                        self.capture_countdown = 0
+                        self.photo_captured = False
+                        self.captured_frame = None
                         self.preprocessed_frame = None
                         
-                        if quality_issues:
-                            print(f"\nQuality Issues Detected")
-                            self.liveness_detector.start_photo_review(quality_issues)
-                        else:
-                            print("\nPHOTO APPROVED - PROCESS COMPLETE")
-                            self.liveness_detector.mark_capture_complete()
-                
-                frame = self.draw_ui_elements(frame, faces, landmarks_list, state)
-                
-                if state.name == 'PHOTO_REVIEW' and not self.liveness_detector.has_photo_quality_issues():
-                    if time.time() - self.liveness_detector.photo_review_start_time > 2:
-                        self.liveness_detector.mark_capture_complete()
-                
-                # Apply scaling for better text readability in fullscreen
-                display_frame = self.scale_frame_for_display(frame)
-                cv2.imshow(window_name, display_frame)
-                
-                key = cv2.waitKey(1) & 0xFF
-                if key == ord('q'):
+                except KeyboardInterrupt:
+                    print("\nKeyboard interrupt detected - shutting down camera...")
                     break
-                elif key == ord('f') or key == ord('F'):
-                    # Toggle fullscreen
-                    if not is_fullscreen:
-                        cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-                        is_fullscreen = True
-                        print("Switched to fullscreen mode")
-                    else:
-                        cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_NORMAL)
-                        cv2.resizeWindow(window_name, 1024, 768)
-                        is_fullscreen = False
-                        print("Exited fullscreen mode")
-                elif key == 27:  # ESC key
-                    if is_fullscreen:
-                        cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_NORMAL)
-                        cv2.resizeWindow(window_name, 1024, 768)
-                        is_fullscreen = False
-                        print("Exited fullscreen mode")
-                elif key == ord('r'):
-
-                    # restart the entire process
-                    self.liveness_detector.reset()
-                    self.capture_countdown = 0
-                    self.photo_captured = False
-                    self.captured_frame = None
-                    self.preprocessed_frame = None
-                elif key == ord('a') and state.name == 'PHOTO_REVIEW':
-                    self.liveness_detector.mark_capture_complete() 
-
-                
-                # auto-restart on failure
-                if state.name == 'FAILED':
-                    time.sleep(2)  # 2 seconds before restarting , adjust
-                    self.liveness_detector.reset()
-                    self.capture_countdown = 0
-                    self.photo_captured = False
-                    self.captured_frame = None
-                    self.preprocessed_frame = None
+                except Exception as e:
+                    print(f"Error in camera loop iteration: {e}")
+                    # Continue running unless it's a critical error
+                    continue
                     
         except Exception as e:
             print(f"Error in camera loop: {e}")
         finally:
+            print("Cleaning up camera resources...")
             self.release_camera()
             cv2.destroyAllWindows()
+            print("Camera cleanup completed")
             
     def stop(self):
+        print("Stopping camera interface...")
         self.is_running = False
+        # Force cleanup if stop is called externally
+        self.release_camera()
+        cv2.destroyAllWindows()

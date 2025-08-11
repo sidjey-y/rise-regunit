@@ -1,0 +1,3 @@
+# Hardware Scanner Test Dependencies
+pyfingerprint>=1.5
+pyserial>=3.5
