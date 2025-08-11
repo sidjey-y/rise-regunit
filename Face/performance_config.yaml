@@ -1,0 +1,35 @@
+# Performance Configuration for Face Recognition System
+# Adjust these values to balance performance vs accuracy
+
+# Camera Performance Settings
+camera:
+  face_detection_interval: 0.1      # Detect faces every 100ms (10 FPS for detection)
+  display_frame_rate: 30            # Target display frame rate
+  frame_skip_factor: 3              # Process every Nth frame
+  
+# Head Pose Performance Settings  
+head_pose:
+  cache_duration: 0.05              # Cache head pose for 50ms (20 FPS for head pose)
+  calculation_skip_frames: 2        # Skip head pose calculation every N frames
+  
+# Liveness Detection Performance
+liveness:
+  debug_log_interval: 5             # Log debug info every Nth frame
+  compliance_check_interval: 0.2    # Check compliance every 200ms
+  
+# Face Detection Performance
+face_detection:
+  min_face_size: 20                # Minimum face size for detection
+  confidence_threshold: 0.5         # Face detection confidence threshold
+  
+# Display Performance
+display:
+  enable_landmarks: true            # Show facial landmarks
+  enable_face_boundary: true        # Show face boundary box
+  enable_debug_info: true           # Show debug information
+  enable_guidelines: true           # Show guidelines overlay
+  
+# Memory Management
+memory:
+  max_cached_frames: 5              # Maximum frames to cache
+  cleanup_interval: 1.0             # Cleanup cache every second

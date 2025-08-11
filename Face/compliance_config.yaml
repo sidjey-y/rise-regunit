@@ -1,0 +1,23 @@
+# Compliance Detection Configuration
+# This file controls the sensitivity and behavior of compliance detection
+
+compliance:
+  enabled: true  # Set to false to disable all compliance checks
+  
+  # Glasses detection settings
+  glasses:
+    enabled: true
+    threshold: 0.15  # Horizontal line detection threshold (0.0 to 1.0)
+    region_margin: 10  # Pixels around eyes to check
+    strip_height: 4   # Height of detection strip
+    
+  # Forehead obstruction settings  
+  forehead:
+    enabled: true
+    hair_threshold: 0.80  # Hair coverage threshold (0.0 to 1.0)
+    region_height: 40     # Height above eyebrows to check
+    
+  # Debug visualization
+  debug:
+    show_detection_regions: false  # Show colored boxes around detection areas
+    log_detection_values: false    # Log detection ratios and values

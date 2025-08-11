@@ -1,0 +1,25 @@
+# Liveness Detection Configuration
+# This file controls the sensitivity and behavior of liveness detection
+
+liveness:
+  # Head movement detection settings
+  head_movement_threshold: 4.0  # Further reduced for much better sensitivity (degrees)
+  direction_frames_required: 4  # Further reduced for faster detection
+  
+  # Blink detection settings
+  blink_frames_required: 3  # consecutive frames for blink detection
+  
+  # Timeout settings
+  max_time_per_step: 15  # seconds (increased from 10 for better user experience)
+  
+  # Face stability settings
+  face_stability_frames: 5  # frames to confirm face presence
+  
+  # Auto-restart settings
+  auto_restart_on_failure: true  # Automatically restart liveness test on failure
+  restart_delay: 3.0  # seconds to wait before restarting
+  
+  # Debug settings
+  debug:
+    show_head_pose_values: true  # Show real-time head pose values
+    log_detection_details: true   # Log detailed detection information

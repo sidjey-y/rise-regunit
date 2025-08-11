@@ -4,6 +4,9 @@ import numpy as np
 from deepface import DeepFace
 import os
 from datetime import datetime
+from typing import Optional, List, Tuple
+from face_detector import FaceDetector
+from liveness_detector import LivenessDetector
 
 class CameraInterface:
 
@@ -62,6 +65,8 @@ class CameraInterface:
             
     def start_capture_countdown(self):
         #capture countdown
+        print("Starting capture countdown in 1 second...")
+        time.sleep(1)  # Give user 1 second to prepare
         self.capture_countdown_start = time.time()
         self.capture_countdown = self.COUNTDOWN_DURATION
         
@@ -74,7 +79,9 @@ class CameraInterface:
                 self.capture_countdown = 0
                 return True  
             else:
-                self.capture_countdown = int(remaining) + 1
+                # Fix: Don't add +1, just use the remaining time
+                # This ensures countdown shows correct values: 3, 2, 1, 0
+                self.capture_countdown = max(1, int(remaining))
                 
         return False
     
@@ -215,6 +222,15 @@ class CameraInterface:
         return enhanced
     
     def draw_countdown(self, frame):
+        # Safety check: ensure frame is not None
+        if frame is None:
+            print("Warning: draw_countdown called with None frame")
+            # Return a fallback frame instead of None
+            fallback_frame = np.zeros((480, 640, 3), dtype=np.uint8)
+            cv2.putText(fallback_frame, "Camera Error - Press Q to quit", (50, 240), 
+                       cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+            return fallback_frame
+            
         if self.capture_countdown > 0:
             h, w = frame.shape[:2]
             ui_scale = self.get_ui_scale_factor(frame)
@@ -231,16 +247,68 @@ class CameraInterface:
             circle_radius = int(120 * ui_scale)
             circle_thickness = max(1, int(5 * ui_scale))
             
+            # Draw black circle background
             cv2.circle(frame, (w//2, h//2), circle_radius, (0, 0, 0), -1)
             cv2.circle(frame, (w//2, h//2), circle_radius, (0, 255, 0), circle_thickness)
             
+            # Draw countdown number
             cv2.putText(frame, text, (x, y), cv2.FONT_HERSHEY_SIMPLEX, 
                        font_scale, (0, 255, 0), thickness)
+            
+            # Add "GET READY" message above countdown
+            ready_text = "GET READY!"
+            ready_font_scale = 1.5 * ui_scale
+            ready_thickness = max(1, int(3 * ui_scale))
+            ready_text_size = cv2.getTextSize(ready_text, cv2.FONT_HERSHEY_SIMPLEX, ready_font_scale, ready_thickness)[0]
+            ready_x = (w - ready_text_size[0]) // 2
+            ready_y = y - 80
+            
+            cv2.putText(frame, ready_text, (ready_x, ready_y), cv2.FONT_HERSHEY_SIMPLEX, 
+                       ready_font_scale, (255, 255, 255), ready_thickness)
+        elif self.photo_captured:
+            # Show completion message instead of countdown
+            h, w = frame.shape[:2]
+            ui_scale = self.get_ui_scale_factor(frame)
+            
+            # Draw completion message
+            completion_text = "PHOTO CAPTURED!"
+            font_scale = 2 * ui_scale
+            thickness = max(1, int(4 * ui_scale))
+            text_size = cv2.getTextSize(completion_text, cv2.FONT_HERSHEY_SIMPLEX, font_scale, thickness)[0]
+            
+            x = (w - text_size[0]) // 2
+            y = (h + text_size[1]) // 2
+            
+            # Draw green circle background
+            circle_radius = int(120 * ui_scale)
+            circle_thickness = max(1, int(5 * ui_scale))
+            cv2.circle(frame, (w//2, h//2), circle_radius, (0, 0, 0), -1)
+            cv2.circle(frame, (w//2, h//2), circle_radius, (0, 255, 0), circle_thickness)
+            
+            # Draw completion text
+            cv2.putText(frame, completion_text, (x, y), cv2.FONT_HERSHEY_SIMPLEX, 
+                       font_scale, (0, 255, 0), thickness)
+            
+            # Add success message below
+            success_text = "Quality assessment completed!"
+            success_font_scale = 1 * ui_scale
+            success_thickness = max(1, int(2 * ui_scale))
+            success_text_size = cv2.getTextSize(success_text, cv2.FONT_HERSHEY_SIMPLEX, success_font_scale, success_thickness)[0]
+            success_x = (w - success_text_size[0]) // 2
+            success_y = y + 60
+            
+            cv2.putText(frame, success_text, (success_x, success_y), cv2.FONT_HERSHEY_SIMPLEX, 
+                       success_font_scale, (255, 255, 255), success_thickness)
         
         return frame
     
     def get_ui_scale_factor(self, frame):
         """Simple text scaling - keep text small and readable"""
+        # Safety check: ensure frame is not None
+        if frame is None:
+            print("Warning: get_ui_scale_factor called with None frame")
+            return 0.5  # Return default scale
+            
         h, w = frame.shape[:2]
         # Always use small, fixed scaling for readable text
         if w > 1400:  # Fullscreen mode
@@ -253,8 +321,33 @@ class CameraInterface:
         return frame  # Keep original frame size
     
     def draw_ui_elements(self, frame, faces, landmarks_list, state):
+        # Safety check: ensure frame is not None
+        if frame is None:
+            print("Warning: draw_ui_elements called with None frame")
+            # Return a fallback frame instead of None
+            fallback_frame = np.zeros((480, 640, 3), dtype=np.uint8)
+            cv2.putText(fallback_frame, "Camera Error - Press Q to quit", (50, 240), 
+                       cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+            return fallback_frame
+            
         # Get adaptive scaling for UI elements
         ui_scale = self.get_ui_scale_factor(frame)
+        
+        # Safety check: ensure state is not None and has a name attribute
+        if state is None:
+            print("Warning: draw_ui_elements called with None state")
+            return frame
+            
+        # Safety check: ensure state has a name attribute
+        if not hasattr(state, 'name'):
+            print("Warning: draw_ui_elements called with state that has no name attribute")
+            return frame
+            
+        # Safety check: ensure faces and landmarks_list are not None
+        if faces is None:
+            faces = []
+        if landmarks_list is None:
+            landmarks_list = []
        
         if state.name == 'SHOW_GUIDELINES':
             frame = self.liveness_detector.draw_guidelines(frame)
@@ -278,14 +371,37 @@ class CameraInterface:
         
         # set face boundaries and landmarks
         for i, face in enumerate(faces):
-            frame = self.face_detector.draw_face_boundary(frame, face)
-            if i < len(landmarks_list):
-                frame = self.face_detector.draw_landmarks(frame, landmarks_list[i])
+            if frame is not None:
+                result = self.face_detector.draw_face_boundary(frame, face)
+                frame = result if result is not None else frame
+            if i < len(landmarks_list) and frame is not None:
+                result = self.face_detector.draw_landmarks(frame, landmarks_list[i])
+                frame = result if result is not None else frame
         
-        frame = self.liveness_detector.draw_face_guide(frame)
-        frame = self.liveness_detector.draw_progress(frame)
+        if frame is not None:
+            result = self.liveness_detector.draw_face_guide(frame)
+            frame = result if result is not None else frame
         
-        frame = self.draw_countdown(frame)
+        if frame is not None:
+            result = self.liveness_detector.draw_progress(frame)
+            frame = result if result is not None else frame
+        
+        # Add head pose debug display when in liveness detection states
+        if (frame is not None and state.name in ['LOOK_LEFT', 'LOOK_RIGHT'] and 
+            landmarks_list and len(landmarks_list) > 0):
+            result = self.liveness_detector.draw_head_pose_debug(frame, landmarks_list[0])
+            frame = result if result is not None else frame
+        
+        if frame is not None:
+            result = self.draw_countdown(frame)
+            frame = result if result is not None else frame
+        
+        # Final safety check before accessing frame.shape
+        if frame is None:
+            print("Warning: frame is None after all drawing operations, creating fallback")
+            frame = np.zeros((480, 640, 3), dtype=np.uint8)
+            cv2.putText(frame, "Camera Error - Press Q to quit", (50, 240), 
+                       cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
         
         h, w = frame.shape[:2]
         state_color = self.liveness_detector.get_state_color()
@@ -319,8 +435,26 @@ class CameraInterface:
         #CAMERA LOOP#
         self.is_running = True
         
+        # Loop safety: prevent infinite loops
+        consecutive_errors = 0
+        max_consecutive_errors = 10
+        consecutive_none_frames = 0
+        max_consecutive_none_frames = 5
+        
         try:
-            self.initialize_camera(camera_index)
+            try:
+                self.initialize_camera(camera_index)
+            except Exception as e:
+                print(f"Error in camera initialization: {e}")
+                consecutive_errors += 1
+                
+                # Break out if camera initialization fails
+                if consecutive_errors >= max_consecutive_errors:
+                    print(f"Camera initialization failed ({consecutive_errors} times), exiting")
+                    return
+                
+                # Small delay before retrying
+                time.sleep(0.1)
             
             # Create fullscreen window by default
             window_name = 'Face Recognition with Liveness Detection'
@@ -330,14 +464,28 @@ class CameraInterface:
             print("Press 'F' to exit fullscreen, 'ESC' to exit fullscreen, 'Q' to quit")
             
             frame_count = 0
-            process_every_n_frames = 2  # Process every 2nd frame for better performance
+            process_every_n_frames = 3  # Process every 3rd frame for better performance (was 2)
             is_fullscreen = True  # Start in fullscreen mode
+            
+            # Performance optimization: skip frames for heavy operations
+            last_face_detection_time = 0
+            face_detection_interval = 0.1  # Detect faces every 100ms (10 FPS for detection)
+            
             while self.is_running:
                 try:
                     ret, frame = self.cap.read()
                     if not ret:
                         print("Failed to capture frame")
-                        break
+                        consecutive_errors += 1
+                        
+                        # Break out if too many consecutive camera failures
+                        if consecutive_errors >= max_consecutive_errors:
+                            print(f"Too many consecutive camera failures ({consecutive_errors}), breaking out of loop")
+                            break
+                        
+                        # Small delay before retrying
+                        time.sleep(0.1)
+                        continue
                     
                     # Check if we should stop (for external shutdown requests)
                     if not self.is_running:
@@ -348,112 +496,347 @@ class CameraInterface:
                     frame = cv2.flip(frame, 1)
                     
                     frame_count += 1
-                    if frame_count % 30 == 0:  # Print every 30 frames (about 1 second)
-                        print(f"")
+                    current_time = time.time()
                     
-                    # Simple face detection like reference file
-                    faces, gray = self.face_detector.detect_faces(frame)
-                    landmarks_list = []
+                    # Initialize variables for this frame iteration
+                    faces = getattr(self, '_last_faces', [])
+                    landmarks_list = getattr(self, '_last_landmarks', [])
+                    state = getattr(self, '_last_state', None)
                     
-                    for face in faces:
-                        landmarks = self.face_detector.get_landmarks(gray, face)
-                        landmarks_list.append(landmarks)
+                    # Safety check: if cached values are consistently invalid, reset them
+                    if (faces is None or landmarks_list is None or state is None or 
+                        (state and not hasattr(state, 'name'))):
+                        print("Warning: Invalid cached values detected, resetting to defaults")
+                        consecutive_errors += 1
+                        
+                        # Break out if too many consecutive cache validation failures
+                        if consecutive_errors >= max_consecutive_errors:
+                            print(f"Too many consecutive cache validation failures ({consecutive_errors}), breaking out of loop")
+                            break
+                        
+                        faces = []
+                        landmarks_list = []
+                        state = self.liveness_detector.state
+                        # Clear invalid cache
+                        self._last_faces = faces
+                        self._last_landmarks = landmarks_list
+                        self._last_state = state
                     
-                    # liveness detection
-                    state = self.liveness_detector.update(frame, faces, landmarks_list)
+                    # Only process face detection at specified intervals for performance
+                    should_detect_faces = (current_time - last_face_detection_time) >= face_detection_interval
                     
-                    #compliance checking
-                    if state.name in ['WAITING_FOR_FACE'] and len(faces) == 1 and len(landmarks_list) == 1:
-                        compliance_status = self.face_detector.get_compliance_status(landmarks_list[0], frame)
-                        if self.liveness_detector.should_return_to_guidelines(compliance_status):
+                    if should_detect_faces:
+                        try:
+                            # Simple face detection like reference file
+                            try:
+                                faces, gray = self.face_detector.detect_faces(frame)
+                            except Exception as e:
+                                print(f"Error in face detection: {e}")
+                                consecutive_errors += 1
+                                
+                                # Break out if too many consecutive face detection failures
+                                if consecutive_errors >= max_consecutive_errors:
+                                    print(f"Too many consecutive face detection failures ({consecutive_errors}), breaking out of loop")
+                                    break
+                                
+                                # Use empty results on face detection failure
+                                faces = []
+                                gray = frame
+                            landmarks_list = []
+                            
+                            for face in faces:
+                                try:
+                                    landmarks = self.face_detector.get_landmarks(gray, face)
+                                    landmarks_list.append(landmarks)
+                                except Exception as e:
+                                    print(f"Error in landmark extraction: {e}")
+                                    consecutive_errors += 1
+                                    
+                                    # Break out if too many consecutive landmark extraction failures
+                                    if consecutive_errors >= max_consecutive_errors:
+                                        print(f"Too many consecutive landmark extraction failures ({consecutive_errors}), breaking out of loop")
+                                        break
+                                    
+                                    # Small delay before retrying
+                                    time.sleep(0.1)
+                                    continue
+                            
+                            # liveness detection with error handling
+                            try:
+                                state = self.liveness_detector.update(frame, faces, landmarks_list)
+                            except Exception as e:
+                                print(f"Error in liveness detection: {e}")
+                                import traceback
+                                traceback.print_exc()
+                                consecutive_errors += 1
+                                
+                                # Break out if too many consecutive liveness detection failures
+                                if consecutive_errors >= max_consecutive_errors:
+                                    print(f"Too many consecutive liveness detection failures ({consecutive_errors}), breaking out of loop")
+                                    break
+                                
+                                # Use a safe default state
+                                state = self.liveness_detector.state
+                            
+                            #compliance checking
+                            if (state and hasattr(state, 'name') and state.name in ['WAITING_FOR_FACE'] and 
+                                faces and landmarks_list and 
+                                len(faces) == 1 and len(landmarks_list) == 1):
+                                try:
+                                    if landmarks_list and len(landmarks_list) > 0:
+                                        compliance_status = self.face_detector.get_compliance_status(landmarks_list[0], frame)
+                                    else:
+                                        compliance_status = None
+                                    if self.liveness_detector.should_return_to_guidelines(compliance_status):
 
-                            # go back to guidelines if critical violations
+                                        # go back to guidelines if critical violations
+                                        self.liveness_detector.reset()
+                                        self.capture_countdown = 0
+                                        self.photo_captured = False
+                                        self.captured_frame = None
+                                        self.preprocessed_frame = None
+                                except Exception as e:
+                                    print(f"Error in compliance checking: {e}")
+                                    consecutive_errors += 1
+                                    
+                                    # Break out if too many consecutive compliance checking failures
+                                    if consecutive_errors >= max_consecutive_errors:
+                                        print(f"Too many consecutive compliance checking failures ({consecutive_errors}), breaking out of loop")
+                                        break
+                                    
+                                    # Small delay before retrying
+                                    time.sleep(0.1)
+                                    continue
+                            
+                            # if liveness check completed and photo not yet captured
+                            if (state and hasattr(state, 'name') and 
+                                state.name == 'COMPLETED' and 
+                                self.capture_countdown == 0 and 
+                                not self.photo_captured):
+                                print("🎯 Starting photo capture countdown...")
+                                self.start_capture_countdown()
+                            elif (state and hasattr(state, 'name') and 
+                                  state.name == 'COMPLETED' and 
+                                  self.photo_captured):
+                                # Photo already captured, move to completion state
+                                print("📸 Photo captured! Moving to completion state...")
+                                self.liveness_detector.mark_capture_complete()
+                            elif (state and hasattr(state, 'name') and 
+                                  state.name in ['CAPTURE_COMPLETE', 'PHOTO_REVIEW']):
+                                # Already in completion state, don't restart countdown
+                                pass
+                            
+                            last_face_detection_time = current_time
+                            
+                            # Reset error counter on successful processing
+                            consecutive_errors = 0
+                            
+                        except Exception as e:
+                            print(f"Error in face detection/liveness processing: {e}")
+                            import traceback
+                            traceback.print_exc()
+                            consecutive_errors += 1
+                            
+                            # Use cached results on error
+                            faces = getattr(self, '_last_faces', [])
+                            landmarks_list = getattr(self, '_last_landmarks', [])
+                            state = getattr(self, '_last_state', None)
+                            
+                            # Ensure we have valid default values
+                            if faces is None:
+                                faces = []
+                            if landmarks_list is None:
+                                landmarks_list = []
+                            if state is None:
+                                state = self.liveness_detector.state
+                    
+                    # Cache results for frame skipping
+                    # Ensure we have valid values before caching
+                    if faces is None:
+                        faces = []
+                    if landmarks_list is None:
+                        landmarks_list = []
+                    if state is None:
+                        state = self.liveness_detector.state
+                        
+                    # Ensure state has a name attribute (only check once)
+                    if state and not hasattr(state, 'name'):
+                        print("Warning: state object has no name attribute, using default state")
+                        consecutive_errors += 1
+                        
+                        # Break out if too many consecutive state validation failures
+                        if consecutive_errors >= max_consecutive_errors:
+                            print(f"Too many consecutive state validation failures ({consecutive_errors}), breaking out of loop")
+                            break
+                        
+                        state = self.liveness_detector.state
+                        
+                    self._last_faces = faces
+                    self._last_landmarks = landmarks_list
+                    self._last_state = state
+                    
+                    # 🎯 CAPTURE PHOTO FIRST (before UI drawing to avoid overlays)
+                    # This ensures the saved photo is clean without text, circles, or UI elements
+                    if self.capture_countdown > 0:
+                        try:
+                            self.update_countdown()
+                            if self.capture_countdown == 0 and not self.photo_captured:
+                                # Ensure we have valid landmarks before accessing
+                                try:
+                                    if landmarks_list and len(landmarks_list) > 0:
+                                        # Capture photo BEFORE UI drawing to get clean image
+                                        self.capture_photo(frame, landmarks_list[0])
+                                        print("✅ Photo captured successfully! Moving to completion...")
+                                    else:
+                                        self.capture_photo(frame, None)
+                                        print("✅ Photo captured successfully! Moving to completion...")
+                                except Exception as e:
+                                    print(f"Error in photo capture: {e}")
+                                    consecutive_errors += 1
+                                    
+                                    # Break out if too many consecutive photo capture failures
+                                    if consecutive_errors >= max_consecutive_errors:
+                                        print(f"Too many consecutive photo capture failures ({consecutive_errors}), breaking out of loop")
+                                        break
+                                    
+                                    # Small delay before retrying
+                                    time.sleep(0.1)
+                                    continue
+                        except Exception as e:
+                            print(f"Error in countdown update: {e}")
+                            consecutive_errors += 1
+                            
+                            # Break out if too many consecutive countdown failures
+                            if consecutive_errors >= max_consecutive_errors:
+                                print(f"Too many consecutive countdown failures ({consecutive_errors}), breaking out of loop")
+                                break
+                            
+                            # Small delay before retrying
+                            time.sleep(0.1)
+                            continue
+                    
+                    # Always draw UI elements AFTER photo capture (lightweight operation)
+                    try:
+                        frame = self.draw_ui_elements(frame, faces, landmarks_list, state)
+                    except Exception as e:
+                        print(f"Error in draw_ui_elements: {e}")
+                        consecutive_errors += 1
+                        
+                        # Break out if too many consecutive UI drawing failures
+                        if consecutive_errors >= max_consecutive_errors:
+                            print(f"Too many consecutive UI drawing failures ({consecutive_errors}), breaking out of loop")
+                            break
+                        
+                        # Create a simple fallback frame
+                        frame = np.zeros((480, 640, 3), dtype=np.uint8)
+                        cv2.putText(frame, "UI Drawing Error - Press Q to quit", (50, 240), 
+                                   cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+                    
+                    # Safety check: ensure frame is not None after UI drawing
+                    if frame is None:
+                        print("Warning: draw_ui_elements returned None frame, using fallback frame")
+                        consecutive_none_frames += 1
+                        
+                        # Break out if too many consecutive None frames to prevent infinite loops
+                        if consecutive_none_frames >= max_consecutive_none_frames:
+                            print(f"Too many consecutive None frames ({consecutive_none_frames}), breaking out of loop")
+                            break
+                        
+                        # Create a simple fallback frame to prevent infinite loops
+                        frame = np.zeros((480, 640, 3), dtype=np.uint8)
+                        cv2.putText(frame, "Camera Error - Press Q to quit", (50, 240), 
+                                   cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+                    else:
+                        # Reset None frame counter on successful frame
+                        consecutive_none_frames = 0
+                    
+
+                    
+                    # Display frame
+                    try:
+                        # Add keyboard shortcuts help text to frame
+                        if frame is not None:
+                            h, w = frame.shape[:2]
+                            help_text = [
+                                "Q: Quit | R: Reset | M: Manual Advance | S: Skip to Complete"
+                            ]
+                            for i, text in enumerate(help_text):
+                                y_pos = h - 20 - (len(help_text) - 1 - i) * 20
+                                cv2.putText(frame, text, (10, y_pos), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+                        
+                        cv2.imshow(window_name, frame)
+                    except Exception as e:
+                        print(f"Error in frame display: {e}")
+                        consecutive_errors += 1
+                        
+                        # Break out if too many consecutive frame display failures
+                        if consecutive_errors >= max_consecutive_errors:
+                            print(f"Too many consecutive frame display failures ({consecutive_errors}), breaking out of loop")
+                            break
+                        
+                        # Small delay before retrying
+                        time.sleep(0.1)
+                        continue
+                    
+                    # Handle key events
+                    try:
+                        key = cv2.waitKey(1) & 0xFF
+                        if key == ord('q') or key == ord('Q') or key == 27:  # Q or ESC
+                            break
+                        elif key == ord('f') or key == ord('F'):
+                            if is_fullscreen:
+                                cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_NORMAL)
+                                is_fullscreen = False
+                                print("Exited fullscreen mode")
+                            else:
+                                cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+                                is_fullscreen = True
+                                print("Entered fullscreen mode")
+                        elif key == ord('r') or key == ord('R'):
                             self.liveness_detector.reset()
                             self.capture_countdown = 0
                             self.photo_captured = False
-                            self.captured_frame = None
-                            self.preprocessed_frame = None
-                    
-                    # if liveness check completed
-                    if state.name == 'COMPLETED' and self.capture_countdown == 0:
-                        self.start_capture_countdown()
-                    
-                    if self.capture_countdown > 0:
-                        should_capture = self.update_countdown()
-                        if should_capture and len(landmarks_list) > 0:
-                            captured_photo = self.capture_photo(frame, landmarks_list[0])
-                            
-                            # preprocessed captured photo quality check
-                            quality_issues = self.face_detector.analyze_captured_photo_quality(captured_photo, landmarks_list[0])
-                            
-                            # clean deleted
-                            self.preprocessed_frame = None
-                            
-                            if quality_issues:
-                                print(f"\nQuality Issues Detected")
-                                self.liveness_detector.start_photo_review(quality_issues)
-                            else:
-                                print("\nPHOTO APPROVED - PROCESS COMPLETE")
-                                self.liveness_detector.mark_capture_complete()
-                    
-                    frame = self.draw_ui_elements(frame, faces, landmarks_list, state)
-                    
-                    if state.name == 'PHOTO_REVIEW' and not self.liveness_detector.has_photo_quality_issues():
-                        if time.time() - self.liveness_detector.photo_review_start_time > 2:
-                            self.liveness_detector.mark_capture_complete()
-                    
-                    # Apply scaling for better text readability in fullscreen
-                    display_frame = self.scale_frame_for_display(frame)
-                    cv2.imshow(window_name, display_frame)
-                    
-                    # Increase waitKey delay for better key detection (30ms instead of 1ms)
-                    key = cv2.waitKey(30) & 0xFF
-                    
-                    # Multiple exit options for better reliability
-                    if key in [ord('q'), ord('Q'), 27]:  # 'q', 'Q', or ESC key
-                        print("Exit key detected - shutting down camera...")
-                        break
-                    elif key == ord('f') or key == ord('F'):
-                        # Toggle fullscreen
-                        if not is_fullscreen:
-                            cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-                            is_fullscreen = True
-                            print("Switched to fullscreen mode")
-                        else:
-                            cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_NORMAL)
-                            cv2.resizeWindow(window_name, 1024, 768)
-                            is_fullscreen = False
-                            print("Exited fullscreen mode")
-                    elif key == ord('r'):
-                        # restart the entire process
-                        self.liveness_detector.reset()
-                        self.capture_countdown = 0
-                        self.photo_captured = False
-                        self.captured_frame = None
-                        self.preprocessed_frame = None
-                    elif key == ord('a') and state.name == 'PHOTO_REVIEW':
-                        self.liveness_detector.mark_capture_complete()
-                    
-                    # Check if window was closed manually (this helps with exit issues)
-                    if cv2.getWindowProperty(window_name, cv2.WND_PROP_VISIBLE) < 1:
-                        print("Window was closed - shutting down camera...")
-                        break
-                    
-                    # auto-restart on failure
-                    if state.name == 'FAILED':
-                        time.sleep(2)  # 2 seconds before restarting , adjust
-                        self.liveness_detector.reset()
-                        self.capture_countdown = 0
-                        self.photo_captured = False
-                        self.captured_frame = None
-                        self.preprocessed_frame = None
+                            print("Reset liveness detection")
+                        elif key == ord('m') or key == ord('M'):
+                            # Manual advance through liveness steps
+                            self.liveness_detector.manual_advance()
+                            print("Manual advance triggered")
+                        elif key == ord('s') or key == ord('S'):
+                            # Skip to completed state (emergency override)
+                            if hasattr(self.liveness_detector, 'state'):
+                                print(f"Current state: {self.liveness_detector.state.name}")
+                                if self.liveness_detector.state.name in ['LOOK_LEFT', 'LOOK_RIGHT', 'BLINK']:
+                                    self.liveness_detector.state = self.liveness_detector.LivenessState.COMPLETED
+                                    print("EMERGENCY: Skipped to COMPLETED state")
+                    except Exception as e:
+                        print(f"Error in key handling: {e}")
+                        consecutive_errors += 1
                         
-                except KeyboardInterrupt:
-                    print("\nKeyboard interrupt detected - shutting down camera...")
-                    break
+                        # Break out if too many consecutive key handling failures
+                        if consecutive_errors >= max_consecutive_errors:
+                            print(f"Too many consecutive key handling failures ({consecutive_errors}), breaking out of loop")
+                            break
+                        
+                        # Small delay before retrying
+                        time.sleep(0.1)
+                        continue
+                    
+                    # Small delay to maintain reasonable frame rate
+                    time.sleep(0.01)  # 10ms delay for ~100 FPS display
+                    
                 except Exception as e:
-                    print(f"Error in camera loop iteration: {e}")
-                    # Continue running unless it's a critical error
+                    print(f"Error in camera loop: {e}")
+                    import traceback
+                    traceback.print_exc()
+                    consecutive_errors += 1
+                    
+                    # Break out if too many consecutive errors to prevent infinite loops
+                    if consecutive_errors >= max_consecutive_errors:
+                        print(f"Too many consecutive errors ({consecutive_errors}), breaking out of loop")
+                        break
+                    
+                    # Small delay before retrying to prevent rapid error loops
+                    time.sleep(0.1)
                     continue
                     
         except Exception as e:

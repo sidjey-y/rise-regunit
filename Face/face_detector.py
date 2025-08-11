@@ -6,6 +6,7 @@ from imutils import face_utils
 from typing import Tuple, List, Optional, Dict, Any
 from base_detector import BaseDetector
 from config_manager import ConfigManager
+import time
 
 class FaceDetector(BaseDetector):
     
@@ -23,6 +24,11 @@ class FaceDetector(BaseDetector):
         
         self._last_detection = None
         self._last_landmarks = None
+        
+        # Performance optimization: cache head pose calculations
+        self._last_head_pose = None
+        self._last_head_pose_time = 0
+        self._head_pose_cache_duration = 0.05  # Cache for 50ms (20 FPS for head pose)
     
     def _initialize_components(self) -> None:
         # Simple, direct initialization like face_detector_try.py
@@ -149,16 +155,42 @@ class FaceDetector(BaseDetector):
     
     #calculate ear
     def _calculate_ear(self, eye: np.ndarray) -> float:
-
-        #vertical distances
-        A = dist.euclidean(eye[1], eye[5])
-        B = dist.euclidean(eye[2], eye[4])
-        
-        #horizontal distance
-        C = dist.euclidean(eye[0], eye[3])
-        
-        ear = (A + B) / (2.0 * C)
-        return ear
+        """Calculate Eye Aspect Ratio with proper error handling"""
+        try:
+            # Validate eye array has enough points
+            if eye is None or len(eye) < 6:
+                return 0.0
+            
+            # Check for invalid coordinates (negative or NaN values)
+            for point in eye[:6]:
+                if (point is None or 
+                    np.any(np.isnan(point)) or 
+                    np.any(np.isinf(point)) or
+                    point[0] < 0 or point[1] < 0):
+                    return 0.0
+            
+            #vertical distances
+            A = dist.euclidean(eye[1], eye[5])
+            B = dist.euclidean(eye[2], eye[4])
+            
+            #horizontal distance
+            C = dist.euclidean(eye[0], eye[3])
+            
+            # Prevent division by zero
+            if C <= 0:
+                return 0.0
+            
+            ear = (A + B) / (2.0 * C)
+            
+            # Validate result
+            if np.isnan(ear) or np.isinf(ear):
+                return 0.0
+                
+            return ear
+            
+        except Exception as e:
+            print(f"Error calculating EAR: {e}")
+            return 0.0
     
     #analyze head pose and orientation
     def _analyze_head_pose(self, landmarks: np.ndarray, frame_shape: Tuple[int, ...]) -> Dict[str, Any]:
@@ -226,18 +258,26 @@ class FaceDetector(BaseDetector):
     
     #glasses detection
     def _detect_glasses(self, landmarks: np.ndarray, frame: np.ndarray) -> Dict[str, Any]:
-
-        coverage_config = self.config_manager.get('face_coverage', {})
-        
-        left_eye = landmarks[self.eye_indices['left_eye_start']:self.eye_indices['left_eye_end']]
-        right_eye = landmarks[self.eye_indices['right_eye_start']:self.eye_indices['right_eye_end']]
-        
-        eye_coverage = 0.0  # placeholder for actual calculation
-        
-        return {
-            'has_glasses': eye_coverage > coverage_config.get('max_glasses_coverage', 0.3),
-            'coverage_ratio': eye_coverage
-        }
+        """Detect glasses with consistent eye index usage"""
+        try:
+            coverage_config = self.config_manager.get('face_coverage', {})
+            
+            # Use the same eye indices as other methods
+            left_eye = landmarks[self.LEFT_EYE_START:self.LEFT_EYE_END]
+            right_eye = landmarks[self.RIGHT_EYE_START:self.RIGHT_EYE_END]
+            
+            eye_coverage = 0.0  # placeholder for actual calculation
+            
+            return {
+                'has_glasses': eye_coverage > coverage_config.get('max_glasses_coverage', 0.3),
+                'coverage_ratio': eye_coverage
+            }
+        except Exception as e:
+            print(f"Error in _detect_glasses: {e}")
+            return {
+                'has_glasses': False,
+                'coverage_ratio': 0.0
+            }
     
     #draw landmarks
     def draw_landmarks(self, frame: np.ndarray, landmarks: np.ndarray) -> np.ndarray:
@@ -287,6 +327,12 @@ class FaceDetector(BaseDetector):
         }
         
         try:
+            # Check if compliance detection is enabled (can be disabled for testing)
+            if hasattr(self, 'config_manager') and self.config_manager:
+                compliance_enabled = self.config_manager.get('compliance', {}).get('enabled', True)
+                if not compliance_enabled:
+                    return compliance
+            
             # Use the working coverage check from reference file
             coverage_issues = self.check_face_coverage(landmarks, frame)
             compliance['face_coverage_issues'] = coverage_issues
@@ -318,10 +364,20 @@ class FaceDetector(BaseDetector):
             except:
                 pass
             
+            # Get configuration values for forehead detection
+            config = getattr(self, 'config_manager', None)
+            if config:
+                forehead_config = config.get('compliance', {}).get('forehead', {})
+                region_height = forehead_config.get('region_height', 40)
+                hair_threshold = forehead_config.get('hair_threshold', 0.80)
+            else:
+                region_height = 40
+                hair_threshold = 0.80
+            
             # Forehead obstruction check (from reference file)
             eyebrow_points = landmarks[17:27]  # eyebrow landmarks
             if len(eyebrow_points) > 0:
-                forehead_top_y = int(min(eyebrow_points[:, 1])) - 40
+                forehead_top_y = int(min(eyebrow_points[:, 1])) - region_height
                 forehead_bottom_y = int(min(eyebrow_points[:, 1]))
                 face_left = int(min(landmarks[:, 0]))
                 face_right = int(max(landmarks[:, 0]))
@@ -339,7 +395,9 @@ class FaceDetector(BaseDetector):
                         total_pixels = thresh.size
                         hair_ratio = hair_pixels / total_pixels if total_pixels > 0 else 0
                         
-                        if hair_ratio > 0.60:
+                        # More conservative threshold - only detect if there's significant hair coverage
+                        # This reduces false positives from natural shadows and slight hair
+                        if hair_ratio > hair_threshold:
                             issues.append("Obstruction covering forehead")
                             
         except Exception:
@@ -347,22 +405,77 @@ class FaceDetector(BaseDetector):
             
         return issues
     
+    def debug_compliance_detection(self, landmarks: np.ndarray, frame: np.ndarray) -> np.ndarray:
+        """Debug method to visualize compliance detection regions"""
+        debug_frame = frame.copy()
+        
+        try:
+            # Draw glasses detection region
+            left_eye = landmarks[self.LEFT_EYE_START:self.LEFT_EYE_END]
+            right_eye = landmarks[self.RIGHT_EYE_START:self.RIGHT_EYE_END]
+            
+            if len(left_eye) > 0 and len(right_eye) > 0:
+                left_eye_y = int(np.mean(left_eye[:, 1]))
+                right_eye_y = int(np.mean(right_eye[:, 1]))
+                glasses_y = (left_eye_y + right_eye_y) // 2
+                
+                left_x = int(min(left_eye[:, 0])) - 10
+                right_x = int(max(right_eye[:, 0])) + 10
+                strip_top = max(0, glasses_y - 4)
+                strip_bottom = min(frame.shape[0], glasses_y + 4)
+                
+                # Draw glasses detection region
+                cv2.rectangle(debug_frame, (left_x, strip_top), (right_x, strip_bottom), (0, 255, 255), 2)
+                cv2.putText(debug_frame, "Glasses Detection", (left_x, strip_top - 10), 
+                           cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 255), 1)
+            
+            # Draw forehead detection region
+            eyebrow_points = landmarks[17:27]
+            if len(eyebrow_points) > 0:
+                forehead_top_y = int(min(eyebrow_points[:, 1])) - 40
+                forehead_bottom_y = int(min(eyebrow_points[:, 1]))
+                face_left = int(min(landmarks[:, 0]))
+                face_right = int(max(landmarks[:, 0]))
+                
+                if forehead_top_y >= 0 and forehead_bottom_y > forehead_top_y:
+                    # Draw forehead detection region
+                    cv2.rectangle(debug_frame, (face_left, forehead_top_y), (face_right, forehead_bottom_y), (255, 0, 255), 2)
+                    cv2.putText(debug_frame, "Forehead Detection", (face_left, forehead_top_y - 10), 
+                               cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 255), 1)
+                    
+        except Exception as e:
+            print(f"Error in debug visualization: {e}")
+        
+        return debug_frame
+    
     def glasses_detection(self, landmarks: np.ndarray, frame: np.ndarray) -> bool:
         """Glasses detection from reference file"""
         try:
             left_eye = landmarks[self.LEFT_EYE_START:self.LEFT_EYE_END]
             right_eye = landmarks[self.RIGHT_EYE_START:self.RIGHT_EYE_END]
             
-            # Horizontal strip across both eyes where glasses would be
+            # More precise region around eyes where glasses frames would be
             left_eye_y = int(np.mean(left_eye[:, 1]))
             right_eye_y = int(np.mean(right_eye[:, 1]))
             glasses_y = (left_eye_y + right_eye_y) // 2
             
-            left_x = int(min(left_eye[:, 0])) - 20
-            right_x = int(max(right_eye[:, 0])) + 20
+            # Get configuration values for glasses detection
+            config = getattr(self, 'config_manager', None)
+            if config:
+                glasses_config = config.get('compliance', {}).get('glasses', {})
+                margin = glasses_config.get('region_margin', 10)
+                strip_height = glasses_config.get('strip_height', 4)
+            else:
+                margin = 10
+                strip_height = 4
             
-            strip_top = max(0, glasses_y - 8)
-            strip_bottom = min(frame.shape[0], glasses_y + 8)
+            # X coordinates spanning both eyes with configurable margin
+            left_x = int(min(left_eye[:, 0])) - margin
+            right_x = int(max(right_eye[:, 0])) + margin
+            
+            # Thinner strip to focus on actual glasses frame area
+            strip_top = max(0, glasses_y - strip_height)
+            strip_bottom = min(frame.shape[0], glasses_y + strip_height)
             strip_left = max(0, left_x)
             strip_right = min(frame.shape[1], right_x)
             
@@ -371,35 +484,80 @@ class FaceDetector(BaseDetector):
             if glasses_strip.size == 0:
                 return False
             
+            # Convert to grayscale
             gray_strip = cv2.cvtColor(glasses_strip, cv2.COLOR_BGR2GRAY)
-            _, thresh = cv2.threshold(gray_strip, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
             
-            dark_pixels_per_row = []
-            for row in thresh:
-                dark_count = np.sum(row == 0)
-                dark_pixels_per_row.append(dark_count / len(row))
+            # Use adaptive threshold for better edge detection
+            thresh = cv2.adaptiveThreshold(gray_strip, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)
             
-            max_dark_ratio = max(dark_pixels_per_row) if dark_pixels_per_row else 0
-            return max_dark_ratio > 0.8
+            # Look for horizontal lines that could be glasses frames
+            horizontal_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (15, 1))
+            horizontal_lines = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, horizontal_kernel)
+            
+            # Count horizontal line pixels
+            horizontal_pixels = np.sum(horizontal_lines > 0)
+            total_pixels = horizontal_lines.size
+            
+            # Calculate horizontal line ratio
+            horizontal_ratio = horizontal_pixels / total_pixels if total_pixels > 0 else 0
+            
+            # Get threshold from configuration
+            threshold = 0.15  # Default
+            if config:
+                threshold = glasses_config.get('threshold', 0.15)
+            
+            # Much more conservative threshold - only detect if there's a strong horizontal line
+            # This reduces false positives from natural shadows and facial features
+            return horizontal_ratio > threshold
             
         except Exception:
             return False
     
     def is_blinking(self, landmarks: np.ndarray) -> Tuple[bool, float]:
-        """Check if person is blinking (from reference file)"""
-        # Extract eye coordinates like reference file
-        left_eye = landmarks[self.LEFT_EYE_START:self.LEFT_EYE_END]
-        right_eye = landmarks[self.RIGHT_EYE_START:self.RIGHT_EYE_END]
-        
-        # Calculate EAR for both eyes
-        left_ear = self._calculate_ear(left_eye)
-        right_ear = self._calculate_ear(right_eye)
-        
-        # Average EAR
-        ear = (left_ear + right_ear) / 2.0
-        
-        # Threshold for blinking (from reference file)
-        return ear < 0.25, ear
+        """Check if person is blinking with proper error handling"""
+        try:
+            # Validate landmarks
+            if landmarks is None or len(landmarks) < 48:  # Need at least 48 landmarks for eyes
+                return False, 0.0
+            
+            # Check for invalid landmark coordinates
+            if np.any(np.isnan(landmarks)) or np.any(np.isinf(landmarks)):
+                return False, 0.0
+            
+            # Extract eye coordinates with bounds checking
+            left_eye_start = min(self.LEFT_EYE_START, len(landmarks) - 1)
+            left_eye_end = min(self.LEFT_EYE_END, len(landmarks))
+            right_eye_start = min(self.RIGHT_EYE_START, len(landmarks) - 1)
+            right_eye_end = min(self.RIGHT_EYE_END, len(landmarks))
+            
+            left_eye = landmarks[left_eye_start:left_eye_end]
+            right_eye = landmarks[right_eye_start:right_eye_end]
+            
+            # Validate eye arrays
+            if len(left_eye) < 6 or len(right_eye) < 6:
+                return False, 0.0
+            
+            # Calculate EAR for both eyes
+            left_ear = self._calculate_ear(left_eye)
+            right_ear = self._calculate_ear(right_eye)
+            
+            # Check if EAR calculation failed
+            if left_ear <= 0 or right_ear <= 0:
+                return False, 0.0
+            
+            # Average EAR
+            ear = (left_ear + right_ear) / 2.0
+            
+            # Validate final EAR value
+            if np.isnan(ear) or np.isinf(ear) or ear < 0:
+                return False, 0.0
+            
+            # Threshold for blinking (from reference file)
+            return ear < 0.25, ear
+            
+        except Exception as e:
+            print(f"Error in is_blinking: {e}")
+            return False, 0.0
     
     def get_face_direction(self, landmarks: np.ndarray) -> str:
         """Get face direction (from reference file)"""
@@ -424,56 +582,89 @@ class FaceDetector(BaseDetector):
             return "center"
     
     def get_head_pose(self, landmarks: np.ndarray, frame_shape: Tuple[int, int, int]) -> Tuple[Optional[float], Optional[float], Optional[float]]:
-        """Get head pose (from reference file)"""
-        h, w = frame_shape[:2]
+        """Get head pose with improved accuracy, error handling, and performance caching"""
+        current_time = time.time()
         
-        focal_length = w
-        center = (w/2, h/2)
-        camera_matrix = np.array([
-            [focal_length, 0, center[0]],
-            [0, focal_length, center[1]],
-            [0, 0, 1]
-        ], dtype="double")
+        # Check if we can use cached result
+        if (self._last_head_pose is not None and 
+            current_time - self._last_head_pose_time < self._head_pose_cache_duration):
+            return self._last_head_pose
         
-        dist_coeffs = np.zeros((4, 1))
-        
-        image_points = np.array([
-            landmarks[30],     # Nose tip
-            landmarks[8],      # Chin
-            landmarks[36],     # Left eye left corner
-            landmarks[45],     # Right eye right corner
-            landmarks[48],     # Left mouth corner
-            landmarks[54]      # Right mouth corner
-        ], dtype="double")
-        
-        # Solve PnP (from reference file)
-        success, rotation_vector, translation_vector = cv2.solvePnP(
-            self.model_points, image_points, camera_matrix, dist_coeffs
-        )
-        
-        if success:
-            # Rotation vector to rotation matrix
-            rotation_matrix, _ = cv2.Rodrigues(rotation_vector)
+        try:
+            h, w = frame_shape[:2]
             
-            # Extract Euler angles (from reference file)
-            sy = np.sqrt(rotation_matrix[0,0] * rotation_matrix[0,0] + rotation_matrix[1,0] * rotation_matrix[1,0])
-            singular = sy < 1e-6
+            # Improved focal length calculation
+            focal_length = max(w, h)  # Use the larger dimension for better accuracy
+            center = (w/2, h/2)
+            camera_matrix = np.array([
+                [focal_length, 0, center[0]],
+                [0, focal_length, center[1]],
+                [0, 0, 1]
+            ], dtype="double")
             
-            if not singular:
-                x = np.arctan2(rotation_matrix[2,1], rotation_matrix[2,2])
-                y = np.arctan2(-rotation_matrix[2,0], sy)
-                z = np.arctan2(rotation_matrix[1,0], rotation_matrix[0,0])
-            else:
-                x = np.arctan2(-rotation_matrix[1,2], rotation_matrix[1,1])
-                y = np.arctan2(-rotation_matrix[2,0], sy)
-                z = 0
+            dist_coeffs = np.zeros((4, 1))
             
-            # Convert to degrees
-            pitch = np.degrees(x)  # up/down
-            yaw = np.degrees(y)    # left/right
-            roll = np.degrees(z)   # tilt
+            # Ensure landmarks are valid
+            if (landmarks[30][0] < 0 or landmarks[30][1] < 0 or 
+                landmarks[8][0] < 0 or landmarks[8][1] < 0 or
+                landmarks[36][0] < 0 or landmarks[36][1] < 0 or
+                landmarks[45][0] < 0 or landmarks[45][1] < 0 or
+                landmarks[48][0] < 0 or landmarks[48][1] < 0 or
+                landmarks[54][0] < 0 or landmarks[54][1] < 0):
+                return None, None, None
             
-            return pitch, yaw, roll
+            image_points = np.array([
+                landmarks[30],     # Nose tip
+                landmarks[8],      # Chin
+                landmarks[36],     # Left eye left corner
+                landmarks[45],     # Right eye right corner
+                landmarks[48],     # Left mouth corner
+                landmarks[54]      # Right mouth corner
+            ], dtype="double")
+            
+            # Solve PnP with better error handling
+            success, rotation_vector, translation_vector = cv2.solvePnP(
+                self.model_points, image_points, camera_matrix, dist_coeffs,
+                flags=cv2.SOLVEPNP_ITERATIVE
+            )
+            
+            if success:
+                # Rotation vector to rotation matrix
+                rotation_matrix, _ = cv2.Rodrigues(rotation_vector)
+                
+                # Extract Euler angles with improved calculation
+                sy = np.sqrt(rotation_matrix[0,0] * rotation_matrix[0,0] + rotation_matrix[1,0] * rotation_matrix[1,0])
+                singular = sy < 1e-6
+                
+                if not singular:
+                    x = np.arctan2(rotation_matrix[2,1], rotation_matrix[2,2])
+                    y = np.arctan2(-rotation_matrix[2,0], sy)
+                    z = np.arctan2(rotation_matrix[1,0], rotation_matrix[0,0])
+                else:
+                    x = np.arctan2(-rotation_matrix[1,2], rotation_matrix[1,1])
+                    y = np.arctan2(-rotation_matrix[2,0], sy)
+                    z = 0
+                
+                # Convert to degrees
+                pitch = np.degrees(x)  # up/down
+                yaw = np.degrees(y)    # left/right (negative = left, positive = right)
+                roll = np.degrees(z)   # tilt
+                
+                # Clamp values to reasonable ranges
+                pitch = np.clip(pitch, -90, 90)
+                yaw = np.clip(yaw, -90, 90)
+                roll = np.clip(roll, -90, 90)
+                
+                # Cache the result
+                result = (pitch, yaw, roll)
+                self._last_head_pose = result
+                self._last_head_pose_time = current_time
+                
+                return result
+            
+        except Exception as e:
+            print(f"Head pose calculation error: {e}")
+            return None, None, None
         
         return None, None, None
     

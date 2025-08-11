@@ -35,7 +35,7 @@ head_pose:
 # LIVENESS DETECTION #
 liveness:
   blink_threshold: 0.25
-  head_movement_threshold: 8.0  # Reduced from 15.0 to 8.0 degrees for better detection
+  head_movement_threshold: 6.0  # Reduced from 8.0 to 6.0 degrees for easier detection
   required_blinks: 2
   detection_timeout: 30  # seconds
 

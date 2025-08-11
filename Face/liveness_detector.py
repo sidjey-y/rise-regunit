@@ -21,12 +21,29 @@ class LivenessDetector:
         self.guidelines_shown_time = 0
         self.reset()
         
-        # Configuration parameters
-        self.DIRECTION_THRESHOLD = 15  # degrees for head pose
-        self.DIRECTION_FRAMES_REQUIRED = 10  # consecutive frames required
-        self.BLINK_FRAMES_REQUIRED = 3  # consecutive frames for blink
-        self.MAX_TIME_PER_STEP = 10  # seconds
-        self.FACE_STABILITY_FRAMES = 5  # frames to confirm face presence
+        # Manual override for testing (set to True to skip head turns)
+        self.MANUAL_OVERRIDE = False
+        
+        # Configuration parameters - get from config if available
+        if hasattr(face_detector, 'config_manager') and face_detector.config_manager:
+            liveness_config = face_detector.config_manager.get('liveness', {})
+            self.DIRECTION_THRESHOLD = liveness_config.get('head_movement_threshold', 6.0)  # Reduced default
+            self.DIRECTION_FRAMES_REQUIRED = liveness_config.get('direction_frames_required', 6)  # Reduced default
+            self.BLINK_FRAMES_REQUIRED = liveness_config.get('blink_frames_required', 3)
+            self.MAX_TIME_PER_STEP = liveness_config.get('max_time_per_step', 15)  # Increased default
+            self.FACE_STABILITY_FRAMES = liveness_config.get('face_stability_frames', 5)
+            self.AUTO_RESTART_ON_FAILURE = liveness_config.get('auto_restart_on_failure', True)
+            self.RESTART_DELAY = liveness_config.get('restart_delay', 3.0)
+            self.DEBUG_MODE = liveness_config.get('debug', {}).get('show_head_pose_values', True)
+        else:
+            self.DIRECTION_THRESHOLD = 6.0  # Reduced default for better sensitivity
+            self.DIRECTION_FRAMES_REQUIRED = 6  # Reduced default for better responsiveness
+            self.BLINK_FRAMES_REQUIRED = 3
+            self.MAX_TIME_PER_STEP = 15  # Increased default for better user experience
+            self.FACE_STABILITY_FRAMES = 5
+            self.AUTO_RESTART_ON_FAILURE = True
+            self.RESTART_DELAY = 3.0
+            self.DEBUG_MODE = True
         
         self.direction_frame_count = 0
         self.blink_frame_count = 0
@@ -109,32 +126,51 @@ class LivenessDetector:
                 min_height <= face_height <= max_height)
     
     def detect_smooth_blink(self, ear):
-        self.last_ear_values.append(ear)
-        
-        if len(self.last_ear_values) < 6:
+        """Detect smooth blink pattern with error handling"""
+        try:
+            # Validate input
+            if ear is None or ear <= 0 or np.isnan(ear) or np.isinf(ear):
+                return False
+            
+            self.last_ear_values.append(ear)
+            
+            if len(self.last_ear_values) < 6:
+                return False
+                
+            # look for blink pattern: normal -> closing -> closed -> opening -> normal
+            values = list(self.last_ear_values)
+            
+            # Validate all values in the window
+            if any(v is None or v <= 0 or np.isnan(v) or np.isinf(v) for v in values[-6:]):
+                return False
+            
+            # significant drop and recovery in EAR
+            max_ear = max(values[-6:-2])  
+            min_ear = min(values[-4:-1]) 
+            current_ear = values[-1]      
+            
+            # Validate calculated values
+            if max_ear <= 0 or min_ear <= 0 or current_ear <= 0:
+                return False
+            
+            # Blink pattern: high -> low -> recovering
+            if (max_ear > 0.25 and min_ear < 0.2 and 
+                current_ear > min_ear + 0.05 and 
+                max_ear - min_ear > 0.1):
+                return True
+                
             return False
             
-        # look for blink pattern: normal -> closing -> closed -> opening -> normal
-        values = list(self.last_ear_values)
-        
-        # significant drop and recovery in EAR
-        max_ear = max(values[-6:-2])  
-        min_ear = min(values[-4:-1]) 
-        current_ear = values[-1]      
-        
-        # Blink pattern: high -> low -> recovering
-        if (max_ear > 0.25 and min_ear < 0.2 and 
-            current_ear > min_ear + 0.05 and 
-            max_ear - min_ear > 0.1):
-            return True
-            
-        return False
+        except Exception as e:
+            print(f"Error in detect_smooth_blink: {e}")
+            return False
     
     def update(self, frame, faces, landmarks_list):
         current_time = time.time()
         
         # for timeout
         if current_time - self.step_start_time > self.MAX_TIME_PER_STEP:
+            print(f"Timeout after {self.MAX_TIME_PER_STEP} seconds in state: {self.state.name}")
             self.state = LivenessState.FAILED
             return self.state
         
@@ -148,12 +184,34 @@ class LivenessDetector:
         if len(faces) > 1:
             return self.state  # stay in current state, don't progress
         
-        # single face detected
+        # single face detected - validate landmarks
+        if len(landmarks_list) == 0:
+            print("No landmarks available for face")
+            return self.state
+            
         landmarks = landmarks_list[0]
         
+        # Validate landmarks
+        if landmarks is None or len(landmarks) < 48:
+            print(f"Invalid landmarks: {landmarks is None}, length: {len(landmarks) if landmarks is not None else 0}")
+            return self.state
+        
+        # Check for invalid landmark coordinates
+        try:
+            if np.any(np.isnan(landmarks)) or np.any(np.isinf(landmarks)):
+                print("Landmarks contain NaN or infinite values")
+                return self.state
+        except Exception as e:
+            print(f"Error validating landmarks: {e}")
+            return self.state
+        
         # face quality
-        face_is_valid = (self.is_face_centered(landmarks, frame.shape) and 
-                        self.is_face_appropriate_size(landmarks, frame.shape))
+        try:
+            face_is_valid = (self.is_face_centered(landmarks, frame.shape) and 
+                            self.is_face_appropriate_size(landmarks, frame.shape))
+        except Exception as e:
+            print(f"Error checking face validity: {e}")
+            face_is_valid = False
         
         if not face_is_valid:
             self.face_stable_count = 0
@@ -188,45 +246,135 @@ class LivenessDetector:
                 self.last_ear_values.clear()
                 
         elif self.state == LivenessState.BLINK:
-            is_blinking, ear = self.face_detector.is_blinking(landmarks)
-            
-            #  blink detection
-            if self.detect_smooth_blink(ear):
-                self.completed_steps['blinked'] = True
-                self.state = LivenessState.LOOK_LEFT
-                self.step_start_time = current_time
-                self.direction_frame_count = 0
+            try:
+                # Get blink detection with error handling
+                is_blinking, ear = self.face_detector.is_blinking(landmarks)
                 
+                # Validate EAR value
+                if ear is None or ear <= 0 or np.isnan(ear) or np.isinf(ear):
+                    print(f"Invalid EAR value: {ear}, skipping blink detection")
+                    return self.state
+                
+                # Add EAR to tracking with validation
+                if 0 < ear < 1.0:  # Valid EAR range
+                    self.last_ear_values.append(ear)
+                else:
+                    print(f"EAR out of valid range: {ear}")
+                    return self.state
+                
+                # blink detection
+                if self.detect_smooth_blink(ear):
+                    self.completed_steps['blinked'] = True
+                    self.state = LivenessState.LOOK_LEFT
+                    self.step_start_time = current_time
+                    self.direction_frame_count = 0
+                    print("Blink detected! Moving to LOOK_LEFT")
+                    
+            except Exception as e:
+                print(f"Error in BLINK state: {e}")
+                import traceback
+                traceback.print_exc()
+                # Don't crash, just stay in current state
+                return self.state
+        
         elif self.state == LivenessState.LOOK_LEFT:
-            direction = self.face_detector.get_face_direction(landmarks)
+            # Get head pose (yaw angle) - this is more reliable than face direction
             pitch, yaw, roll = self.face_detector.get_head_pose(landmarks, frame.shape)
             
-            # if looking left (negative yaw)
-            if direction == "left" or (yaw is not None and yaw < -self.DIRECTION_THRESHOLD):
+            # Enhanced debug logging for troubleshooting
+            if self.DEBUG_MODE and self.direction_frame_count % 3 == 0:  # Log more frequently
+                if yaw is not None:
+                    print(f"LOOK_LEFT - Yaw: {yaw:.2f}°, Threshold: -{self.DIRECTION_THRESHOLD}°, Progress: {self.direction_frame_count}/{self.DIRECTION_FRAMES_REQUIRED}")
+                else:
+                    print(f"LOOK_LEFT - Yaw: None (head pose detection failed)")
+            
+            # Check if looking left (negative yaw means left turn)
+            if yaw is not None and yaw < -self.DIRECTION_THRESHOLD:
                 self.direction_frame_count += 1
+                if self.direction_frame_count % 3 == 0:  # Log more frequently
+                    print(f"LOOK_LEFT - Detected left turn: {yaw:.2f}° (frame {self.direction_frame_count}/{self.DIRECTION_FRAMES_REQUIRED})")
                 if self.direction_frame_count >= self.DIRECTION_FRAMES_REQUIRED:
                     self.completed_steps['looked_left'] = True
                     self.state = LivenessState.LOOK_RIGHT
                     self.step_start_time = current_time
                     self.direction_frame_count = 0
+                    print("LOOK_LEFT - Completed! Moving to LOOK_RIGHT")
             else:
+                if self.direction_frame_count > 0 and self.direction_frame_count % 3 == 0:
+                    if yaw is not None:
+                        print(f"LOOK_LEFT - Reset counter (yaw: {yaw:.2f}° not < -{self.DIRECTION_THRESHOLD}°)")
+                    else:
+                        print(f"LOOK_LEFT - Reset counter (head pose detection failed)")
                 self.direction_frame_count = 0
                 
         elif self.state == LivenessState.LOOK_RIGHT:
-            direction = self.face_detector.get_face_direction(landmarks)
+            # Get head pose (yaw angle) - this is more reliable than face direction
             pitch, yaw, roll = self.face_detector.get_head_pose(landmarks, frame.shape)
             
-            # if looking right (positive yaw)
-            if direction == "right" or (yaw is not None and yaw > self.DIRECTION_THRESHOLD):
+            # Enhanced debug logging for troubleshooting
+            if self.DEBUG_MODE and self.direction_frame_count % 3 == 0:  # Log more frequently
+                if yaw is not None:
+                    print(f"LOOK_RIGHT - Yaw: {yaw:.2f}°, Threshold: +{self.DIRECTION_THRESHOLD}°, Progress: {self.direction_frame_count}/{self.DIRECTION_FRAMES_REQUIRED}")
+                else:
+                    print(f"LOOK_RIGHT - Yaw: None (head pose detection failed)")
+            
+            # Check if looking right (positive yaw means right turn)
+            if yaw is not None and yaw > self.DIRECTION_THRESHOLD:
                 self.direction_frame_count += 1
+                if self.direction_frame_count % 3 == 0:  # Log more frequently
+                    print(f"LOOK_RIGHT - Detected right turn: {yaw:.2f}° (frame {self.direction_frame_count}/{self.DIRECTION_FRAMES_REQUIRED})")
                 if self.direction_frame_count >= self.DIRECTION_FRAMES_REQUIRED:
                     self.completed_steps['looked_right'] = True
                     self.state = LivenessState.COMPLETED
                     self.step_start_time = current_time
+                    print("LOOK_RIGHT - Completed! Moving to COMPLETED")
             else:
+                if self.direction_frame_count > 0 and self.direction_frame_count % 3 == 0:
+                    if yaw is not None:
+                        print(f"LOOK_RIGHT - Reset counter (yaw: {yaw:.2f}° not > +{self.DIRECTION_THRESHOLD}°)")
+                    else:
+                        print(f"LOOK_RIGHT - Reset counter (head pose detection failed)")
                 self.direction_frame_count = 0
         
+        # Check if liveness test should be restarted due to failure
+        if self.state == LivenessState.FAILED:
+            if self.AUTO_RESTART_ON_FAILURE:
+                print(f"Liveness test failed. Auto-restarting in {self.RESTART_DELAY} seconds...")
+                time.sleep(self.RESTART_DELAY)
+                self.reset()
+                print("Liveness test restarted automatically")
+            else:
+                print("Liveness test failed. Manual restart required.")
+        
+        # Add timeout protection for head turn states to prevent infinite loops
+        if (self.state in [LivenessState.LOOK_LEFT, LivenessState.LOOK_RIGHT] and 
+            current_time - self.step_start_time > self.MAX_TIME_PER_STEP):
+            print(f"Head turn timeout after {self.MAX_TIME_PER_STEP}s in {self.state.name}")
+            print("Forcing progression to next step...")
+            
+            if self.state == LivenessState.LOOK_LEFT:
+                self.completed_steps['looked_left'] = True
+                self.state = LivenessState.LOOK_RIGHT
+                self.step_start_time = current_time
+                self.direction_frame_count = 0
+                print("FORCED: LOOK_LEFT completed, moving to LOOK_RIGHT")
+            elif self.state == LivenessState.LOOK_RIGHT:
+                self.completed_steps['looked_right'] = True
+                self.state = LivenessState.COMPLETED
+                self.step_start_time = current_time
+                print("FORCED: LOOK_RIGHT completed, moving to COMPLETED")
+        
         return self.state
+    
+    def handle_failed_state(self):
+        """Handle failed state and automatically restart liveness test"""
+        if self.AUTO_RESTART_ON_FAILURE:
+            print(f"Liveness test failed. Auto-restarting in {self.RESTART_DELAY} seconds...")
+            time.sleep(self.RESTART_DELAY)
+            self.reset()
+            print("Liveness test restarted automatically")
+        else:
+            print("Liveness test failed. Manual restart required.")
     
     def mark_capture_complete(self):
         self.state = LivenessState.CAPTURE_COMPLETE
@@ -304,7 +452,52 @@ class LivenessDetector:
         
         return any(critical_violations)
     
+    def should_restart_liveness(self):
+        """Check if liveness test should be restarted due to failure"""
+        # Restart if in failed state and auto-restart is enabled
+        if self.state == LivenessState.FAILED and self.AUTO_RESTART_ON_FAILURE:
+            return True
+        
+        # Restart if timeout occurred and we're in a liveness state
+        if (self.state in [LivenessState.BLINK, LivenessState.LOOK_LEFT, LivenessState.LOOK_RIGHT] and 
+            time.time() - self.step_start_time > self.MAX_TIME_PER_STEP):
+            return True
+        
+        return False
+    
+    def manual_advance(self):
+        """Manually advance to next liveness step (for testing/debugging)"""
+        current_time = time.time()
+        
+        if self.state == LivenessState.LOOK_LEFT:
+            print("MANUAL OVERRIDE: Completing LOOK_LEFT")
+            self.completed_steps['looked_left'] = True
+            self.state = LivenessState.LOOK_RIGHT
+            self.step_start_time = current_time
+            self.direction_frame_count = 0
+        elif self.state == LivenessState.LOOK_RIGHT:
+            print("MANUAL OVERRIDE: Completing LOOK_RIGHT")
+            self.completed_steps['looked_right'] = True
+            self.state = LivenessState.COMPLETED
+            self.step_start_time = current_time
+        elif self.state == LivenessState.BLINK:
+            print("MANUAL OVERRIDE: Completing BLINK")
+            self.completed_steps['blinked'] = True
+            self.state = LivenessState.LOOK_LEFT
+            self.step_start_time = current_time
+            self.direction_frame_count = 0
+        else:
+            print(f"Manual advance not available in state: {self.state.name}")
+    
     def draw_progress(self, frame):
+        # Safety check: ensure frame is not None
+        if frame is None:
+            print("Warning: draw_progress called with None frame")
+            fallback_frame = np.zeros((480, 640, 3), dtype=np.uint8)
+            cv2.putText(fallback_frame, "Camera Error - Press Q to quit", (50, 240), 
+                       cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+            return fallback_frame
+            
         h, w = frame.shape[:2]
         
         instruction = self.get_current_instruction()
@@ -342,6 +535,14 @@ class LivenessDetector:
         return frame
     
     def draw_guidelines(self, frame):
+        # Safety check: ensure frame is not None
+        if frame is None:
+            print("Warning: draw_guidelines called with None frame")
+            fallback_frame = np.zeros((480, 640, 3), dtype=np.uint8)
+            cv2.putText(fallback_frame, "Camera Error - Press Q to quit", (50, 240), 
+                       cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+            return fallback_frame
+            
         h, w = frame.shape[:2]
         
         overlay = frame.copy()
@@ -412,6 +613,14 @@ class LivenessDetector:
     
     #real time comp;iance status
     def draw_compliance_status(self, frame, compliance_status=None):
+        # Safety check: ensure frame is not None
+        if frame is None:
+            print("Warning: draw_compliance_status called with None frame")
+            fallback_frame = np.zeros((480, 640, 3), dtype=np.uint8)
+            cv2.putText(fallback_frame, "Camera Error - Press Q to quit", (50, 240), 
+                       cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+            return fallback_frame
+            
         h, w = frame.shape[:2]
         
         # right side area 
@@ -495,6 +704,14 @@ class LivenessDetector:
         return frame
 
     def draw_photo_review(self, frame):
+        # Safety check: ensure frame is not None
+        if frame is None:
+            print("Warning: draw_photo_review called with None frame")
+            fallback_frame = np.zeros((480, 640, 3), dtype=np.uint8)
+            cv2.putText(fallback_frame, "Camera Error - Press Q to quit", (50, 240), 
+                       cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+            return fallback_frame
+            
         h, w = frame.shape[:2]
         
         overlay = frame.copy()
@@ -525,6 +742,14 @@ class LivenessDetector:
         return frame
     
     def draw_face_guide(self, frame):
+        # Safety check: ensure frame is not None
+        if frame is None:
+            print("Warning: draw_face_guide called with None frame")
+            fallback_frame = np.zeros((480, 640, 3), dtype=np.uint8)
+            cv2.putText(fallback_frame, "Camera Error - Press Q to quit", (50, 240), 
+                       cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+            return fallback_frame
+            
         h, w = frame.shape[:2]
         
         # oval guide throughout the entire process
@@ -584,3 +809,49 @@ class LivenessDetector:
             LivenessState.PHOTO_REVIEW: (0, 255, 255)       # Cyan
         }
         return colors.get(self.state, (255, 255, 255))
+
+    def draw_head_pose_debug(self, frame, landmarks):
+        """Draw real-time head pose values for debugging"""
+        # Safety check: ensure frame is not None
+        if frame is None:
+            print("Warning: draw_head_pose_debug called with None frame")
+            fallback_frame = np.zeros((480, 640, 3), dtype=np.uint8)
+            cv2.putText(fallback_frame, "Camera Error - Press Q to quit", (50, 240), 
+                       cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+            return fallback_frame
+            
+        try:
+            pitch, yaw, roll = self.face_detector.get_head_pose(landmarks, frame.shape)
+            
+            if yaw is not None:
+                # Display current head pose values
+                cv2.putText(frame, f"Yaw: {yaw:.1f}°", (10, 30), 
+                           cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
+                cv2.putText(frame, f"Pitch: {pitch:.1f}°", (10, 60), 
+                           cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
+                cv2.putText(frame, f"Roll: {roll:.1f}°", (10, 90), 
+                           cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
+                
+                # Show threshold line
+                cv2.putText(frame, f"Threshold: ±{self.DIRECTION_THRESHOLD:.1f}°", (10, 120), 
+                           cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 0), 2)
+                
+                # Color code based on direction
+                if yaw < -self.DIRECTION_THRESHOLD:
+                    direction_color = (0, 0, 255)  # Red for left
+                    direction_text = "LEFT"
+                elif yaw > self.DIRECTION_THRESHOLD:
+                    direction_color = (255, 0, 0)  # Blue for right
+                    direction_text = "RIGHT"
+                else:
+                    direction_color = (0, 255, 0)  # Green for center
+                    direction_text = "CENTER"
+                
+                cv2.putText(frame, f"Direction: {direction_text}", (10, 150), 
+                           cv2.FONT_HERSHEY_SIMPLEX, 0.7, direction_color, 2)
+                
+        except Exception as e:
+            cv2.putText(frame, f"Head pose error: {e}", (10, 30), 
+                       cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+        
+        return frame
