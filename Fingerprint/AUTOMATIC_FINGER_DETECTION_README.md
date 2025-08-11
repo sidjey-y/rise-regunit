@@ -30,7 +30,6 @@ This system implements a **realistic 10-finger enrollment system** where:
 - **Between Users**: Different users can have same finger types without conflict
 - **Real-time Comparison**: Compares each new scan against all previously enrolled fingers
 - **Similarity Threshold**: 50% similarity triggers duplicate warning (lowered for better detection)
-- **Enhanced AI Detection**: Uses morphological analysis to detect wrong finger types
 - **Detailed Feedback**: Shows which finger was detected as duplicate and similarity score
 
 ### **Enrollment Process**
@@ -62,10 +61,7 @@ print('Scanner connected:', system.test_scanner_connection())
 python test_duplicate_detection.py
 ```
 
-### **Test Enhanced AI Detection**
-```bash
-python enhanced_duplicate_detection.py
-```
+
 
 ### **Clear All Templates and Restart**
 ```bash
@@ -119,8 +115,6 @@ python clear_and_restart.py
 3. **Similarity Threshold**: 50% similarity triggers duplicate warning (lowered from 80%)
 4. **Position Validation**: Ensures no template conflicts
 5. **Template Positioning**: Starts at position 1 (not 0)
-6. **Enhanced AI Detection**: Morphological analysis for wrong finger type detection
-7. **Machine Learning**: Pattern complexity and ridge density analysis
 
 ### **Quality Validation**
 - **Image Readability**: Ensures scanner can read the image
@@ -152,11 +146,9 @@ python clear_and_restart.py
 
 ### **Duplicate Detection Issues**
 - **Same finger accepted twice**: System now compares against all enrolled fingers
-- **Wrong finger type accepted**: Enhanced AI detection now catches this
 - **False positives**: Similarity threshold set to 50% (adjustable)
 - **No duplicate warning**: Check if characteristics comparison is working
 - **Scanner templates**: System also checks scanner memory for conflicts
-- **Enhanced detection not working**: Install required packages with `pip install -r requirements_enhanced.txt`
 
 ### **Data Storage Issues**
 - Check write permissions in directory
@@ -172,15 +164,9 @@ python clear_and_restart.py
 
 ## 📚 **Dependencies**
 
-### **Basic System**
 ```bash
 pip install pyfingerprint
 pip install PyYAML  # Optional, for YAML output
-```
-
-### **Enhanced AI Detection**
-```bash
-pip install -r requirements_enhanced.txt
 ```
 
 ## 🎯 **Use Cases**

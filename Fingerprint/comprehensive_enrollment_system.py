@@ -244,6 +244,18 @@ class ComprehensiveEnrollmentSystem:
             logger.info("Downloading characteristics...")
             current_char = self.scanner.downloadCharacteristics(0x01)
             
+            # Ensure current_char is bytes (PyFingerprint sometimes returns list)
+            if isinstance(current_char, list):
+                logger.info("Converting characteristics from list to bytes...")
+                current_char = bytes(current_char)
+            elif not isinstance(current_char, bytes):
+                logger.warning(f"Unexpected characteristics type: {type(current_char)}, converting to bytes...")
+                try:
+                    current_char = bytes(current_char)
+                except Exception as e:
+                    logger.error(f"Failed to convert characteristics to bytes: {e}")
+                    return False
+            
             # Check for duplicates against already enrolled fingers for this user
             logger.info("Checking for duplicates against already enrolled fingers...")
             if self.current_user_fingers:
@@ -265,36 +277,7 @@ class ComprehensiveEnrollmentSystem:
             else:
                 logger.info("First finger - no duplicates to check")
             
-            # NEW: Enhanced wrong finger type detection
-            logger.info("Running enhanced wrong finger type detection...")
-            try:
-                from enhanced_duplicate_detection import EnhancedDuplicateDetector
-                
-                enhanced_detector = EnhancedDuplicateDetector()
-                analysis = enhanced_detector.analyze_finger_scan(
-                    current_char, hand.value, finger_type.value
-                )
-                
-                if analysis and analysis.is_wrong_finger:
-                    logger.error(f"🚨 WRONG FINGER TYPE DETECTED!")
-                    logger.error(f"   Expected: {hand.value.title()} {finger_type.value.title()}")
-                    logger.error(f"   Detected: {analysis.detected_finger_type.title()}")
-                    logger.error(f"   Confidence: {analysis.confidence:.1%}")
-                    logger.error(f"   Reason: {analysis.reason}")
-                    logger.error(f"   Overall similarity: {analysis.similarity_scores.get('overall_similarity', 0):.1%}")
-                    logger.error("   Please scan the correct finger type")
-                    return False
-                
-                if analysis:
-                    logger.info(f"✅ Finger type validation passed")
-                    logger.info(f"   Detected: {analysis.detected_finger_type.title()}")
-                    logger.info(f"   Confidence: {analysis.confidence:.1%}")
-                    logger.info(f"   Overall similarity: {analysis.similarity_scores.get('overall_similarity', 0):.1%}")
-                
-            except ImportError:
-                logger.warning("Enhanced duplicate detection not available - skipping finger type validation")
-            except Exception as e:
-                logger.warning(f"Enhanced detection failed: {e} - continuing with basic validation")
+
             
             # Also check scanner templates for any conflicts
             logger.info("Checking scanner templates for conflicts...")
@@ -323,6 +306,20 @@ class ComprehensiveEnrollmentSystem:
             logger.info("Extracting minutiae points and characteristics...")
             embeddings = self.extract_fingerprint_features(current_char)
             
+            # Extract minutiae points with fallback
+            try:
+                minutiae_points = self._extract_minutiae_points(current_char)
+                logger.info(f"Minutiae extraction successful: {len(minutiae_points)} points")
+            except Exception as e:
+                logger.warning(f"Minutiae extraction failed, using fallback: {e}")
+                minutiae_points = [{
+                    'position': 0,
+                    'type': 'fallback',
+                    'coordinates': [0, 0],
+                    'confidence': 0.5,
+                    'data': 'extraction_failed'
+                }]
+            
             # Store fingerprint data with minutiae points
             fingerprint_data = FingerprintData(
                 user_id=self.current_user_id,
@@ -333,7 +330,7 @@ class ComprehensiveEnrollmentSystem:
                 score=score,
                 embeddings=embeddings,
                 raw_image_data=current_char,  # Store the actual characteristics data
-                minutiae_points=self._extract_minutiae_points(current_char)
+                minutiae_points=minutiae_points
             )
             
             self.current_user_fingers[finger_key] = fingerprint_data
@@ -1199,6 +1196,11 @@ class ComprehensiveEnrollmentSystem:
                 logger.warning("Characteristics data too small for minutiae extraction")
                 return []
             
+            # Ensure characteristics is bytes
+            if not isinstance(characteristics, bytes):
+                logger.warning(f"Characteristics is not bytes, got {type(characteristics)}")
+                return []
+            
             # Analyze characteristics data for minutiae patterns
             # This is a simplified approach - in practice, you'd use more sophisticated algorithms
             
@@ -1206,17 +1208,23 @@ class ComprehensiveEnrollmentSystem:
             for i in range(0, len(characteristics) - 4, 4):
                 chunk = characteristics[i:i+4]
                 
-                # Simple pattern detection (this is a placeholder)
-                # In a real system, you'd use proper minutiae detection algorithms
-                if any(b != 0 for b in chunk):  # Non-zero chunk
-                    minutiae_point = {
-                        'position': i,
-                        'type': 'ridge_ending',  # Placeholder
-                        'coordinates': [i % 256, (i // 256) % 256],  # Simplified coordinates
-                        'confidence': 0.8,  # Placeholder confidence
-                        'data': chunk.hex()  # Store the actual data
-                    }
-                    minutiae_points.append(minutiae_point)
+                # Ensure chunk is bytes before calling .hex()
+                if isinstance(chunk, bytes):
+                    try:
+                        # Simple pattern detection (this is a placeholder)
+                        # In a real system, you'd use proper minutiae detection algorithms
+                        if any(b != 0 for b in chunk):  # Non-zero chunk
+                            minutiae_point = {
+                                'position': i,
+                                'type': 'ridge_ending',  # Placeholder
+                                'coordinates': [i % 256, (i // 256) % 256],  # Simplified coordinates
+                                'confidence': 0.8,  # Placeholder confidence
+                                'data': chunk.hex()  # Store the actual data
+                            }
+                            minutiae_points.append(minutiae_point)
+                    except Exception as chunk_error:
+                        logger.warning(f"Error processing chunk at position {i}: {chunk_error}")
+                        continue
             
             logger.info(f"Extracted {len(minutiae_points)} minutiae points")
             return minutiae_points
