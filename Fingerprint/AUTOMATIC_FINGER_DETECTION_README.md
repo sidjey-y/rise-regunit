@@ -29,7 +29,10 @@ This system implements a **realistic 10-finger enrollment system** where:
 - **Within User Only**: Prevents same user from enrolling the same finger twice
 - **Between Users**: Different users can have same finger types without conflict
 - **Real-time Comparison**: Compares each new scan against all previously enrolled fingers
-- **Similarity Threshold**: 50% similarity triggers duplicate warning (lowered for better detection)
+- **Smart Thresholds**: 
+  - **Same hand, same finger**: 65% similarity threshold
+  - **Left vs Right thumbs**: 80% similarity threshold (thumbs are naturally similar)
+  - **Other fingers**: 65% similarity threshold
 - **Detailed Feedback**: Shows which finger was detected as duplicate and similarity score
 
 ### **Enrollment Process**
@@ -39,6 +42,7 @@ This system implements a **realistic 10-finger enrollment system** where:
 4. **3 Attempts Per Finger**: Retry mechanism for failed scans
 5. **Real-time Feedback**: Progress tracking and validation
 6. **Data Storage**: JSON/YAML with minutiae and raw data
+7. **Enhanced Debugging**: Detailed similarity scores and thresholds shown
 
 ## 🚀 **How to Run**
 
@@ -112,7 +116,10 @@ python clear_and_restart.py
 ### **Duplication Detection Method**
 1. **Template Search**: Uses scanner's built-in search
 2. **Characteristics Comparison**: Compares fingerprint features
-3. **Similarity Threshold**: 50% similarity triggers duplicate warning (lowered from 80%)
+3. **Smart Thresholds**: 
+   - Same hand duplicates: 65% similarity
+   - Left vs Right thumbs: 80% similarity (naturally similar)
+   - Other fingers: 65% similarity
 4. **Position Validation**: Ensures no template conflicts
 5. **Template Positioning**: Starts at position 1 (not 0)
 
@@ -146,7 +153,7 @@ python clear_and_restart.py
 
 ### **Duplicate Detection Issues**
 - **Same finger accepted twice**: System now compares against all enrolled fingers
-- **False positives**: Similarity threshold set to 50% (adjustable)
+- **False positives**: Similarity threshold set to 65% (adjustable)
 - **No duplicate warning**: Check if characteristics comparison is working
 - **Scanner templates**: System also checks scanner memory for conflicts
 

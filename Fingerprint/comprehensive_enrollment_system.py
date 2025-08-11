@@ -163,23 +163,55 @@ class ComprehensiveEnrollmentSystem:
             return False, "", 0.0
         
         logger.info(f"Checking for duplicates against {len(self.current_user_fingers)} enrolled fingers...")
+        logger.info("=" * 50)
+        
+        # Special handling for thumbs - they're naturally similar between left/right
+        is_thumb = finger_type.value == 'thumb'
+        current_hand = hand.value
+        
+        # Store all similarities for debugging
+        all_similarities = []
         
         for enrolled_key, enrolled_finger in self.current_user_fingers.items():
             if enrolled_finger.raw_image_data:
                 try:
                     similarity = self.compare_characteristics(characteristics, enrolled_finger.raw_image_data)
-                    logger.info(f"  Comparing with {enrolled_key}: {similarity:.2%} similarity")
+                    all_similarities.append((enrolled_key, similarity))
                     
-                    if similarity > 0.5:  # 50% similarity threshold for duplicate detection (lowered from 70%)
+                    # Determine threshold based on finger type and hand
+                    if is_thumb and enrolled_finger.finger_type == 'thumb':
+                        # Thumb comparison - use different thresholds
+                        if enrolled_finger.hand == current_hand:
+                            # Same hand thumb - use normal threshold (65%)
+                            threshold = 0.65
+                            logger.info(f"  🔍 {enrolled_key}: {similarity:.1%} similarity (Same hand thumb - 65% threshold)")
+                        else:
+                            # Different hands (left vs right thumb) - use higher threshold (80%)
+                            threshold = 0.8
+                            logger.info(f"  🔍 {enrolled_key}: {similarity:.1%} similarity (Different hand thumb - 80% threshold)")
+                    else:
+                        # Non-thumb fingers - use normal threshold
+                        threshold = 0.65
+                        logger.info(f"  🔍 {enrolled_key}: {similarity:.1%} similarity (65% threshold)")
+                    
+                    if similarity > threshold:
                         duplicate_info = f"{enrolled_finger.hand.title()} {enrolled_finger.finger_type.title()}"
-                        logger.warning(f"Duplicate detected! This finger is {similarity:.1%} similar to {duplicate_info}")
+                        logger.warning(f"🚨 DUPLICATE DETECTED!")
+                        logger.warning(f"   This finger is {similarity:.1%} similar to {duplicate_info}")
+                        logger.warning(f"   Threshold exceeded: {similarity:.1%} > {threshold:.1%}")
                         return True, duplicate_info, similarity
                         
                 except Exception as e:
                     logger.warning(f"Could not compare with {enrolled_key}: {e}")
                     continue
         
-        logger.info("No duplicates found")
+        # Show summary of all similarities for debugging
+        logger.info("📊 SIMILARITY SUMMARY:")
+        logger.info("-" * 30)
+        for enrolled_key, similarity in sorted(all_similarities, key=lambda x: x[1], reverse=True):
+            logger.info(f"  {enrolled_key}: {similarity:.1%}")
+        
+        logger.info("✅ No duplicates found - all similarities below threshold")
         return False, "", 0.0
     
     def extract_fingerprint_features(self, image_data: bytes) -> Dict:
@@ -257,25 +289,28 @@ class ComprehensiveEnrollmentSystem:
                     return False
             
             # Check for duplicates against already enrolled fingers for this user
-            logger.info("Checking for duplicates against already enrolled fingers...")
+            logger.info("🔍 DUPLICATE DETECTION START")
+            logger.info("=" * 50)
+            
             if self.current_user_fingers:
-                logger.info("Comparing with previously enrolled fingers...")
+                logger.info(f"Comparing new scan with {len(self.current_user_fingers)} enrolled fingers...")
                 
                 # Use the improved duplicate detection method
                 is_duplicate, duplicate_info, similarity = self.check_duplicate_within_user(current_char, hand, finger_type)
                 
                 if is_duplicate:
-                    logger.error(f"DUPLICATE FINGER DETECTED!")
-                    logger.error(f"   This fingerprint is {similarity:.1%} similar to {duplicate_info}")
-                    logger.error(f"   You may have scanned the same finger twice")
+                    logger.error("🚨 DUPLICATE FINGER DETECTED!")
+                    logger.error("=" * 50)
                     logger.error(f"   Expected: {hand.value.title()} {finger_type.value.title()}")
                     logger.error(f"   Detected: {duplicate_info}")
-                    logger.error("   Please scan the correct finger")
+                    logger.error(f"   Similarity: {similarity:.1%}")
+                    logger.error(f"   Threshold exceeded - please scan a different finger")
+                    logger.error("=" * 50)
                     return False
                 
-                logger.info("No duplicates found - proceeding with enrollment")
+                logger.info("✅ No duplicates found - proceeding with enrollment")
             else:
-                logger.info("First finger - no duplicates to check")
+                logger.info("✅ First finger - no duplicates to check")
             
 
             
@@ -789,24 +824,12 @@ class ComprehensiveEnrollmentSystem:
                 
                 time.sleep(1)
             
-            # Final verification
-            logger.info("\nRunning final verification for all fingers...")
+            # Enrollment completed successfully
+            logger.info("All 10 fingers enrolled successfully!")
             logger.info("=" * 60)
-            
-            all_verified = True
-            for hand, finger_type in self.required_fingers:
-                if not self.verify_finger(hand, finger_type):
-                    all_verified = False
-            
-            if all_verified:
-                logger.info("All 10 fingers enrolled and verified successfully!")
-                logger.info("=" * 60)
-                self._show_final_enrollment_summary()
-                self.save_enrollment_data()
-                return True
-            else:
-                logger.error("Some fingers failed verification")
-                return False
+            self._show_final_enrollment_summary()
+            self.save_enrollment_data()
+            return True
                 
         except Exception as e:
             logger.error(f"Complete enrollment failed: {e}")

@@ -217,3 +217,5 @@ class FingerType(Enum):
 
 **Ready to try?** Start with `python test_recognition.py` to verify everything works!
 
+
+
