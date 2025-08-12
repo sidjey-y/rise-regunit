@@ -774,3 +774,823 @@ class FaceDetector(BaseDetector):
         self._last_detection = None
         self._last_landmarks = None
         super().cleanup() 
+
+    def check_face_obstruction_compliance(self, landmarks: np.ndarray, frame: np.ndarray) -> Dict[str, Any]:
+        """Comprehensive face obstruction compliance checking based on YAML configuration"""
+        compliance_result = {
+            'compliant': True,
+            'issues': [],
+            'details': {
+                'glasses': {'compliant': True, 'issues': []},
+                'hair': {'compliant': True, 'issues': []},
+                'face_coverings': {'compliant': True, 'issues': []},
+                'accessories': {'compliant': True, 'issues': []},
+                'overall_visibility': {'compliant': True, 'issues': []}
+            }
+        }
+        
+        try:
+            # Get compliance configuration
+            if not hasattr(self, 'config_manager') or not self.config_manager:
+                return compliance_result
+                
+            compliance_config = self.config_manager.get('compliance', {})
+            face_obstruction_config = compliance_config.get('face_obstruction', {})
+            
+            if not face_obstruction_config.get('enabled', False):
+                return compliance_result
+            
+            # 1. Glasses Compliance Check
+            if face_obstruction_config.get('glasses_compliance', {}).get('allowed', True):
+                glasses_compliance = self._check_glasses_compliance(landmarks, frame, face_obstruction_config)
+                compliance_result['details']['glasses'] = glasses_compliance
+                if not glasses_compliance['compliant']:
+                    compliance_result['compliant'] = False
+                    compliance_result['issues'].extend(glasses_compliance['issues'])
+            
+            # 2. Hair Obstruction Compliance Check
+            if face_obstruction_config.get('hair_compliance', {}).get('allowed', True):
+                hair_compliance = self._check_hair_compliance(landmarks, frame, face_obstruction_config)
+                compliance_result['details']['hair'] = hair_compliance
+                if not hair_compliance['compliant']:
+                    compliance_result['compliant'] = False
+                    compliance_result['issues'].extend(hair_compliance['issues'])
+            
+            # 3. Face Coverings Compliance Check
+            face_coverings_compliance = self._check_face_coverings_compliance(landmarks, frame, face_obstruction_config)
+            compliance_result['details']['face_coverings'] = face_coverings_compliance
+            if not face_coverings_compliance['compliant']:
+                compliance_result['compliant'] = False
+                compliance_result['issues'].extend(face_coverings_compliance['issues'])
+            
+            # 4. Accessories Compliance Check
+            accessories_compliance = self._check_accessories_compliance(landmarks, frame, face_obstruction_config)
+            compliance_result['details']['accessories'] = accessories_compliance
+            if not accessories_compliance['compliant']:
+                compliance_result['compliant'] = False
+                compliance_result['issues'].extend(accessories_compliance['issues'])
+            
+            # 5. Overall Visibility Compliance Check
+            visibility_compliance = self._check_overall_visibility_compliance(landmarks, frame, face_obstruction_config)
+            compliance_result['details']['overall_visibility'] = visibility_compliance
+            if not visibility_compliance['compliant']:
+                compliance_result['compliant'] = False
+                compliance_result['issues'].extend(visibility_compliance['issues'])
+                
+        except Exception as e:
+            compliance_result['compliant'] = False
+            compliance_result['issues'].append(f"Compliance check failed: {str(e)}")
+            
+        return compliance_result
+    
+    def _check_glasses_compliance(self, landmarks: np.ndarray, frame: np.ndarray, config: Dict) -> Dict[str, Any]:
+        """Check glasses compliance based on configuration"""
+        result = {'compliant': True, 'issues': []}
+        
+        try:
+            glasses_config = config.get('glasses_compliance', {})
+            max_coverage = glasses_config.get('max_coverage', 0.30)
+            max_thickness = glasses_config.get('frame_thickness', 0.05)
+            
+            # Check if glasses are detected
+            glasses_detected = self.glasses_detection(landmarks, frame)
+            
+            if glasses_detected:
+                # Calculate glasses coverage
+                coverage = self._calculate_glasses_coverage(landmarks, frame)
+                thickness = self._calculate_frame_thickness(landmarks, frame)
+                
+                if coverage > max_coverage:
+                    result['compliant'] = False
+                    result['issues'].append(f"Glasses coverage ({coverage:.2f}) exceeds limit ({max_coverage})")
+                
+                if thickness > max_thickness:
+                    result['compliant'] = False
+                    result['issues'].append(f"Frame thickness ({thickness:.2f}) exceeds limit ({max_thickness})")
+                    
+        except Exception as e:
+            result['compliant'] = False
+            result['issues'].append(f"Glasses compliance check failed: {str(e)}")
+            
+        return result
+    
+    def _check_hair_compliance(self, landmarks: np.ndarray, frame: np.ndarray, config: Dict) -> Dict[str, Any]:
+        """Check hair obstruction compliance based on configuration"""
+        result = {'compliant': True, 'issues': []}
+        
+        try:
+            hair_config = config.get('hair_compliance', {})
+            max_forehead_coverage = hair_config.get('max_forehead_coverage', 0.25)
+            max_eye_coverage = hair_config.get('max_eye_coverage', 0.10)
+            
+            # Check forehead hair coverage
+            forehead_coverage = self._calculate_forehead_hair_coverage(landmarks, frame)
+            if forehead_coverage > max_forehead_coverage:
+                result['compliant'] = False
+                result['issues'].append(f"Forehead hair coverage ({forehead_coverage:.2f}) exceeds limit ({max_forehead_coverage})")
+            
+            # Check eye hair coverage
+            eye_coverage = self._calculate_eye_hair_coverage(landmarks, frame)
+            if eye_coverage > max_eye_coverage:
+                result['compliant'] = False
+                result['issues'].append(f"Eye hair coverage ({eye_coverage:.2f}) exceeds limit ({max_eye_coverage})")
+                
+        except Exception as e:
+            result['compliant'] = False
+            result['issues'].append(f"Hair compliance check failed: {str(e)}")
+            
+        return result
+    
+    def _check_face_coverings_compliance(self, landmarks: np.ndarray, frame: np.ndarray, config: Dict) -> Dict[str, Any]:
+        """Check face coverings compliance based on configuration"""
+        result = {'compliant': True, 'issues': []}
+        
+        try:
+            coverings_config = config.get('face_coverings', {})
+            masks_allowed = coverings_config.get('masks_allowed', False)
+            scarves_allowed = coverings_config.get('scarves_allowed', False)
+            max_face_coverage = coverings_config.get('max_face_coverage', 0.15)
+            
+            # Check for masks
+            mask_detected = self._detect_face_mask(landmarks, frame)
+            if mask_detected and not masks_allowed:
+                result['compliant'] = False
+                result['issues'].append("Face masks not allowed")
+            
+            # Check for scarves
+            scarf_detected = self._detect_scarf(landmarks, frame)
+            if scarf_detected and not scarves_allowed:
+                result['compliant'] = False
+                result['issues'].append("Scarves not allowed")
+            
+            # Check overall face coverage
+            face_coverage = self._calculate_face_coverage(landmarks, frame)
+            if face_coverage > max_face_coverage:
+                result['compliant'] = False
+                result['issues'].append(f"Face coverage ({face_coverage:.2f}) exceeds limit ({max_face_coverage})")
+                
+        except Exception as e:
+            result['compliant'] = False
+            result['issues'].append(f"Face coverings compliance check failed: {str(e)}")
+            
+        return result
+    
+    def _check_accessories_compliance(self, landmarks: np.ndarray, frame: np.ndarray, config: Dict) -> Dict[str, Any]:
+        """Check accessories compliance based on configuration"""
+        result = {'compliant': True, 'issues': []}
+        
+        try:
+            accessories_config = config.get('accessories', {})
+            hats_allowed = accessories_config.get('hats_allowed', False)
+            sunglasses_allowed = accessories_config.get('sunglasses_allowed', False)
+            max_jewelry_coverage = accessories_config.get('jewelry_coverage', 0.05)
+            
+            # Check for hats
+            hat_detected = self._detect_hat(landmarks, frame)
+            if hat_detected and not hats_allowed:
+                result['compliant'] = False
+                result['issues'].append("Hats not allowed")
+            
+            # Check for sunglasses
+            sunglasses_detected = self._detect_sunglasses(landmarks, frame)
+            if sunglasses_detected and not sunglasses_allowed:
+                result['compliant'] = False
+                result['issues'].append("Sunglasses not allowed")
+            
+            # Check jewelry coverage
+            jewelry_coverage = self._calculate_jewelry_coverage(landmarks, frame)
+            if jewelry_coverage > max_jewelry_coverage:
+                result['compliant'] = False
+                result['issues'].append(f"Jewelry coverage ({jewelry_coverage:.2f}) exceeds limit ({max_jewelry_coverage})")
+                
+        except Exception as e:
+            result['compliant'] = False
+            result['issues'].append(f"Accessories compliance check failed: {str(e)}")
+            
+        return result
+    
+    def _check_overall_visibility_compliance(self, landmarks: np.ndarray, frame: np.ndarray, config: Dict) -> Dict[str, Any]:
+        """Check overall face visibility compliance"""
+        result = {'compliant': True, 'issues': []}
+        
+        if not config.get('enabled', True):
+            return result
+            
+        thresholds = config.get('compliance_thresholds', {})
+        
+        # Calculate visibility metrics
+        face_visibility = self._calculate_face_visibility(landmarks, frame)
+        eye_visibility = self._calculate_eye_visibility(landmarks, frame)
+        mouth_visibility = self._calculate_mouth_visibility(landmarks, frame)
+        nose_visibility = self._calculate_nose_visibility(landmarks, frame)
+        
+        # Check against thresholds
+        if face_visibility < thresholds.get('min_face_visibility', 0.85):
+            result['compliant'] = False
+            result['issues'].append(f"Face visibility too low: {face_visibility:.2f}")
+            
+        if eye_visibility < thresholds.get('min_eye_visibility', 0.90):
+            result['compliant'] = False
+            result['issues'].append(f"Eye visibility too low: {eye_visibility:.2f}")
+            
+        if mouth_visibility < thresholds.get('min_mouth_visibility', 0.80):
+            result['compliant'] = False
+            result['issues'].append(f"Mouth visibility too low: {mouth_visibility:.2f}")
+            
+        if nose_visibility < thresholds.get('min_nose_visibility', 0.85):
+            result['compliant'] = False
+            result['issues'].append(f"Nose visibility too low: {nose_visibility:.2f}")
+            
+        return result
+
+    def _calculate_glasses_coverage(self, landmarks: np.ndarray, frame: np.ndarray) -> float:
+        """Calculate the percentage of eye region covered by glasses"""
+        # Eye region landmarks (27-36 for left eye, 36-45 for right eye)
+        left_eye = landmarks[36:42]
+        right_eye = landmarks[42:48]
+        
+        # Create eye region with margin
+        left_eye_region = self._get_eye_region(left_eye, frame, margin=15)
+        right_eye_region = self._get_eye_region(right_eye, frame, margin=15)
+        
+        # Analyze horizontal lines in eye regions
+        left_coverage = self._analyze_horizontal_lines(left_eye_region)
+        right_coverage = self._analyze_horizontal_lines(right_eye_region)
+        
+        return (left_coverage + right_coverage) / 2.0
+
+    def _calculate_frame_thickness(self, landmarks: np.ndarray, frame: np.ndarray) -> float:
+        """Calculate the thickness of glasses frames"""
+        # Focus on the bridge area between eyes
+        bridge_region = self._get_bridge_region(landmarks, frame)
+        
+        # Analyze vertical edges to detect frame thickness
+        edges = cv2.Canny(bridge_region, 50, 150)
+        contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        
+        if not contours:
+            return 0.0
+            
+        # Find the largest contour (likely the frame)
+        largest_contour = max(contours, key=cv2.contourArea)
+        thickness = self._calculate_contour_thickness(largest_contour)
+        
+        # Normalize by face width
+        face_width = self._get_face_width(landmarks)
+        return thickness / face_width if face_width > 0 else 0.0
+
+    def _calculate_forehead_hair_coverage(self, landmarks: np.ndarray, frame: np.ndarray) -> float:
+        """Calculate hair coverage over the forehead region"""
+        # Forehead region above eyebrows
+        eyebrow_left = landmarks[19]  # Left eyebrow
+        eyebrow_right = landmarks[24]  # Right eyebrow
+        
+        # Create forehead region
+        forehead_region = self._get_forehead_region(landmarks, frame, height=40)
+        
+        # Analyze hair coverage using edge detection
+        gray = cv2.cvtColor(forehead_region, cv2.COLOR_BGR2GRAY)
+        edges = cv2.Canny(gray, 30, 100)
+        
+        # Calculate hair coverage ratio
+        total_pixels = forehead_region.shape[0] * forehead_region.shape[1]
+        hair_pixels = np.count_nonzero(edges)
+        
+        return hair_pixels / total_pixels if total_pixels > 0 else 0.0
+
+    def _calculate_eye_hair_coverage(self, landmarks: np.ndarray, frame: np.ndarray) -> float:
+        """Calculate hair coverage over the eyes"""
+        # Eye regions with extended margins
+        left_eye = landmarks[36:42]
+        right_eye = landmarks[42:48]
+        
+        left_eye_region = self._get_eye_region(left_eye, frame, margin=20)
+        right_eye_region = self._get_eye_region(right_eye, frame, margin=20)
+        
+        # Analyze hair coverage in both eye regions
+        left_coverage = self._analyze_hair_in_region(left_eye_region)
+        right_coverage = self._analyze_hair_in_region(right_eye_region)
+        
+        return (left_coverage + right_coverage) / 2.0
+    
+    def _get_eye_region(self, eye_landmarks: np.ndarray, frame: np.ndarray, margin: int) -> np.ndarray:
+        """Helper to get a region around eye landmarks with a margin."""
+        left_x = int(min(eye_landmarks[:, 0])) - margin
+        right_x = int(max(eye_landmarks[:, 0])) + margin
+        top_y = int(min(eye_landmarks[:, 1])) - margin
+        bottom_y = int(max(eye_landmarks[:, 1])) + margin
+        
+        # Ensure bounds
+        left_x = max(0, left_x)
+        right_x = min(frame.shape[1], right_x)
+        top_y = max(0, top_y)
+        bottom_y = min(frame.shape[0], bottom_y)
+        
+        return frame[top_y:bottom_y, left_x:right_x]
+
+    def _analyze_horizontal_lines(self, image: np.ndarray) -> float:
+        """Analyzes an image for horizontal lines and returns a coverage ratio."""
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        thresh = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 2)
+        
+        horizontal_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (20, 1)) # Adjust kernel size for horizontal lines
+        horizontal_lines = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, horizontal_kernel)
+        
+        # Count horizontal line pixels
+        horizontal_pixels = np.sum(horizontal_lines > 0)
+        total_pixels = horizontal_lines.size
+        
+        return horizontal_pixels / total_pixels if total_pixels > 0 else 0.0
+
+    def _get_bridge_region(self, landmarks: np.ndarray, frame: np.ndarray) -> np.ndarray:
+        """Helper to get a region between eye corners."""
+        left_eye_corner = landmarks[36]
+        right_eye_corner = landmarks[45]
+        
+        # Calculate center of the bridge
+        bridge_center_x = (left_eye_corner[0] + right_eye_corner[0]) / 2
+        bridge_center_y = (left_eye_corner[1] + right_eye_corner[1]) / 2
+        
+        # Define a region around the bridge
+        margin = 20 # Adjust margin as needed
+        left_x = int(bridge_center_x - (right_eye_corner[0] - left_eye_corner[0]) * 0.5) - margin
+        right_x = int(bridge_center_x + (right_eye_corner[0] - left_eye_corner[0]) * 0.5) + margin
+        top_y = int(bridge_center_y - 10) - margin # Above the bridge
+        bottom_y = int(bridge_center_y + 10) + margin # Below the bridge
+        
+        # Ensure bounds
+        left_x = max(0, left_x)
+        right_x = min(frame.shape[1], right_x)
+        top_y = max(0, top_y)
+        bottom_y = min(frame.shape[0], bottom_y)
+        
+        return frame[top_y:bottom_y, left_x:right_x]
+
+    def _calculate_contour_thickness(self, contour: np.ndarray) -> float:
+        """Calculates the thickness of a contour (e.g., glasses frame)."""
+        # This is a simplified approach. A more robust method would involve
+        # fitting a line or curve to the contour and measuring its width.
+        # For now, we'll just return a placeholder value.
+        return 1.0 # Placeholder for actual thickness calculation
+
+    def _get_face_width(self, landmarks: np.ndarray) -> float:
+        """Calculates the width of the face from landmarks."""
+        left_face = min(landmarks[:, 0])
+        right_face = max(landmarks[:, 0])
+        return right_face - left_face
+
+    def _get_forehead_region(self, landmarks: np.ndarray, frame: np.ndarray, height: int) -> np.ndarray:
+        """Helper to get a region above eyebrows."""
+        eyebrow_top_y = int(min(landmarks[17:27, 1])) # Average Y of eyebrow points
+        eyebrow_bottom_y = int(min(landmarks[17:27, 1])) # Average Y of eyebrow points
+        
+        face_left = int(min(landmarks[:, 0]))
+        face_right = int(max(landmarks[:, 0]))
+        
+        # Ensure bounds
+        eyebrow_top_y = max(0, eyebrow_top_y - height)
+        eyebrow_bottom_y = max(0, eyebrow_bottom_y)
+        face_left = max(0, face_left)
+        face_right = min(frame.shape[1], face_right)
+        
+        return frame[eyebrow_top_y:eyebrow_bottom_y, face_left:face_right]
+
+    def _analyze_hair_in_region(self, image: np.ndarray) -> float:
+        """Analyzes an image for hair coverage."""
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        _, thresh = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
+        
+        # Count non-black pixels (likely hair)
+        hair_pixels = np.count_nonzero(thresh == 0)
+        total_pixels = thresh.size
+        
+        return hair_pixels / total_pixels if total_pixels > 0 else 0.0
+    
+    def _detect_face_mask(self, landmarks: np.ndarray, frame: np.ndarray) -> bool:
+        """Detect if person is wearing a face mask"""
+        try:
+            # Simple mask detection based on lower face coverage
+            # This is a simplified approach - in production you'd use more sophisticated methods
+            
+            # Define mouth and nose region
+            nose_points = landmarks[27:36]  # nose landmarks
+            mouth_points = landmarks[48:68]  # mouth landmarks
+            
+            if len(nose_points) == 0 or len(mouth_points) == 0:
+                return False
+            
+            # Calculate face dimensions
+            face_width = max(landmarks[:, 0]) - min(landmarks[:, 0])
+            face_height = max(landmarks[:, 1]) - min(landmarks[:, 1])
+            
+            # Calculate lower face region
+            lower_face_top = int(min(nose_points[:, 1]))
+            lower_face_bottom = int(max(mouth_points[:, 1])) + int(face_height * 0.1)
+            lower_face_left = int(min(landmarks[:, 0]))
+            lower_face_right = int(max(landmarks[:, 0]))
+            
+            # Ensure bounds
+            lower_face_top = max(0, lower_face_top)
+            lower_face_bottom = min(frame.shape[0], lower_face_bottom)
+            lower_face_left = max(0, lower_face_left)
+            lower_face_right = min(frame.shape[1], lower_face_right)
+            
+            if lower_face_bottom <= lower_face_top or lower_face_right <= lower_face_left:
+                return False
+            
+            # Analyze lower face region for mask-like patterns
+            lower_face_region = frame[lower_face_top:lower_face_bottom, lower_face_left:lower_face_right]
+            if lower_face_region.size == 0:
+                return False
+            
+            # Convert to grayscale and analyze
+            gray_lower = cv2.cvtColor(lower_face_region, cv2.COLOR_BGR2GRAY)
+            
+            # Simple heuristic: if lower face is very uniform and bright, likely a mask
+            std_dev = np.std(gray_lower)
+            mean_brightness = np.mean(gray_lower)
+            
+            # Mask detection criteria (simplified)
+            return std_dev < 20 and mean_brightness > 150
+            
+        except Exception:
+            return False
+    
+    def _detect_scarf(self, landmarks: np.ndarray, frame: np.ndarray) -> bool:
+        """Detect if person is wearing a scarf"""
+        try:
+            # Simplified scarf detection - looks for large coverage below mouth
+            mouth_points = landmarks[48:68]  # mouth landmarks
+            
+            if len(mouth_points) == 0:
+                return False
+            
+            # Define region below mouth
+            below_mouth_top = int(max(mouth_points[:, 1])) + 10
+            below_mouth_bottom = int(below_mouth_top + (max(landmarks[:, 1]) - min(landmarks[:, 1])) * 0.3)
+            below_mouth_left = int(min(landmarks[:, 0]))
+            below_mouth_right = int(max(landmarks[:, 0]))
+            
+            # Ensure bounds
+            below_mouth_top = max(0, below_mouth_top)
+            below_mouth_bottom = min(frame.shape[0], below_mouth_bottom)
+            below_mouth_left = max(0, below_mouth_left)
+            below_mouth_right = min(frame.shape[1], below_mouth_right)
+            
+            if below_mouth_bottom <= below_mouth_top or below_mouth_right <= below_mouth_left:
+                return False
+            
+            # Analyze region below mouth
+            below_mouth_region = frame[below_mouth_top:below_mouth_bottom, below_mouth_left:below_mouth_right]
+            if below_mouth_region.size == 0:
+                return False
+            
+            # Convert to grayscale and analyze
+            gray_below = cv2.cvtColor(below_mouth_region, cv2.COLOR_BGR2GRAY)
+            
+            # Scarf detection: look for large uniform regions
+            std_dev = np.std(gray_below)
+            mean_brightness = np.mean(gray_below)
+            
+            # Scarf detection criteria (simplified)
+            return std_dev < 25 and mean_brightness < 120
+            
+        except Exception:
+            return False
+    
+    def _detect_hat(self, landmarks: np.ndarray, frame: np.ndarray) -> bool:
+        """Detect if person is wearing a hat"""
+        try:
+            # Hat detection based on forehead region analysis
+            eyebrow_points = landmarks[17:27]  # eyebrow landmarks
+            
+            if len(eyebrow_points) == 0:
+                return False
+            
+            # Define region above eyebrows
+            above_eyebrow_top = int(min(eyebrow_points[:, 1])) - 60
+            above_eyebrow_bottom = int(min(eyebrow_points[:, 1])) - 20
+            above_eyebrow_left = int(min(landmarks[:, 0]))
+            above_eyebrow_right = int(max(landmarks[:, 0]))
+            
+            # Ensure bounds
+            above_eyebrow_top = max(0, above_eyebrow_top)
+            above_eyebrow_bottom = max(0, above_eyebrow_bottom)
+            above_eyebrow_left = max(0, above_eyebrow_left)
+            above_eyebrow_right = min(frame.shape[1], above_eyebrow_right)
+            
+            if above_eyebrow_bottom <= above_eyebrow_top or above_eyebrow_right <= above_eyebrow_left:
+                return False
+            
+            # Analyze region above eyebrows
+            above_eyebrow_region = frame[above_eyebrow_top:above_eyebrow_bottom, above_eyebrow_left:above_eyebrow_right]
+            if above_eyebrow_region.size == 0:
+                return False
+            
+            # Convert to grayscale and analyze
+            gray_above = cv2.cvtColor(above_eyebrow_region, cv2.COLOR_BGR2GRAY)
+            
+            # Hat detection: look for large uniform regions with low brightness
+            std_dev = np.std(gray_above)
+            mean_brightness = np.mean(gray_above)
+            
+            # Hat detection criteria (simplified)
+            return std_dev < 30 and mean_brightness < 100
+            
+        except Exception:
+            return False
+    
+    def _detect_sunglasses(self, landmarks: np.ndarray, frame: np.ndarray) -> bool:
+        """Detect if person is wearing sunglasses"""
+        try:
+            # Sunglasses detection based on eye region analysis
+            left_eye = landmarks[self.LEFT_EYE_START:self.LEFT_EYE_END]
+            right_eye = landmarks[self.RIGHT_EYE_START:self.RIGHT_EYE_END]
+            
+            if len(left_eye) == 0 or len(right_eye) == 0:
+                return False
+            
+            # Define eye regions
+            left_eye_left = int(min(left_eye[:, 0])) - 5
+            left_eye_right = int(max(left_eye[:, 0])) + 5
+            left_eye_top = int(min(left_eye[:, 1])) - 5
+            left_eye_bottom = int(max(left_eye[:, 1])) + 5
+            
+            right_eye_left = int(min(right_eye[:, 0])) - 5
+            right_eye_right = int(max(right_eye[:, 0])) + 5
+            right_eye_top = int(min(right_eye[:, 1])) - 5
+            right_eye_bottom = int(max(right_eye[:, 1])) + 5
+            
+            # Ensure bounds
+            left_eye_left = max(0, left_eye_left)
+            left_eye_right = min(frame.shape[1], left_eye_right)
+            left_eye_top = max(0, left_eye_top)
+            left_eye_bottom = min(frame.shape[0], left_eye_bottom)
+            
+            right_eye_left = max(0, right_eye_left)
+            right_eye_right = min(frame.shape[1], right_eye_right)
+            right_eye_top = max(0, right_eye_top)
+            right_eye_bottom = min(frame.shape[0], right_eye_bottom)
+            
+            # Analyze both eye regions
+            total_dark_pixels = 0
+            total_pixels = 0
+            
+            # Left eye
+            if left_eye_bottom > left_eye_top and left_eye_right > left_eye_left:
+                left_eye_region = frame[left_eye_top:left_eye_bottom, left_eye_left:left_eye_right]
+                if left_eye_region.size > 0:
+                    gray_left = cv2.cvtColor(left_eye_region, cv2.COLOR_BGR2GRAY)
+                    # Count very dark pixels (likely sunglasses)
+                    total_dark_pixels += np.sum(gray_left < 50)
+                    total_pixels += gray_left.size
+            
+            # Right eye
+            if right_eye_bottom > right_eye_top and right_eye_right > right_eye_left:
+                right_eye_region = frame[right_eye_top:right_eye_bottom, right_eye_left:right_eye_right]
+                if right_eye_region.size > 0:
+                    gray_right = cv2.cvtColor(right_eye_region, cv2.COLOR_BGR2GRAY)
+                    # Count very dark pixels (likely sunglasses)
+                    total_dark_pixels += np.sum(gray_right < 50)
+                    total_pixels += gray_right.size
+            
+            # Sunglasses detection: if significant portion is very dark
+            dark_ratio = total_dark_pixels / total_pixels if total_pixels > 0 else 0.0
+            return dark_ratio > 0.4  # 40% of eye region is very dark
+            
+        except Exception:
+            return False
+    
+    def _calculate_jewelry_coverage(self, landmarks: np.ndarray, frame: np.ndarray) -> float:
+        """Calculate jewelry coverage on face"""
+        try:
+            # Simplified jewelry detection - looks for small bright regions
+            # This is a basic implementation - production systems would use more sophisticated methods
+            
+            # Define face region
+            face_left = int(min(landmarks[:, 0]))
+            face_right = int(max(landmarks[:, 0]))
+            face_top = int(min(landmarks[:, 1]))
+            face_bottom = int(max(landmarks[:, 1]))
+            
+            # Ensure bounds
+            face_left = max(0, face_left)
+            face_right = min(frame.shape[1], face_right)
+            face_top = max(0, face_top)
+            face_bottom = min(frame.shape[0], face_bottom)
+            
+            if face_bottom <= face_top or face_right <= face_left:
+                return 0.0
+            
+            # Analyze face region for jewelry-like patterns
+            face_region = frame[face_top:face_bottom, face_left:face_right]
+            if face_region.size == 0:
+                return 0.0
+            
+            # Convert to grayscale and look for bright spots (potential jewelry)
+            gray_face = cv2.cvtColor(face_region, cv2.COLOR_BGR2GRAY)
+            
+            # Count bright pixels (potential jewelry)
+            bright_pixels = np.sum(gray_face > 200)
+            total_pixels = gray_face.size
+            
+            return bright_pixels / total_pixels if total_pixels > 0 else 0.0
+            
+        except Exception:
+            return 0.0
+    
+    def _calculate_face_visibility(self, landmarks: np.ndarray, frame: np.ndarray) -> float:
+        """Calculate overall face visibility"""
+        try:
+            # Calculate face region
+            face_left = int(min(landmarks[:, 0]))
+            face_right = int(max(landmarks[:, 0]))
+            face_top = int(min(landmarks[:, 1]))
+            face_bottom = int(max(landmarks[:, 1]))
+            
+            # Ensure bounds
+            face_left = max(0, face_left)
+            face_right = min(frame.shape[1], face_right)
+            face_top = max(0, face_top)
+            face_bottom = min(frame.shape[0], face_bottom)
+            
+            if face_bottom <= face_top or face_right <= face_left:
+                return 0.0
+            
+            # Analyze face region for visibility
+            face_region = frame[face_top:face_bottom, face_left:face_right]
+            if face_region.size == 0:
+                return 0.0
+            
+            # Convert to grayscale and analyze
+            gray_face = cv2.cvtColor(face_region, cv2.COLOR_BGR2GRAY)
+            
+            # Calculate visibility based on contrast and brightness
+            mean_brightness = np.mean(gray_face)
+            std_dev = np.std(gray_face)
+            
+            # Normalize to 0-1 range
+            brightness_score = min(1.0, mean_brightness / 255.0)
+            contrast_score = min(1.0, std_dev / 100.0)
+            
+            # Combined visibility score
+            visibility = (brightness_score + contrast_score) / 2.0
+            
+            return max(0.0, min(1.0, visibility))
+            
+        except Exception:
+            return 0.0
+    
+    def _calculate_eye_visibility(self, landmarks: np.ndarray, frame: np.ndarray) -> float:
+        """Calculate eye visibility"""
+        try:
+            left_eye = landmarks[self.LEFT_EYE_START:self.LEFT_EYE_END]
+            right_eye = landmarks[self.RIGHT_EYE_START:self.RIGHT_EYE_END]
+            
+            if len(left_eye) == 0 or len(right_eye) == 0:
+                return 0.0
+            
+            # Calculate visibility for both eyes
+            left_visibility = self._calculate_single_eye_visibility(left_eye, frame)
+            right_visibility = self._calculate_single_eye_visibility(right_eye, frame)
+            
+            return (left_visibility + right_visibility) / 2.0
+            
+        except Exception:
+            return 0.0
+    
+    def _calculate_single_eye_visibility(self, eye_landmarks: np.ndarray, frame: np.ndarray) -> float:
+        """Calculate visibility for a single eye"""
+        try:
+            # Define eye region
+            eye_left = int(min(eye_landmarks[:, 0])) - 5
+            eye_right = int(max(eye_landmarks[:, 0])) + 5
+            eye_top = int(min(eye_landmarks[:, 1])) - 5
+            eye_bottom = int(max(eye_landmarks[:, 1])) + 5
+            
+            # Ensure bounds
+            eye_left = max(0, eye_left)
+            eye_right = min(frame.shape[1], eye_right)
+            eye_top = max(0, eye_top)
+            eye_bottom = min(frame.shape[0], eye_bottom)
+            
+            if eye_bottom <= eye_top or eye_right <= eye_left:
+                return 0.0
+            
+            # Analyze eye region
+            eye_region = frame[eye_top:eye_bottom, eye_left:eye_right]
+            if eye_region.size == 0:
+                return 0.0
+            
+            # Convert to grayscale and analyze
+            gray_eye = cv2.cvtColor(eye_region, cv2.COLOR_BGR2GRAY)
+            
+            # Calculate visibility based on contrast and brightness
+            mean_brightness = np.mean(gray_eye)
+            std_dev = np.std(gray_eye)
+            
+            # Normalize to 0-1 range
+            brightness_score = min(1.0, mean_brightness / 255.0)
+            contrast_score = min(1.0, std_dev / 100.0)
+            
+            # Eye visibility score (weighted towards contrast)
+            visibility = (brightness_score * 0.3 + contrast_score * 0.7)
+            
+            return max(0.0, min(1.0, visibility))
+            
+        except Exception:
+            return 0.0
+    
+    def _calculate_mouth_visibility(self, landmarks: np.ndarray, frame: np.ndarray) -> float:
+        """Calculate mouth visibility"""
+        try:
+            mouth_points = landmarks[48:68]  # mouth landmarks
+            
+            if len(mouth_points) == 0:
+                return 0.0
+            
+            # Define mouth region
+            mouth_left = int(min(mouth_points[:, 0])) - 10
+            mouth_right = int(max(mouth_points[:, 0])) + 10
+            mouth_top = int(min(mouth_points[:, 1])) - 10
+            mouth_bottom = int(max(mouth_points[:, 1])) + 10
+            
+            # Ensure bounds
+            mouth_left = max(0, mouth_left)
+            mouth_right = min(frame.shape[1], mouth_right)
+            mouth_top = max(0, mouth_top)
+            mouth_bottom = min(frame.shape[0], mouth_bottom)
+            
+            if mouth_bottom <= mouth_top or mouth_right <= mouth_left:
+                return 0.0
+            
+            # Analyze mouth region
+            mouth_region = frame[mouth_top:mouth_bottom, mouth_left:mouth_right]
+            if mouth_region.size == 0:
+                return 0.0
+            
+            # Convert to grayscale and analyze
+            gray_mouth = cv2.cvtColor(mouth_region, cv2.COLOR_BGR2GRAY)
+            
+            # Calculate visibility based on contrast and brightness
+            mean_brightness = np.mean(gray_mouth)
+            std_dev = np.std(gray_mouth)
+            
+            # Normalize to 0-1 range
+            brightness_score = min(1.0, mean_brightness / 255.0)
+            contrast_score = min(1.0, std_dev / 100.0)
+            
+            # Mouth visibility score
+            visibility = (brightness_score * 0.4 + contrast_score * 0.6)
+            
+            return max(0.0, min(1.0, visibility))
+            
+        except Exception:
+            return 0.0
+    
+    def _calculate_nose_visibility(self, landmarks: np.ndarray, frame: np.ndarray) -> float:
+        """Calculate nose visibility"""
+        try:
+            nose_points = landmarks[27:36]  # nose landmarks
+            
+            if len(nose_points) == 0:
+                return 0.0
+            
+            # Define nose region
+            nose_left = int(min(nose_points[:, 0])) - 8
+            nose_right = int(max(nose_points[:, 0])) + 8
+            nose_top = int(min(nose_points[:, 1])) - 8
+            nose_bottom = int(max(nose_points[:, 1])) + 8
+            
+            # Ensure bounds
+            nose_left = max(0, nose_left)
+            nose_right = min(frame.shape[1], nose_right)
+            nose_top = max(0, nose_top)
+            nose_bottom = min(frame.shape[0], nose_bottom)
+            
+            if nose_bottom <= nose_top or nose_right <= nose_left:
+                return 0.0
+            
+            # Analyze nose region
+            nose_region = frame[nose_top:nose_bottom, nose_left:nose_right]
+            if nose_region.size == 0:
+                return 0.0
+            
+            # Convert to grayscale and analyze
+            gray_nose = cv2.cvtColor(nose_region, cv2.COLOR_BGR2GRAY)
+            
+            # Calculate visibility based on contrast and brightness
+            mean_brightness = np.mean(gray_nose)
+            std_dev = np.std(gray_nose)
+            
+            # Normalize to 0-1 range
+            brightness_score = min(1.0, mean_brightness / 255.0)
+            contrast_score = min(1.0, std_dev / 100.0)
+            
+            # Nose visibility score
+            visibility = (brightness_score * 0.5 + contrast_score * 0.5)
+            
+            return max(0.0, min(1.0, visibility))
+            
+        except Exception:
+            return 0.0 

@@ -1,12 +1,15 @@
 import yaml
 import os
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, Union
 import logging
+from functools import lru_cache
 
 class ConfigManager:
     
     _instance = None
     _config = None
+    _is_valid = None
+    _config_hash = None
     
     def __new__(cls, config_path: str = "config.yaml"):
         if cls._instance is None:
@@ -21,6 +24,10 @@ class ConfigManager:
             
             with open(config_path, 'r', encoding='utf-8') as file:
                 self._config = yaml.safe_load(file)
+            
+            # Reset validation cache when config changes
+            self._is_valid = None
+            self._config_hash = hash(str(self._config))
             
             self._setup_logging()
             
@@ -41,6 +48,15 @@ class ConfigManager:
         )
     
     def get(self, key: str, default: Any = None) -> Any:
+        """Get configuration value with dot notation support and caching."""
+        if '.' not in key:
+            return self._config.get(key, default)
+        
+        return self._get_nested_value(key, default)
+    
+    @lru_cache(maxsize=128)
+    def _get_nested_value(self, key: str, default: Any = None) -> Any:
+        """Cached method for getting nested configuration values."""
         keys = key.split('.')
         value = self._config
         
@@ -72,22 +88,71 @@ class ConfigManager:
     def get_paths_config(self) -> Dict[str, Any]:
         return self._config.get('paths', {})
     
+    def get_compliance_config(self) -> Dict[str, Any]:
+        return self._config.get('compliance', {})
+    
     def validate_config(self) -> bool:
+        """Validate configuration with caching for performance."""
+        if self._is_valid is not None:
+            return self._is_valid
+        
         required_sections = [
             'camera', 'face_detection', 'eye_detection', 
             'liveness', 'head_pose', 'display', 'paths'
         ]
         
-        for section in required_sections:
-            if section not in self._config:
-                print(f"Missing required configuration section: {section}")
-                return False
+        self._is_valid = all(section in self._config for section in required_sections)
         
-        return True
+        if not self._is_valid:
+            missing_sections = [section for section in required_sections if section not in self._config]
+            print(f"Missing required configuration sections: {missing_sections}")
+        
+        return self._is_valid
     
     def reload_config(self, config_path: str = "config.yaml") -> None:
+        """Reload configuration and clear caches."""
+        old_hash = self._config_hash
         self._load_config(config_path)
+        
+        # Clear LRU cache when config changes
+        self._get_nested_value.cache_clear()
+        
+        if old_hash != self._config_hash:
+            print("Configuration reloaded successfully")
+        else:
+            print("Configuration unchanged")
+    
+    def has_changed(self) -> bool:
+        """Check if configuration has changed since last load."""
+        return self._config_hash != hash(str(self._config))
+    
+    def get_config_info(self) -> Dict[str, Any]:
+        """Get information about the current configuration."""
+        return {
+            'sections': list(self._config.keys()),
+            'is_valid': self.validate_config(),
+            'config_hash': self._config_hash,
+            'file_size': os.path.getsize(self._config_path) if hasattr(self, '_config_path') else None
+        }
     
     @property
     def config(self) -> Dict[str, Any]:
-        return self._config.copy() 
+        """Return configuration with shallow copy for safety."""
+        return self._config.copy()  # Shallow copy is much faster than deep copy
+    
+    @property
+    def config_path(self) -> str:
+        """Get the current configuration file path."""
+        return getattr(self, '_config_path', 'config.yaml')
+    
+    def __contains__(self, key: str) -> bool:
+        """Support 'in' operator for checking if key exists."""
+        return self.get(key) is not None
+    
+    def __len__(self) -> int:
+        """Return number of top-level configuration sections."""
+        return len(self._config)
+    
+    def __str__(self) -> str:
+        """String representation of the configuration manager."""
+        return f"ConfigManager(config_path='{self.config_path}', sections={list(self._config.keys())})" 

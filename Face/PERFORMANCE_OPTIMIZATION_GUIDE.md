@@ -193,3 +193,4 @@ For developers who want to fine-tune:
 4. **Monitor with `monitor_performance.py`** to validate changes
 
 The system is now optimized for smooth operation while maintaining accurate liveness detection!
+

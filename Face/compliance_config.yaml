@@ -17,6 +17,41 @@ compliance:
     hair_threshold: 0.80  # Hair coverage threshold (0.0 to 1.0)
     region_height: 40     # Height above eyebrows to check
     
+  # Face obstruction compliance
+  face_obstruction:
+    enabled: true
+    
+    # Glasses compliance
+    glasses_compliance:
+      allowed: true
+      max_coverage: 0.30      # Maximum glasses coverage allowed
+      frame_thickness: 0.05   # Maximum frame thickness
+    
+    # Hair obstruction compliance
+    hair_compliance:
+      allowed: true
+      max_forehead_coverage: 0.25    # Maximum hair covering forehead
+      max_eye_coverage: 0.10         # Maximum hair covering eyes
+    
+    # Face coverings compliance
+    face_coverings:
+      masks_allowed: false           # Are face masks allowed?
+      scarves_allowed: false         # Are scarves allowed?
+      max_face_coverage: 0.15        # Maximum face coverage allowed
+    
+    # Accessories compliance
+    accessories:
+      hats_allowed: false            # Are hats allowed?
+      sunglasses_allowed: false      # Are sunglasses allowed?
+      jewelry_coverage: 0.05         # Maximum jewelry coverage
+    
+    # Compliance thresholds
+    compliance_thresholds:
+      min_face_visibility: 0.85      # Minimum face must be visible
+      min_eye_visibility: 0.90       # Minimum eyes must be visible
+      min_mouth_visibility: 0.80     # Minimum mouth must be visible
+      min_nose_visibility: 0.85      # Minimum nose must be visible
+    
   # Debug visualization
   debug:
     show_detection_regions: false  # Show colored boxes around detection areas
