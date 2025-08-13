@@ -330,3 +330,13 @@
 2025-08-11 17:25:22,565 - FaceRecognitionSystem - INFO - System cleanup completed
 2025-08-11 17:25:22,565 - FaceDetector - INFO - FaceDetector cleaned up
 2025-08-11 17:25:22,565 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-12 17:56:52,117 - FaceDetector - INFO - Face detection components initialized
+2025-08-12 17:56:52,138 - FaceDetector - INFO - FaceDetector initialized successfully
+2025-08-12 17:56:52,149 - FaceRecognitionSystem - INFO - Face recognition system initialized successfully
+2025-08-12 17:56:52,150 - FaceRecognitionSystem - INFO - Checking system requirements...
+2025-08-12 17:56:56,676 - FaceRecognitionSystem - INFO - [OK] All requirements met!
+2025-08-12 17:56:56,678 - FaceRecognitionSystem - INFO - Starting camera (index: 0)...
+2025-08-12 17:57:26,143 - FaceDetector - INFO - FaceDetector cleaned up
+2025-08-12 17:57:26,149 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-12 17:57:26,150 - FaceDetector - INFO - FaceDetector cleaned up
+2025-08-12 17:57:26,156 - FaceRecognitionSystem - INFO - System cleanup completed

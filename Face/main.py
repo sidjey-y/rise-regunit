@@ -13,6 +13,7 @@ from liveness_detector import LivenessDetector
 from camera_interface import CameraInterface
 
 class FaceRecognitionSystem:
+    #FaceRegistrationSystem
     
     def __init__(self, config_path: str = "config.yaml"):
         self.config_path = config_path

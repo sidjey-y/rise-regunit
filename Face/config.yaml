@@ -1,29 +1,38 @@
-# Photo Quality and Face Recognition Config#
+# Comprehensive Face Recognition System Configuration
+# This file contains ALL configuration settings for the face recognition system
 
-# CAMERA SETTINGS #
+# ========================================
+# CAMERA SETTINGS
+# ========================================
 camera:
   default_index: 0
   width: 640
   height: 480
   fps: 30
 
-# FACE DETECTION #
+# ========================================
+# FACE DETECTION
+# ========================================
 face_detection:
   landmarks_file: "shape_predictor_68_face_landmarks.dat"
   confidence_threshold: 0.5
-  min_face_size: 20 #can change to 20-30
+  min_face_size: 20  # Can change to 20-30
 
-# EYE DETECTION #
+# ========================================
+# EYE DETECTION
+# ========================================
 eye_detection:
   left_eye_start: 36
   left_eye_end: 42
   right_eye_start: 42
   right_eye_end: 48
+  
+  # EAR = Eye Aspect Ratio
+  ear_threshold: 0.25
 
-  #EAR = Eye Aspect Ratio
-  ear_threshold: 0.25 
-
-# HEAD POSE #
+# ========================================
+# HEAD POSE
+# ========================================
 head_pose:
   nose_tip_index: 30
   chin_index: 8
@@ -32,20 +41,85 @@ head_pose:
   left_mouth_corner: 48
   right_mouth_corner: 54
 
-# LIVENESS DETECTION #
+# ========================================
+# LIVENESS DETECTION
+# ========================================
 liveness:
   blink_threshold: 0.25
   head_movement_threshold: 6.0  # Reduced from 8.0 to 6.0 degrees for easier detection
   required_blinks: 2
   detection_timeout: 30  # seconds
 
-# FACE COVERAGE #
+# ========================================
+# FACE COVERAGE (Legacy - now part of compliance)
+# ========================================
 face_coverage:
   min_face_visibility: 0.8
   max_glasses_coverage: 0.3
   min_eye_visibility: 0.7
 
-# Display  #
+# ========================================
+# COMPLIANCE DETECTION
+# ========================================
+compliance:
+  enabled: true  # Set to false to disable all compliance checks
+  
+  # Glasses detection settings
+  glasses:
+    enabled: true
+    threshold: 0.15  # Horizontal line detection threshold (0.0 to 1.0)
+    region_margin: 10  # Pixels around eyes to check
+    strip_height: 4   # Height of detection strip
+    
+  # Forehead obstruction settings  
+  forehead:
+    enabled: true
+    hair_threshold: 0.80  # Hair coverage threshold (0.0 to 1.0)
+    region_height: 40     # Height above eyebrows to check
+    
+  # Face obstruction compliance
+  face_obstruction:
+    enabled: true
+    
+    # Glasses compliance
+    glasses_compliance:
+      allowed: true
+      max_coverage: 0.30      # Maximum glasses coverage allowed
+      frame_thickness: 0.05   # Maximum frame thickness
+    
+    # Hair obstruction compliance
+    hair_compliance:
+      allowed: true
+      max_forehead_coverage: 0.25    # Maximum hair covering forehead
+      max_eye_coverage: 0.10         # Maximum hair covering eyes
+    
+    # Face coverings compliance
+    face_coverings:
+      masks_allowed: false           # Are face masks allowed?
+      scarves_allowed: false         # Are scarves allowed?
+      max_face_coverage: 0.15        # Maximum face coverage allowed
+    
+    # Accessories compliance
+    accessories:
+      hats_allowed: false            # Are hats allowed?
+      sunglasses_allowed: false      # Are sunglasses allowed?
+      jewelry_coverage: 0.05         # Maximum jewelry coverage
+    
+    # Compliance thresholds
+    compliance_thresholds:
+      min_face_visibility: 0.85      # Minimum face must be visible
+      min_eye_visibility: 0.90       # Minimum eyes must be visible
+      min_mouth_visibility: 0.80     # Minimum mouth must be visible
+      min_nose_visibility: 0.85      # Minimum nose must be visible
+    
+  # Debug visualization
+  debug:
+    show_detection_regions: false  # Show colored boxes around detection areas
+    log_detection_values: false    # Log detection ratios and values
+
+# ========================================
+# DISPLAY SETTINGS
+# ========================================
 display:
   show_landmarks: true
   show_face_boundary: true
@@ -53,13 +127,17 @@ display:
   show_head_pose: true
   window_name: "Face Recognition System"
 
-# File paths #
+# ========================================
+# FILE PATHS
+# ========================================
 paths:
   approved_images: "aproved_img/"
   models: "./"
   output: "./output/"
 
-# Logging settings
+# ========================================
+# LOGGING SETTINGS
+# ========================================
 logging:
   level: "INFO"
   file: "face_recognition.log"
