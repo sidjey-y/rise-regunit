@@ -34,3 +34,4 @@ memory:
   max_cached_frames: 5              # Maximum frames to cache
   cleanup_interval: 1.0             # Cleanup cache every second
 
+

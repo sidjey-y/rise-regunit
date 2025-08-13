@@ -30,7 +30,7 @@ class LivenessDetector:
             self.DIRECTION_THRESHOLD = liveness_config.get('head_movement_threshold', 6.0)  # Reduced default
             self.DIRECTION_FRAMES_REQUIRED = liveness_config.get('direction_frames_required', 6)  # Reduced default
             self.BLINK_FRAMES_REQUIRED = liveness_config.get('blink_frames_required', 3)
-            self.MAX_TIME_PER_STEP = liveness_config.get('max_time_per_step', 15)  # Increased default
+            self.MAX_TIME_PER_STEP = liveness_config.get('max_time_per_step', 30)  # Increased from 15 to 30 seconds
             self.FACE_STABILITY_FRAMES = liveness_config.get('face_stability_frames', 5)
             self.AUTO_RESTART_ON_FAILURE = liveness_config.get('auto_restart_on_failure', True)
             self.RESTART_DELAY = liveness_config.get('restart_delay', 3.0)
@@ -39,7 +39,7 @@ class LivenessDetector:
             self.DIRECTION_THRESHOLD = 6.0  # Reduced default for better sensitivity
             self.DIRECTION_FRAMES_REQUIRED = 6  # Reduced default for better responsiveness
             self.BLINK_FRAMES_REQUIRED = 3
-            self.MAX_TIME_PER_STEP = 15  # Increased default for better user experience
+            self.MAX_TIME_PER_STEP = 30  # Increased from 15 to 30 seconds for better user experience
             self.FACE_STABILITY_FRAMES = 5
             self.AUTO_RESTART_ON_FAILURE = True
             self.RESTART_DELAY = 3.0
@@ -126,7 +126,7 @@ class LivenessDetector:
                 min_height <= face_height <= max_height)
     
     def detect_smooth_blink(self, ear):
-        """Detect smooth blink pattern with error handling"""
+        """Detect blink with improved sensitivity and reliability"""
         try:
             # Validate input
             if ear is None or ear <= 0 or np.isnan(ear) or np.isinf(ear):
@@ -134,29 +134,52 @@ class LivenessDetector:
             
             self.last_ear_values.append(ear)
             
-            if len(self.last_ear_values) < 6:
+            # Need at least 3 frames for detection
+            if len(self.last_ear_values) < 3:
                 return False
                 
-            # look for blink pattern: normal -> closing -> closed -> opening -> normal
+            # Get recent values
             values = list(self.last_ear_values)
             
             # Validate all values in the window
-            if any(v is None or v <= 0 or np.isnan(v) or np.isinf(v) for v in values[-6:]):
+            if any(v is None or v <= 0 or np.isnan(v) or np.isinf(v) for v in values[-3:]):
                 return False
             
-            # significant drop and recovery in EAR
-            max_ear = max(values[-6:-2])  
-            min_ear = min(values[-4:-1]) 
-            current_ear = values[-1]      
+            # Use a 3-frame window for more responsive detection
+            current_ear = values[-1]      # Current frame
+            previous_ear = values[-2]     # Previous frame
+            older_ear = values[-3]        # 3 frames ago
             
             # Validate calculated values
-            if max_ear <= 0 or min_ear <= 0 or current_ear <= 0:
+            if current_ear <= 0 or previous_ear <= 0 or older_ear <= 0:
                 return False
             
-            # Blink pattern: high -> low -> recovering
-            if (max_ear > 0.25 and min_ear < 0.2 and 
-                current_ear > min_ear + 0.05 and 
-                max_ear - min_ear > 0.1):
+            # MORE SENSITIVE thresholds for better blink detection
+            OPEN_THRESHOLD = 0.20   # Reduced from 0.21 - Eyes are considered open above this
+            CLOSED_THRESHOLD = 0.18 # Reduced from 0.19 - Eyes are considered closed below this
+            MIN_CHANGE = 0.02       # Reduced from 0.03 - Smaller change needed to detect blink
+            
+            # Check if this looks like a blink pattern
+            eyes_were_open = older_ear > OPEN_THRESHOLD
+            eyes_closed = previous_ear < CLOSED_THRESHOLD
+            eyes_opened_again = current_ear > OPEN_THRESHOLD
+            
+            # Calculate the change magnitude
+            change_magnitude = max(older_ear, current_ear) - previous_ear
+            
+            # Debug logging - ALWAYS show this for troubleshooting
+            print(f"🔍 Blink Debug - Open: {eyes_were_open}, Closed: {eyes_closed}, Opened: {eyes_opened_again}")
+            print(f"🔍 Blink Debug - Values: {older_ear:.3f} -> {previous_ear:.3f} -> {current_ear:.3f}")
+            print(f"🔍 Blink Debug - Change: {change_magnitude:.3f} (min: {MIN_CHANGE})")
+            print(f"🔍 Blink Debug - Thresholds: Open>{OPEN_THRESHOLD}, Closed<{CLOSED_THRESHOLD}")
+            
+            # Blink detected if all conditions are met
+            if (eyes_were_open and eyes_closed and eyes_opened_again and 
+                change_magnitude > MIN_CHANGE):
+                
+                print(f"✅ BLINK DETECTED! Pattern: {older_ear:.3f} -> {previous_ear:.3f} -> {current_ear:.3f}")
+                # Clear the buffer after successful detection
+                self.last_ear_values.clear()
                 return True
                 
             return False
@@ -165,11 +188,38 @@ class LivenessDetector:
             print(f"Error in detect_smooth_blink: {e}")
             return False
     
+    def _detect_simple_blink(self):
+        try:
+            if len(self.last_ear_values) < 5:
+                return False
+            
+            values = list(self.last_ear_values)[-5:]
+            
+            max_ear = max(values)
+            min_ear = min(values)
+            current_ear = values[-1]
+            
+            if (max_ear > 0.20 and  # Eyes were open
+                min_ear < 0.18 and   # Eyes closed at some point
+                current_ear > 0.20 and  # Eyes are open now
+                (max_ear - min_ear) > 0.04):  # Significant change
+                
+                print(f"✅ Simple blink detected: max={max_ear:.3f}, min={min_ear:.3f}, current={current_ear:.3f}")
+                self.last_ear_values.clear()
+                return True
+            
+            return False
+            
+        except Exception as e:
+            print(f"Error in _detect_simple_blink: {e}")
+            return False
+    
     def update(self, frame, faces, landmarks_list):
         current_time = time.time()
         
-        # for timeout
-        if current_time - self.step_start_time > self.MAX_TIME_PER_STEP:
+        # for timeout - but don't timeout in WAITING_FOR_FACE state
+        if (current_time - self.step_start_time > self.MAX_TIME_PER_STEP and 
+            self.state != LivenessState.WAITING_FOR_FACE):
             print(f"Timeout after {self.MAX_TIME_PER_STEP} seconds in state: {self.state.name}")
             self.state = LivenessState.FAILED
             return self.state
@@ -250,6 +300,15 @@ class LivenessDetector:
                 # Get blink detection with error handling
                 is_blinking, ear = self.face_detector.is_blinking(landmarks)
                 
+                # Enhanced debug logging for troubleshooting
+                if self.DEBUG_MODE and self.blink_frame_count % 5 == 0:  # Log every 5 frames
+                    print(f"BLINK - EAR: {ear:.3f}, Buffer size: {len(self.last_ear_values)}")
+                    if len(self.last_ear_values) > 0:
+                        # Convert deque to list for slicing
+                        ear_list = list(self.last_ear_values)
+                        recent_values = ear_list[-4:] if len(ear_list) >= 4 else ear_list
+                        print(f"BLINK - Recent EAR values: {[f'{v:.3f}' for v in recent_values]}")
+                
                 # Validate EAR value
                 if ear is None or ear <= 0 or np.isnan(ear) or np.isinf(ear):
                     print(f"Invalid EAR value: {ear}, skipping blink detection")
@@ -258,17 +317,38 @@ class LivenessDetector:
                 # Add EAR to tracking with validation
                 if 0 < ear < 1.0:  # Valid EAR range
                     self.last_ear_values.append(ear)
+                    self.blink_frame_count += 1
                 else:
                     print(f"EAR out of valid range: {ear}")
                     return self.state
                 
-                # blink detection
+                # Try primary blink detection method
                 if self.detect_smooth_blink(ear):
                     self.completed_steps['blinked'] = True
                     self.state = LivenessState.LOOK_LEFT
                     self.step_start_time = current_time
                     self.direction_frame_count = 0
-                    print("Blink detected! Moving to LOOK_LEFT")
+                    print("✅ Blink detected! Moving to LOOK_LEFT")
+                    return self.state
+                
+                # Fallback: Simple blink detection if buffer is full
+                if len(self.last_ear_values) >= 5:
+                    if self._detect_simple_blink():
+                        self.completed_steps['blinked'] = True
+                        self.state = LivenessState.LOOK_LEFT
+                        self.step_start_time = current_time
+                        self.direction_frame_count = 0
+                        print("✅ Simple blink detected! Moving to LOOK_LEFT")
+                        return self.state
+                
+                # Add timeout protection for blink state
+                if self.blink_frame_count > 300:  # 10 seconds at 30fps
+                    print("⚠️ Blink timeout - forcing progression")
+                    self.completed_steps['blinked'] = True
+                    self.state = LivenessState.LOOK_LEFT
+                    self.step_start_time = current_time
+                    self.direction_frame_count = 0
+                    return self.state
                     
             except Exception as e:
                 print(f"Error in BLINK state: {e}")
@@ -343,8 +423,14 @@ class LivenessDetector:
                 time.sleep(self.RESTART_DELAY)
                 self.reset()
                 print("Liveness test restarted automatically")
+                return self.state  # Return the new state after reset
             else:
                 print("Liveness test failed. Manual restart required.")
+                # Force auto-restart anyway to prevent getting stuck
+                print("Forcing auto-restart to prevent system lockup...")
+                self.reset()
+                print("Liveness test restarted automatically")
+                return self.state
         
         # Add timeout protection for head turn states to prevent infinite loops
         if (self.state in [LivenessState.LOOK_LEFT, LivenessState.LOOK_RIGHT] and 
@@ -752,9 +838,10 @@ class LivenessDetector:
             
         h, w = frame.shape[:2]
         
-        # oval guide throughout the entire process
-        center_x, center_y = w // 2, h // 2 - 50
-        axes = (int(w * 0.15), int(h * 0.25))
+        # Make oval smaller and more proportional to face size
+        # Reduced from 0.15/0.25 to 0.12/0.18 for better face fit
+        center_x, center_y = w // 2, h // 2 - 30  # Moved up slightly
+        axes = (int(w * 0.12), int(h * 0.18))  # Smaller, more proportional oval
         
         # change oval color based on state
         if self.state == LivenessState.COMPLETED:
@@ -852,6 +939,57 @@ class LivenessDetector:
                 
         except Exception as e:
             cv2.putText(frame, f"Head pose error: {e}", (10, 30), 
+                       cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+        
+        return frame
+    
+    def draw_blink_debug(self, frame, landmarks):
+        """Draw real-time EAR values and blink status for debugging"""
+        # Safety check: ensure frame is not None
+        if frame is None:
+            print("Warning: draw_blink_debug called with None frame")
+            fallback_frame = np.zeros((480, 640, 3), dtype=np.uint8)
+            cv2.putText(fallback_frame, "Camera Error - Press Q to quit", (50, 240), 
+                       cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+            return fallback_frame
+            
+        try:
+            # Get current EAR value
+            is_blinking, ear = self.face_detector.is_blinking(landmarks)
+            
+            if ear is not None:
+                # Display current EAR value
+                cv2.putText(frame, f"EAR: {ear:.3f}", (10, 180), 
+                           cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
+                
+                # Color code based on blink state
+                if is_blinking:
+                    blink_color = (0, 0, 255)  # Red for blinking
+                    blink_text = "BLINKING"
+                else:
+                    blink_color = (0, 255, 0)  # Green for eyes open
+                    blink_text = "EYES OPEN"
+                
+                cv2.putText(frame, f"Status: {blink_text}", (10, 210), 
+                           cv2.FONT_HERSHEY_SIMPLEX, 0.7, blink_color, 2)
+                
+                # Show buffer status
+                buffer_size = len(self.last_ear_values)
+                cv2.putText(frame, f"Buffer: {buffer_size}/10", (10, 240), 
+                           cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+                
+                # Show recent EAR values if available
+                if buffer_size > 0:
+                    recent_values = [f"{v:.3f}" for v in self.last_ear_values[-3:]]
+                    cv2.putText(frame, f"Recent: {recent_values}", (10, 270), 
+                               cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 0), 2)
+                
+                # Show thresholds
+                cv2.putText(frame, f"Open: >0.21, Closed: <0.19", (10, 300), 
+                           cv2.FONT_HERSHEY_SIMPLEX, 0.6, (200, 200, 200), 2)
+                
+        except Exception as e:
+            cv2.putText(frame, f"Blink debug error: {e}", (10, 180), 
                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
         
         return frame

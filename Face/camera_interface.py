@@ -34,19 +34,161 @@ class CameraInterface:
         self.CAMERA_WIDTH = 1280
         self.CAMERA_HEIGHT = 720
         
+    def check_camera_availability(self, camera_index=0):
+        """Check if camera is available without opening it (for requirements checking)"""
+        try:
+            # Quick check without opening camera
+            test_cap = cv2.VideoCapture(camera_index)
+            if not test_cap.isOpened():
+                return False, f"Camera at index {camera_index} is not available"
+            
+            # Try to read one frame to verify it works
+            ret, frame = test_cap.read()
+            test_cap.release()
+            
+            if not ret or frame is None:
+                return False, f"Camera at index {camera_index} cannot read frames"
+            
+            return True, f"Camera at index {camera_index} is available"
+            
+        except Exception as e:
+            return False, f"Error checking camera {camera_index}: {e}"
+    
+    def initialize_camera_fallback(self, camera_index=0):
+        """Fallback camera initialization with minimal settings"""
+        try:
+            print("Trying fallback camera initialization...")
+            
+            # Release any existing camera
+            if hasattr(self, 'cap') and self.cap:
+                self.cap.release()
+                self.cap = None
+            
+            # Open camera with minimal settings
+            self.cap = cv2.VideoCapture(camera_index)
+            if not self.cap.isOpened():
+                raise Exception(f"Could not open camera at index {camera_index}")
+            
+            # Test single frame read
+            ret, test_frame = self.cap.read()
+            if not ret or test_frame is None:
+                raise Exception("Camera opened but cannot read frames")
+            
+            # Don't set any properties - use camera defaults
+            print("✅ Fallback camera initialization successful")
+            print("Using camera default settings (no custom properties)")
+            return True
+            
+        except Exception as e:
+            print(f"❌ Fallback camera initialization failed: {e}")
+            if hasattr(self, 'cap') and self.cap:
+                self.cap.release()
+                self.cap = None
+            return False
+    
     def initialize_camera(self, camera_index=0):
-        self.cap = cv2.VideoCapture(camera_index)
-        if not self.cap.isOpened():
-            raise Exception("Could not open camera")
+        """Initialize camera with better error handling and retry logic"""
+        max_retries = 3
+        retry_delay = 0.5
         
-        # cam properties,
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.CAMERA_WIDTH)
-        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.CAMERA_HEIGHT)
-        self.cap.set(cv2.CAP_PROP_FPS, 30)
-        self.cap.set(cv2.CAP_PROP_AUTOFOCUS, 1)
+        for attempt in range(max_retries):
+            try:
+                print(f"Attempting to initialize camera (attempt {attempt + 1}/{max_retries})...")
+                
+                # Release any existing camera first
+                if hasattr(self, 'cap') and self.cap:
+                    self.cap.release()
+                    self.cap = None
+                
+                # Try to open camera
+                self.cap = cv2.VideoCapture(camera_index)
+                if not self.cap.isOpened():
+                    raise Exception(f"Could not open camera at index {camera_index}")
+                
+                # Test if camera can actually read frames - but only read ONE frame
+                # Multiple frame reads during initialization can cause OpenCV crashes
+                ret, test_frame = self.cap.read()
+                if not ret or test_frame is None:
+                    raise Exception("Camera opened but cannot read frames")
+                
+                # Validate frame dimensions and data
+                if test_frame.size == 0 or test_frame.shape[0] == 0 or test_frame.shape[1] == 0:
+                    raise Exception("Camera returned invalid frame dimensions")
+                
+                print(f"✅ Camera initialized successfully on attempt {attempt + 1}")
+                
+                # Set camera properties - but be more conservative
+                try:
+                    # Set basic properties one by one with error checking
+                    self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.CAMERA_WIDTH)
+                    time.sleep(0.1)  # Small delay between property changes
+                    
+                    self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.CAMERA_HEIGHT)
+                    time.sleep(0.1)
+                    
+                    self.cap.set(cv2.CAP_PROP_FPS, 30)
+                    time.sleep(0.1)
+                    
+                    # Only set autofocus if supported
+                    try:
+                        self.cap.set(cv2.CAP_PROP_AUTOFOCUS, 1)
+                    except:
+                        print("Autofocus not supported by this camera")
+                    
+                    print("Camera properties set successfully")
+                    
+                except Exception as prop_error:
+                    print(f"Warning: Some camera properties could not be set: {prop_error}")
+                    print("Continuing with default camera settings...")
+                
+                # DON'T warm up camera by reading multiple frames - this causes crashes!
+                # Just verify we can still read one more frame after setting properties
+                try:
+                    ret, verify_frame = self.cap.read()
+                    if ret and verify_frame is not None and verify_frame.size > 0:
+                        print("Camera verification successful - ready to use")
+                    else:
+                        print("Warning: Camera verification frame was invalid, but continuing...")
+                except Exception as verify_error:
+                    print(f"Warning: Camera verification failed: {verify_error}")
+                    print("Continuing anyway - camera might work during normal operation...")
+                
+                return
+                
+            except Exception as e:
+                print(f"❌ Camera initialization attempt {attempt + 1} failed: {e}")
+                
+                # Release failed camera
+                if hasattr(self, 'cap') and self.cap:
+                    self.cap.release()
+                    self.cap = None
+                
+                if attempt < max_retries - 1:
+                    print(f"Retrying in {retry_delay} seconds...")
+                    time.sleep(retry_delay)
+                else:
+                    print("All camera initialization attempts failed")
+                    # Provide specific error messages for common issues
+                    if "Could not open camera" in str(e):
+                        print("\n🔍 TROUBLESHOOTING:")
+                        print("• Camera index might be wrong - try: python main.py --camera 1")
+                        print("• Camera might be in use by another application")
+                        print("• Check Windows privacy settings for camera access")
+                    elif "cannot read frames" in str(e):
+                        print("\n🔍 TROUBLESHOOTING:")
+                        print("• Camera driver might be corrupted")
+                        print("• Try restarting your computer")
+                        print("• Check Device Manager for camera issues")
+                    elif "matrix.cpp" in str(e) or "_step >= minstep" in str(e):
+                        print("\n🔍 TROUBLESHOOTING:")
+                        print("• OpenCV compatibility issue with camera driver")
+                        print("• Try updating camera drivers")
+                        print("• Try different camera index: python main.py --camera 1")
+                        print("• This is a known OpenCV 4.8.1 issue with some cameras")
+                    
+                    raise Exception(f"Camera initialization failed after {max_retries} attempts: {e}")
         
-        for _ in range(10):
-            self.cap.read()
+        raise Exception("Camera initialization failed - unknown error")
             
     def release_camera(self):
         try:
@@ -235,17 +377,17 @@ class CameraInterface:
             h, w = frame.shape[:2]
             ui_scale = self.get_ui_scale_factor(frame)
             
-            # countdown with adaptive scaling
-            font_scale = 5 * ui_scale
-            thickness = max(1, int(10 * ui_scale))
+            # countdown with much better scaling - not too large
+            font_scale = 1.5 * ui_scale  # Reduced from 2.5 to 1.5
+            thickness = max(1, int(2 * ui_scale))  # Reduced from 3 to 2
             text = str(self.capture_countdown)
             text_size = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, font_scale, thickness)[0]
             
             x = (w - text_size[0]) // 2
             y = (h + text_size[1]) // 2
             
-            circle_radius = int(120 * ui_scale)
-            circle_thickness = max(1, int(5 * ui_scale))
+            circle_radius = int(60 * ui_scale)  # Reduced from 80 to 60
+            circle_thickness = max(1, int(2 * ui_scale))  # Reduced from 3 to 2
             
             # Draw black circle background
             cv2.circle(frame, (w//2, h//2), circle_radius, (0, 0, 0), -1)
@@ -257,11 +399,11 @@ class CameraInterface:
             
             # Add "GET READY" message above countdown
             ready_text = "GET READY!"
-            ready_font_scale = 1.5 * ui_scale
-            ready_thickness = max(1, int(3 * ui_scale))
+            ready_font_scale = 0.8 * ui_scale  # Reduced from 1.0 to 0.8
+            ready_thickness = max(1, int(1 * ui_scale))  # Reduced from 2 to 1
             ready_text_size = cv2.getTextSize(ready_text, cv2.FONT_HERSHEY_SIMPLEX, ready_font_scale, ready_thickness)[0]
             ready_x = (w - ready_text_size[0]) // 2
-            ready_y = y - 80
+            ready_y = y - 40  # Reduced from 60 to 40
             
             cv2.putText(frame, ready_text, (ready_x, ready_y), cv2.FONT_HERSHEY_SIMPLEX, 
                        ready_font_scale, (255, 255, 255), ready_thickness)
@@ -270,18 +412,17 @@ class CameraInterface:
             h, w = frame.shape[:2]
             ui_scale = self.get_ui_scale_factor(frame)
             
-            # Draw completion message
+            # Draw completion message with much better scaling
             completion_text = "PHOTO CAPTURED!"
-            font_scale = 2 * ui_scale
-            thickness = max(1, int(4 * ui_scale))
+            font_scale = 1.0 * ui_scale  # Reduced from 1.5 to 1.0
+            thickness = max(1, int(1 * ui_scale))  # Reduced from 2 to 1
             text_size = cv2.getTextSize(completion_text, cv2.FONT_HERSHEY_SIMPLEX, font_scale, thickness)[0]
             
             x = (w - text_size[0]) // 2
             y = (h + text_size[1]) // 2
             
-            # Draw green circle background
-            circle_radius = int(120 * ui_scale)
-            circle_thickness = max(1, int(5 * ui_scale))
+            circle_radius = int(60 * ui_scale)  # Reduced from 80 to 60
+            circle_thickness = max(1, int(2 * ui_scale))  # Reduced from 3 to 2
             cv2.circle(frame, (w//2, h//2), circle_radius, (0, 0, 0), -1)
             cv2.circle(frame, (w//2, h//2), circle_radius, (0, 255, 0), circle_thickness)
             
@@ -291,11 +432,11 @@ class CameraInterface:
             
             # Add success message below
             success_text = "Quality assessment completed!"
-            success_font_scale = 1 * ui_scale
-            success_thickness = max(1, int(2 * ui_scale))
+            success_font_scale = 0.6 * ui_scale  # Reduced from 0.8 to 0.6
+            success_thickness = max(1, int(1 * ui_scale))  # Keep at 1
             success_text_size = cv2.getTextSize(success_text, cv2.FONT_HERSHEY_SIMPLEX, success_font_scale, success_thickness)[0]
             success_x = (w - success_text_size[0]) // 2
-            success_y = y + 60
+            success_y = y + 30  # Reduced from 50 to 30
             
             cv2.putText(frame, success_text, (success_x, success_y), cv2.FONT_HERSHEY_SIMPLEX, 
                        success_font_scale, (255, 255, 255), success_thickness)
@@ -303,18 +444,44 @@ class CameraInterface:
         return frame
     
     def get_ui_scale_factor(self, frame):
-        """Simple text scaling - keep text small and readable"""
+        """Much smaller text scaling - keep text appropriately sized for different resolutions"""
         # Safety check: ensure frame is not None
         if frame is None:
             print("Warning: get_ui_scale_factor called with None frame")
-            return 0.5  # Return default scale
+            return 0.08  # Return much smaller default scale
             
         h, w = frame.shape[:2]
-        # Always use small, fixed scaling for readable text
-        if w > 1400:  # Fullscreen mode
-            return 0.5  # Small fixed scale for fullscreen
-        else:
-            return 0.7  # Slightly larger for windowed mode
+        
+        # Much smaller scaling based on resolution
+        if w > 1400:  # Fullscreen mode (1920x1080, 2560x1440, etc.)
+            return 0.08  # Much smaller scale for high resolution
+        elif w > 1000:  # Medium resolution
+            return 0.12
+        else:  # Low resolution
+            return 0.15
+    
+    def get_display_scale_factor(self):
+        """Get the current display scale factor for coordinate scaling"""
+        try:
+            if hasattr(self, 'cap') and self.cap and self.cap.isOpened():
+                # Get the actual frame size
+                frame_width = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+                frame_height = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+                
+                # Get the window size (if available)
+                # Note: OpenCV doesn't provide direct access to window size
+                # So we'll use a reasonable default scale
+                if frame_width > 0 and frame_height > 0:
+                    # Assume display is scaled to fit screen
+                    # This is a reasonable approximation
+                    return 1.0
+                else:
+                    return 1.0
+            else:
+                return 1.0
+        except Exception as e:
+            print(f"Error getting display scale: {e}")
+            return 1.0
     
     def scale_frame_for_display(self, frame):
         """Simple scaling - no frame scaling, just better text sizing"""
@@ -372,10 +539,14 @@ class CameraInterface:
         # set face boundaries and landmarks
         for i, face in enumerate(faces):
             if frame is not None:
-                result = self.face_detector.draw_face_boundary(frame, face)
+                # Get display scale factor for proper coordinate scaling
+                display_scale = self.get_display_scale_factor()
+                result = self.face_detector.draw_face_boundary(frame, face, display_scale)
                 frame = result if result is not None else frame
             if i < len(landmarks_list) and frame is not None:
-                result = self.face_detector.draw_landmarks(frame, landmarks_list[i])
+                # Get display scale factor for proper coordinate scaling
+                display_scale = self.get_display_scale_factor()
+                result = self.face_detector.draw_landmarks(frame, landmarks_list[i], display_scale)
                 frame = result if result is not None else frame
         
         if frame is not None:
@@ -407,23 +578,23 @@ class CameraInterface:
         state_color = self.liveness_detector.get_state_color()
         
         # Scale UI elements based on screen size
-        circle_radius = int(20 * ui_scale)
-        circle_x = w - int(50 * ui_scale)
-        circle_y = int(50 * ui_scale)
+        circle_radius = int(15 * ui_scale)  # Reduced from 20 to 15
+        circle_x = w - int(40 * ui_scale)  # Reduced from 50 to 40
+        circle_y = int(40 * ui_scale)  # Reduced from 50 to 40
         
         cv2.circle(frame, (circle_x, circle_y), circle_radius, state_color, -1)
-        cv2.circle(frame, (circle_x, circle_y), circle_radius, (255, 255, 255), max(1, int(2 * ui_scale)))
+        cv2.circle(frame, (circle_x, circle_y), circle_radius, (255, 255, 255), max(1, int(1 * ui_scale)))  # Reduced from 2 to 1
         
         # Simple controls text like reference file
         if w > 1400:  # Fullscreen mode
             controls_text = "Q: Quit  |  R: Restart  |  F: Exit Fullscreen"
             cv2.putText(frame, controls_text, (10, h - 20), 
-                       cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+                       cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255, 255, 255), 1)  # Reduced from 0.5 to 0.4
         
         mode_text = ""
-        font_scale = 0.5 * ui_scale
+        font_scale = 0.4 * ui_scale  # Reduced from 0.5 to 0.4
         text_thickness = max(1, int(1 * ui_scale))
-        text_y = h - int(60 * ui_scale) if w > 1400 else h - int(20 * ui_scale)
+        text_y = h - int(50 * ui_scale) if w > 1400 else h - int(20 * ui_scale)  # Reduced from 60 to 50
         
         cv2.putText(frame, mode_text, (int(10 * ui_scale), text_y), 
                    cv2.FONT_HERSHEY_SIMPLEX, font_scale, (255, 255, 0), text_thickness)
@@ -440,21 +611,53 @@ class CameraInterface:
         max_consecutive_errors = 10
         consecutive_none_frames = 0
         max_consecutive_none_frames = 5
+        camera_crash_count = 0
+        max_camera_crashes = 3
         
         try:
+            # Try to initialize camera first
+            camera_initialized = False
+            
             try:
                 self.initialize_camera(camera_index)
+                print("✅ Camera initialized successfully!")
+                camera_initialized = True
             except Exception as e:
-                print(f"Error in camera initialization: {e}")
-                consecutive_errors += 1
+                print(f"❌ Main camera initialization failed: {e}")
                 
-                # Break out if camera initialization fails
-                if consecutive_errors >= max_consecutive_errors:
-                    print(f"Camera initialization failed ({consecutive_errors} times), exiting")
+                # Try fallback initialization
+                print("Attempting fallback camera initialization...")
+                if self.initialize_camera_fallback(camera_index):
+                    print("✅ Fallback camera initialization successful!")
+                    camera_initialized = True
+                else:
+                    print("❌ Both main and fallback camera initialization failed")
+                    print("\n" + "="*60)
+                    print("CAMERA INITIALIZATION FAILED")
+                    print("="*60)
+                    print("Common causes and solutions:")
+                    print("1. Camera is in use by another application (Zoom, Teams, etc.)")
+                    print("   → Close other camera applications and try again")
+                    print("2. Camera permissions not granted")
+                    print("   → Check Windows privacy settings for camera access")
+                    print("3. Camera driver issues")
+                    print("   → Try restarting your computer")
+                    print("4. Wrong camera index")
+                    print("   → Try different camera index: python main.py --camera 1")
+                    print("5. Skip camera check: python main.py --no-check")
+                    print("6. OpenCV compatibility issue")
+                    print("   → Try updating camera drivers")
+                    print("   → This is a known OpenCV 4.8.1 issue with some cameras")
+                    print("="*60)
+                    
+                    # Don't continue if camera initialization fails
+                    print("Exiting due to camera initialization failure")
                     return
-                
-                # Small delay before retrying
-                time.sleep(0.1)
+            
+            # Verify camera is properly initialized before proceeding
+            if not camera_initialized or self.cap is None or not self.cap.isOpened():
+                print("❌ Camera object is invalid after initialization")
+                return
             
             # Create fullscreen window by default
             window_name = 'Face Recognition with Liveness Detection'
@@ -473,8 +676,59 @@ class CameraInterface:
             
             while self.is_running:
                 try:
-                    ret, frame = self.cap.read()
-                    if not ret:
+                    # Safety check: ensure camera is still valid
+                    if self.cap is None or not self.cap.isOpened():
+                        print("❌ Camera became invalid during operation")
+                        break
+                    
+                    # ROBUST FRAME READING WITH ERROR RECOVERY
+                    frame = None
+                    ret = False
+                    
+                    try:
+                        ret, frame = self.cap.read()
+                    except cv2.error as cv_error:
+                        # Handle OpenCV-specific errors (like matrix assertion failures)
+                        if "matrix.cpp" in str(cv_error) or "_step >= minstep" in str(cv_error):
+                            print(f"⚠️  OpenCV matrix error detected: {cv_error}")
+                            camera_crash_count += 1
+                            
+                            if camera_crash_count <= max_camera_crashes:
+                                print(f"Attempting camera recovery (attempt {camera_crash_count}/{max_camera_crashes})...")
+                                
+                                # Try to reinitialize camera
+                                try:
+                                    self.release_camera()
+                                    time.sleep(1)  # Wait for camera to reset
+                                    
+                                    if self.initialize_camera_fallback(camera_index):
+                                        print("✅ Camera recovered successfully!")
+                                        camera_crash_count = 0  # Reset crash counter
+                                        continue  # Skip to next frame
+                                    else:
+                                        print("❌ Camera recovery failed")
+                                        break
+                                except Exception as recovery_error:
+                                    print(f"❌ Camera recovery failed: {recovery_error}")
+                                    break
+                            else:
+                                print(f"❌ Too many camera crashes ({camera_crash_count}), giving up")
+                                break
+                        else:
+                            # Re-raise non-matrix OpenCV errors
+                            raise cv_error
+                    except Exception as e:
+                        print(f"❌ Unexpected error reading frame: {e}")
+                        consecutive_errors += 1
+                        
+                        if consecutive_errors >= max_consecutive_errors:
+                            print(f"Too many consecutive errors ({consecutive_errors}), breaking out of loop")
+                            break
+                        
+                        time.sleep(0.1)
+                        continue
+                    
+                    if not ret or frame is None:
                         print("Failed to capture frame")
                         consecutive_errors += 1
                         
@@ -486,6 +740,10 @@ class CameraInterface:
                         # Small delay before retrying
                         time.sleep(0.1)
                         continue
+                    
+                    # Reset error counters on successful frame read
+                    consecutive_errors = 0
+                    camera_crash_count = 0
                     
                     # Check if we should stop (for external shutdown requests)
                     if not self.is_running:
@@ -507,13 +765,6 @@ class CameraInterface:
                     if (faces is None or landmarks_list is None or state is None or 
                         (state and not hasattr(state, 'name'))):
                         print("Warning: Invalid cached values detected, resetting to defaults")
-                        consecutive_errors += 1
-                        
-                        # Break out if too many consecutive cache validation failures
-                        if consecutive_errors >= max_consecutive_errors:
-                            print(f"Too many consecutive cache validation failures ({consecutive_errors}), breaking out of loop")
-                            break
-                        
                         faces = []
                         landmarks_list = []
                         state = self.liveness_detector.state
@@ -532,16 +783,10 @@ class CameraInterface:
                                 faces, gray = self.face_detector.detect_faces(frame)
                             except Exception as e:
                                 print(f"Error in face detection: {e}")
-                                consecutive_errors += 1
-                                
-                                # Break out if too many consecutive face detection failures
-                                if consecutive_errors >= max_consecutive_errors:
-                                    print(f"Too many consecutive face detection failures ({consecutive_errors}), breaking out of loop")
-                                    break
-                                
                                 # Use empty results on face detection failure
                                 faces = []
                                 gray = frame
+                            
                             landmarks_list = []
                             
                             for face in faces:
@@ -550,15 +795,6 @@ class CameraInterface:
                                     landmarks_list.append(landmarks)
                                 except Exception as e:
                                     print(f"Error in landmark extraction: {e}")
-                                    consecutive_errors += 1
-                                    
-                                    # Break out if too many consecutive landmark extraction failures
-                                    if consecutive_errors >= max_consecutive_errors:
-                                        print(f"Too many consecutive landmark extraction failures ({consecutive_errors}), breaking out of loop")
-                                        break
-                                    
-                                    # Small delay before retrying
-                                    time.sleep(0.1)
                                     continue
                             
                             # liveness detection with error handling
@@ -566,15 +802,6 @@ class CameraInterface:
                                 state = self.liveness_detector.update(frame, faces, landmarks_list)
                             except Exception as e:
                                 print(f"Error in liveness detection: {e}")
-                                import traceback
-                                traceback.print_exc()
-                                consecutive_errors += 1
-                                
-                                # Break out if too many consecutive liveness detection failures
-                                if consecutive_errors >= max_consecutive_errors:
-                                    print(f"Too many consecutive liveness detection failures ({consecutive_errors}), breaking out of loop")
-                                    break
-                                
                                 # Use a safe default state
                                 state = self.liveness_detector.state
                             
@@ -597,15 +824,6 @@ class CameraInterface:
                                         self.preprocessed_frame = None
                                 except Exception as e:
                                     print(f"Error in compliance checking: {e}")
-                                    consecutive_errors += 1
-                                    
-                                    # Break out if too many consecutive compliance checking failures
-                                    if consecutive_errors >= max_consecutive_errors:
-                                        print(f"Too many consecutive compliance checking failures ({consecutive_errors}), breaking out of loop")
-                                        break
-                                    
-                                    # Small delay before retrying
-                                    time.sleep(0.1)
                                     continue
                             
                             # if liveness check completed and photo not yet captured
@@ -628,27 +846,12 @@ class CameraInterface:
                             
                             last_face_detection_time = current_time
                             
-                            # Reset error counter on successful processing
-                            consecutive_errors = 0
-                            
                         except Exception as e:
                             print(f"Error in face detection/liveness processing: {e}")
-                            import traceback
-                            traceback.print_exc()
-                            consecutive_errors += 1
-                            
                             # Use cached results on error
                             faces = getattr(self, '_last_faces', [])
                             landmarks_list = getattr(self, '_last_landmarks', [])
                             state = getattr(self, '_last_state', None)
-                            
-                            # Ensure we have valid default values
-                            if faces is None:
-                                faces = []
-                            if landmarks_list is None:
-                                landmarks_list = []
-                            if state is None:
-                                state = self.liveness_detector.state
                     
                     # Cache results for frame skipping
                     # Ensure we have valid values before caching
@@ -662,13 +865,6 @@ class CameraInterface:
                     # Ensure state has a name attribute (only check once)
                     if state and not hasattr(state, 'name'):
                         print("Warning: state object has no name attribute, using default state")
-                        consecutive_errors += 1
-                        
-                        # Break out if too many consecutive state validation failures
-                        if consecutive_errors >= max_consecutive_errors:
-                            print(f"Too many consecutive state validation failures ({consecutive_errors}), breaking out of loop")
-                            break
-                        
                         state = self.liveness_detector.state
                         
                     self._last_faces = faces
@@ -709,27 +905,9 @@ class CameraInterface:
                                         print("✅ Photo captured successfully! Moving to completion...")
                                 except Exception as e:
                                     print(f"Error in photo capture: {e}")
-                                    consecutive_errors += 1
-                                    
-                                    # Break out if too many consecutive photo capture failures
-                                    if consecutive_errors >= max_consecutive_errors:
-                                        print(f"Too many consecutive photo capture failures ({consecutive_errors}), breaking out of loop")
-                                        break
-                                    
-                                    # Small delay before retrying
-                                    time.sleep(0.1)
                                     continue
                         except Exception as e:
                             print(f"Error in countdown update: {e}")
-                            consecutive_errors += 1
-                            
-                            # Break out if too many consecutive countdown failures
-                            if consecutive_errors >= max_consecutive_errors:
-                                print(f"Too many consecutive countdown failures ({consecutive_errors}), breaking out of loop")
-                                break
-                            
-                            # Small delay before retrying
-                            time.sleep(0.1)
                             continue
                     
                     # Always draw UI elements AFTER photo capture (lightweight operation)
@@ -737,13 +915,6 @@ class CameraInterface:
                         frame = self.draw_ui_elements(frame, faces, landmarks_list, state)
                     except Exception as e:
                         print(f"Error in draw_ui_elements: {e}")
-                        consecutive_errors += 1
-                        
-                        # Break out if too many consecutive UI drawing failures
-                        if consecutive_errors >= max_consecutive_errors:
-                            print(f"Too many consecutive UI drawing failures ({consecutive_errors}), breaking out of loop")
-                            break
-                        
                         # Create a simple fallback frame
                         frame = np.zeros((480, 640, 3), dtype=np.uint8)
                         cv2.putText(frame, "UI Drawing Error - Press Q to quit", (50, 240), 
@@ -788,20 +959,11 @@ class CameraInterface:
                             ]
                             for i, text in enumerate(help_text):
                                 y_pos = h - 20 - (len(help_text) - 1 - i) * 20
-                                cv2.putText(frame, text, (10, y_pos), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+                                cv2.putText(frame, text, (10, y_pos), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255, 255, 255), 1)  # Reduced from 0.5 to 0.4
                         
                         cv2.imshow(window_name, frame)
                     except Exception as e:
                         print(f"Error in frame display: {e}")
-                        consecutive_errors += 1
-                        
-                        # Break out if too many consecutive frame display failures
-                        if consecutive_errors >= max_consecutive_errors:
-                            print(f"Too many consecutive frame display failures ({consecutive_errors}), breaking out of loop")
-                            break
-                        
-                        # Small delay before retrying
-                        time.sleep(0.1)
                         continue
                     
                     # Handle key events
@@ -844,15 +1006,6 @@ class CameraInterface:
                                 print("Manual approval only available during photo review")
                     except Exception as e:
                         print(f"Error in key handling: {e}")
-                        consecutive_errors += 1
-                        
-                        # Break out if too many consecutive key handling failures
-                        if consecutive_errors >= max_consecutive_errors:
-                            print(f"Too many consecutive key handling failures ({consecutive_errors}), breaking out of loop")
-                            break
-                        
-                        # Small delay before retrying
-                        time.sleep(0.1)
                         continue
                     
                     # Small delay to maintain reasonable frame rate

@@ -15,7 +15,6 @@ import time
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from face_detector import FaceDetector
-from config_manager import ConfigManager
 
 def main():
     print("Blink Detection Test")
@@ -27,8 +26,7 @@ def main():
     
     try:
         # Initialize components
-        config_manager = ConfigManager("config.yaml")
-        face_detector = FaceDetector(config_manager)
+        face_detector = FaceDetector()
         
         if not face_detector.initialize():
             print("Failed to initialize face detector")
@@ -172,4 +170,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 

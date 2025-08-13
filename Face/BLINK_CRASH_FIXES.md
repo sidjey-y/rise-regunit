@@ -293,3 +293,4 @@ The blink detection crash has been resolved through comprehensive error handling
 
 The fixes maintain the original functionality while adding multiple layers of protection against crashes, ensuring a stable user experience during the liveness detection process.
 
+
