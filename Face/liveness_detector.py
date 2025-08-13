@@ -192,7 +192,7 @@ class LivenessDetector:
         landmarks = landmarks_list[0]
         
         # Validate landmarks
-        if landmarks is None or len(landmarks) < 48:
+        if landmarks is None or (hasattr(landmarks, '__len__') and len(landmarks) < 48):
             print(f"Invalid landmarks: {landmarks is None}, length: {len(landmarks) if landmarks is not None else 0}")
             return self.state
         
@@ -750,49 +750,62 @@ class LivenessDetector:
                        cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
             return fallback_frame
             
-        h, w = frame.shape[:2]
-        
-        # oval guide throughout the entire process
-        center_x, center_y = w // 2, h // 2 - 50
-        axes = (int(w * 0.15), int(h * 0.25))
-        
-        # change oval color based on state
-        if self.state == LivenessState.COMPLETED:
-            oval_color = (0, 255, 0)  # green for success
-        elif self.state == LivenessState.CAPTURE_COMPLETE:
-            oval_color = (0, 255, 0)  # green for capture complete
-        elif self.state == LivenessState.FAILED:
-            oval_color = (0, 0, 255)  # red for failure
-        else:
-            oval_color = (0, 255, 255)  # yellow during liveness checks
+        try:
+            h, w = frame.shape[:2]
             
-        cv2.ellipse(frame, (center_x, center_y), axes, 0, 0, 360, oval_color, 3)
-        
-        # draw instruction text
-        instruction = self.get_current_instruction()
-        
-        if self.state == LivenessState.COMPLETED:
-            font_scale = 1.5
-            color = (0, 255, 255)  #yellow
-        elif self.state == LivenessState.CAPTURE_COMPLETE:
-            font_scale = 1.5
-            color = (0, 255, 0)  
-        elif self.state == LivenessState.FAILED:
-            font_scale = 1.2
-            color = (0, 0, 255)  
-        else:
-            font_scale = 1.2
-            color = (255, 255, 255) 
-        
-        text_size = cv2.getTextSize(instruction, cv2.FONT_HERSHEY_SIMPLEX, font_scale, 3)[0]
-        text_x = (w - text_size[0]) // 2
-        text_y = h - 80
-        
-        padding = 20
-        cv2.rectangle(frame, (text_x - padding, text_y - 40), 
-                     (text_x + text_size[0] + padding, text_y + 15), (0, 0, 0), -1)
-        cv2.putText(frame, instruction, (text_x, text_y), 
-                   cv2.FONT_HERSHEY_SIMPLEX, font_scale, color, 3)
+            # oval guide throughout the entire process
+            center_x, center_y = w // 2, h // 2 - 50
+            axes = (int(w * 0.15), int(h * 0.25))
+            
+            # change oval color based on state
+            if self.state == LivenessState.COMPLETED:
+                oval_color = (0, 255, 0)  # green for success
+            elif self.state == LivenessState.CAPTURE_COMPLETE:
+                oval_color = (0, 255, 0)  # green for capture complete
+            elif self.state == LivenessState.FAILED:
+                oval_color = (0, 0, 255)  # red for failure
+            else:
+                oval_color = (0, 255, 255)  # yellow during liveness checks
+                
+            # Always draw the oval - this is the most important UI element
+            cv2.ellipse(frame, (center_x, center_y), axes, 0, 0, 360, oval_color, 3)
+            
+            # draw instruction text
+            instruction = self.get_current_instruction()
+            
+            if self.state == LivenessState.COMPLETED:
+                font_scale = 1.5
+                color = (0, 255, 255)  #yellow
+            elif self.state == LivenessState.CAPTURE_COMPLETE:
+                font_scale = 1.5
+                color = (0, 255, 0)  
+            elif self.state == LivenessState.FAILED:
+                font_scale = 1.2
+                color = (0, 0, 255)  
+            else:
+                font_scale = 1.2
+                color = (255, 255, 255) 
+            
+            text_size = cv2.getTextSize(instruction, cv2.FONT_HERSHEY_SIMPLEX, font_scale, 3)[0]
+            text_x = (w - text_size[0]) // 2
+            text_y = h - 80
+            
+            padding = 20
+            cv2.rectangle(frame, (text_x - padding, text_y - 40), 
+                         (text_x + text_size[0] + padding, text_y + 15), (0, 0, 0), -1)
+            cv2.putText(frame, instruction, (text_x, text_y), 
+                       cv2.FONT_HERSHEY_SIMPLEX, font_scale, color, 3)
+            
+        except Exception as e:
+            print(f"Error in draw_face_guide: {e}")
+            # Even if there's an error, try to draw a basic oval
+            try:
+                h, w = frame.shape[:2]
+                center_x, center_y = w // 2, h // 2
+                axes = (int(w * 0.15), int(h * 0.25))
+                cv2.ellipse(frame, (center_x, center_y), axes, 0, 0, 360, (0, 255, 255), 3)
+            except Exception as e2:
+                print(f"Even basic oval drawing failed: {e2}")
         
         return frame
     

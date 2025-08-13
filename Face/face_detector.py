@@ -158,7 +158,7 @@ class FaceDetector(BaseDetector):
         """Calculate Eye Aspect Ratio with proper error handling"""
         try:
             # Validate eye array has enough points
-            if eye is None or len(eye) < 6:
+            if eye is None or (hasattr(eye, '__len__') and len(eye) < 6):
                 return 0.0
             
             # Check for invalid coordinates (negative or NaN values)
@@ -376,7 +376,7 @@ class FaceDetector(BaseDetector):
             
             # Forehead obstruction check (from reference file)
             eyebrow_points = landmarks[17:27]  # eyebrow landmarks
-            if len(eyebrow_points) > 0:
+            if hasattr(eyebrow_points, '__len__') and len(eyebrow_points) > 0:
                 forehead_top_y = int(min(eyebrow_points[:, 1])) - region_height
                 forehead_bottom_y = int(min(eyebrow_points[:, 1]))
                 face_left = int(min(landmarks[:, 0]))
@@ -414,7 +414,7 @@ class FaceDetector(BaseDetector):
             left_eye = landmarks[self.LEFT_EYE_START:self.LEFT_EYE_END]
             right_eye = landmarks[self.RIGHT_EYE_START:self.RIGHT_EYE_END]
             
-            if len(left_eye) > 0 and len(right_eye) > 0:
+            if hasattr(left_eye, '__len__') and len(left_eye) > 0 and hasattr(right_eye, '__len__') and len(right_eye) > 0:
                 left_eye_y = int(np.mean(left_eye[:, 1]))
                 right_eye_y = int(np.mean(right_eye[:, 1]))
                 glasses_y = (left_eye_y + right_eye_y) // 2
@@ -431,7 +431,7 @@ class FaceDetector(BaseDetector):
             
             # Draw forehead detection region
             eyebrow_points = landmarks[17:27]
-            if len(eyebrow_points) > 0:
+            if hasattr(eyebrow_points, '__len__') and len(eyebrow_points) > 0:
                 forehead_top_y = int(min(eyebrow_points[:, 1])) - 40
                 forehead_bottom_y = int(min(eyebrow_points[:, 1]))
                 face_left = int(min(landmarks[:, 0]))
@@ -517,7 +517,7 @@ class FaceDetector(BaseDetector):
         """Check if person is blinking with proper error handling"""
         try:
             # Validate landmarks
-            if landmarks is None or len(landmarks) < 48:  # Need at least 48 landmarks for eyes
+            if landmarks is None or (hasattr(landmarks, '__len__') and len(landmarks) < 48):  # Need at least 48 landmarks for eyes
                 return False, 0.0
             
             # Check for invalid landmark coordinates
@@ -534,7 +534,7 @@ class FaceDetector(BaseDetector):
             right_eye = landmarks[right_eye_start:right_eye_end]
             
             # Validate eye arrays
-            if len(left_eye) < 6 or len(right_eye) < 6:
+            if (hasattr(left_eye, '__len__') and len(left_eye) < 6) or (hasattr(right_eye, '__len__') and len(right_eye) < 6):
                 return False, 0.0
             
             # Calculate EAR for both eyes

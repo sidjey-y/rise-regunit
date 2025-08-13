@@ -258,21 +258,39 @@ class CameraInterface:
     
     def draw_ui_elements(self, frame, faces, landmarks_list, state):
         """Draw UI elements efficiently with proper error handling"""
-        # Input validation
+        # Input validation - but don't fail completely
         if not self._validate_ui_inputs(frame, state, faces, landmarks_list):
-            return self._create_fallback_frame()
+            # If frame is invalid, create fallback but still try to draw UI
+            frame = self._create_fallback_frame()
         
-        # Handle state-specific UI first
-        if state.name == 'SHOW_GUIDELINES':
-            return self._draw_guidelines_state(frame, faces, landmarks_list)
-        elif state.name == 'PHOTO_REVIEW':
-            return self._draw_photo_review_state(frame)
+        # Always draw the oval guide first - this is the most important UI element
+        try:
+            frame = self.liveness_detector.draw_face_guide(frame)
+        except Exception as e:
+            print(f"Error drawing face guide: {e}")
+            # Continue with other UI elements
+        
+        # Handle state-specific UI
+        try:
+            state_name = self._safe_get_state_name(state)
+            if state_name == 'SHOW_GUIDELINES':
+                frame = self._draw_guidelines_state(frame, faces, landmarks_list)
+            elif state_name == 'PHOTO_REVIEW':
+                frame = self._draw_photo_review_state(frame)
+        except Exception as e:
+            print(f"Error drawing state-specific UI: {e}")
         
         # Draw common UI elements
-        frame = self._draw_common_ui_elements(frame, faces, landmarks_list, state)
+        try:
+            frame = self._draw_common_ui_elements(frame, faces, landmarks_list, state)
+        except Exception as e:
+            print(f"Error drawing common UI elements: {e}")
         
         # Draw state indicator and controls
-        frame = self._draw_state_indicator_and_controls(frame, state)
+        try:
+            frame = self._draw_state_indicator_and_controls(frame, state)
+        except Exception as e:
+            print(f"Error drawing state indicator: {e}")
         
         return frame
     
@@ -282,15 +300,16 @@ class CameraInterface:
             print("Warning: draw_ui_elements called with None frame")
             return False
         
-        if state is None or not hasattr(state, 'name'):
-            print("Warning: Invalid state object")
-            return False
-        
         # Ensure faces and landmarks are lists (not None)
         if faces is None:
             faces = []
         if landmarks_list is None:
             landmarks_list = []
+        
+        # Allow drawing even if state is not perfect - just log warning
+        if state is None or not hasattr(state, 'name'):
+            print("Warning: Invalid state object, but continuing with UI drawing")
+            # Don't return False - continue with drawing
         
         return True
     
@@ -315,20 +334,49 @@ class CameraInterface:
         # Draw face boundaries and landmarks
         for i, face in enumerate(faces):
             if i < len(landmarks_list):
-                frame = self.face_detector.draw_face_boundary(frame, face) or frame
-                frame = self.face_detector.draw_landmarks(frame, landmarks_list[i]) or frame
+                try:
+                    result = self.face_detector.draw_face_boundary(frame, face)
+                    if result is not None:
+                        frame = result
+                except Exception as e:
+                    print(f"Error drawing face boundary: {e}")
+                
+                try:
+                    result = self.face_detector.draw_landmarks(frame, landmarks_list[i])
+                    if result is not None:
+                        frame = result
+                except Exception as e:
+                    print(f"Error drawing landmarks: {e}")
         
-        # Draw liveness detection UI
-        frame = self.liveness_detector.draw_face_guide(frame) or frame
-        frame = self.liveness_detector.draw_progress(frame) or frame
+        # Note: draw_face_guide (oval) is already called in draw_ui_elements
+        
+        # Draw liveness detection progress
+        try:
+            result = self.liveness_detector.draw_progress(frame)
+            if result is not None:
+                frame = result
+        except Exception as e:
+            print(f"Error drawing progress: {e}")
         
         # Draw head pose debug for specific states
-        if (state.name in ['LOOK_LEFT', 'LOOK_RIGHT'] and 
-            landmarks_list and len(landmarks_list) > 0):
-            frame = self.liveness_detector.draw_head_pose_debug(frame, landmarks_list[0]) or frame
+        try:
+            faces_valid, landmarks_valid = self._safe_check_arrays(faces, landmarks_list)
+            state_name = self._safe_get_state_name(state)
+            if (self._safe_state_transition(state, ['LOOK_LEFT', 'LOOK_RIGHT']) and 
+                landmarks_valid and len(landmarks_list) > 0):
+                result = self.liveness_detector.draw_head_pose_debug(frame, landmarks_list[0])
+                if result is not None:
+                    frame = result
+        except Exception as e:
+            print(f"Error drawing head pose debug: {e}")
         
         # Draw countdown
-        frame = self.draw_countdown(frame)
+        try:
+            result = self.draw_countdown(frame)
+            if result is not None:
+                frame = result
+        except Exception as e:
+            print(f"Error drawing countdown: {e}")
         
         return frame
     
@@ -412,6 +460,9 @@ class CameraInterface:
                     time.sleep(0.01)  # 10ms delay for ~100 FPS display
                     
                 except Exception as e:
+                    print(f"Frame processing error: {e}")
+                    import traceback
+                    traceback.print_exc()
                     consecutive_errors = self._handle_processing_error(e, consecutive_errors, max_consecutive_errors)
                     if consecutive_errors >= max_consecutive_errors:
                         break
@@ -443,21 +494,54 @@ class CameraInterface:
             frame = cv2.flip(frame, 1)
             
             # Get cached or fresh detection results
-            faces, landmarks_list, state = self._get_detection_results(
-                frame, current_time, last_face_detection_time, face_detection_interval
-            )
+            try:
+                faces, landmarks_list, state = self._get_detection_results(
+                    frame, current_time, last_face_detection_time, face_detection_interval
+                )
+                
+                # Validate detection results
+                if faces is None:
+                    faces = []
+                if landmarks_list is None:
+                    landmarks_list = []
+                if state is None:
+                    # Create a default state or skip processing
+                    state = self.liveness_detector.state
+                
+                # Handle liveness state transitions
+                try:
+                    self._handle_liveness_transitions(state, faces, landmarks_list, frame)
+                except Exception as e:
+                    print(f"Liveness transition error: {e}")
+                
+                # Handle photo capture countdown and capture
+                try:
+                    self._handle_photo_capture(frame, landmarks_list)
+                except Exception as e:
+                    print(f"Photo capture error: {e}")
+                
+            except Exception as e:
+                print(f"Detection processing error: {e}")
+                # Continue with empty results but keep the frame
+                faces, landmarks_list = [], []
+                state = self.liveness_detector.state
             
-            # Handle liveness state transitions
-            self._handle_liveness_transitions(state, faces, landmarks_list, frame)
-            
-            # Handle photo capture countdown and capture
-            self._handle_photo_capture(frame, landmarks_list)
-            
-            # Draw UI elements
-            frame = self.draw_ui_elements(frame, faces, landmarks_list, state)
+            # Always draw UI elements - this is critical for the oval to show
+            try:
+                frame = self.draw_ui_elements(frame, faces, landmarks_list, state)
+            except Exception as e:
+                print(f"UI drawing error: {e}")
+                # Try to draw at least the basic oval
+                try:
+                    frame = self.liveness_detector.draw_face_guide(frame)
+                except Exception as e2:
+                    print(f"Even basic oval drawing failed: {e2}")
             
             # Handle photo review auto-proceed
-            self._handle_photo_review_auto_proceed()
+            try:
+                self._handle_photo_review_auto_proceed()
+            except Exception as e:
+                print(f"Photo review error: {e}")
             
             # Display frame
             cv2.imshow('Face Recognition with Liveness Detection', frame)
@@ -511,25 +595,34 @@ class CameraInterface:
 
     def _handle_emergency_skip(self):
         """Handle emergency skip command (S key)"""
-        if hasattr(self.liveness_detector, 'state'):
-            print(f"Current state: {self.liveness_detector.state.name}")
-            if self.liveness_detector.state.name in ['LOOK_LEFT', 'LOOK_RIGHT', 'BLINK']:
-                self.liveness_detector.state = self.liveness_detector.LivenessState.COMPLETED
-                print("EMERGENCY: Skipped to COMPLETED state")
+        try:
+            if hasattr(self.liveness_detector, 'state') and self.liveness_detector.state is not None:
+                state_name = self._safe_get_state_name(self.liveness_detector.state)
+                print(f"Current state: {state_name}")
+                if self._safe_state_transition(self.liveness_detector.state, ['LOOK_LEFT', 'LOOK_RIGHT', 'BLINK']):
+                    self.liveness_detector.state = self.liveness_detector.LivenessState.COMPLETED
+                    print("EMERGENCY: Skipped to COMPLETED state")
+        except Exception as e:
+            print(f"Error in emergency skip: {e}")
 
     def _handle_manual_approval(self):
         """Handle manual approval command (A key)"""
-        if (hasattr(self.liveness_detector, 'state') and 
-            self.liveness_detector.state.name == 'PHOTO_REVIEW'):
-            print("✅ Manual approval - Proceeding to completion...")
-            # Save the photo after manual approval
-            saved_path = self.save_captured_photo()
-            if saved_path:
-                self.liveness_detector.mark_capture_complete()
-            else:
-                print("❌ Failed to save photo - cannot proceed")
-        else:
-            print("Manual approval only available during photo review")
+        try:
+            if (hasattr(self.liveness_detector, 'state') and 
+                self.liveness_detector.state is not None):
+                state_name = self._safe_get_state_name(self.liveness_detector.state)
+                if state_name == 'PHOTO_REVIEW':
+                    print("✅ Manual approval - Proceeding to completion...")
+                    # Save the photo after manual approval
+                    saved_path = self.save_captured_photo()
+                    if saved_path:
+                        self.liveness_detector.mark_capture_complete()
+                    else:
+                        print("❌ Failed to save photo - cannot proceed")
+                else:
+                    print("Manual approval only available during photo review")
+        except Exception as e:
+            print(f"Error in manual approval: {e}")
 
     def _initialize_camera_safely(self, camera_index):
         """Safely initialize camera with retry logic and performance optimization"""
@@ -557,8 +650,26 @@ class CameraInterface:
         if (current_time - last_face_detection_time) >= face_detection_interval:
             try:
                 # Perform face detection with optimized parameters
-                faces, landmarks_list = self.face_detector.detect_faces_optimized(frame)
-                state = self.liveness_detector.get_current_state()
+                faces, gray = self.face_detector.detect_faces(frame)
+                
+                # Ensure faces is a valid list/array
+                if faces is None:
+                    faces = []
+                elif not hasattr(faces, '__len__'):
+                    faces = []
+                
+                landmarks_list = []
+                for face in faces:
+                    try:
+                        landmarks = self.face_detector.get_landmarks(gray, face)
+                        if landmarks is not None and hasattr(landmarks, '__len__'):
+                            landmarks_list.append(landmarks)
+                    except Exception as e:
+                        print(f"Landmark extraction error for face: {e}")
+                        continue
+                
+                # Get current state from liveness detector
+                state = self.liveness_detector.state
                 
                 # Cache results for next frame
                 self._cached_detection_results = (faces, landmarks_list, state)
@@ -570,17 +681,61 @@ class CameraInterface:
                 # Return cached results if available, otherwise empty results
                 if hasattr(self, '_cached_detection_results'):
                     return self._cached_detection_results
-                return [], [], self.liveness_detector.get_current_state()
+                return [], [], self.liveness_detector.state
         else:
             # Return cached results for performance
             if hasattr(self, '_cached_detection_results'):
                 return self._cached_detection_results
-            return [], [], self.liveness_detector.get_current_state()
+            return [], [], self.liveness_detector.state
     
     def _are_cached_results_valid(self, faces, landmarks_list, state):
         """Check if cached detection results are valid"""
         return (faces is not None and landmarks_list is not None and 
                 state is not None and hasattr(state, 'name'))
+    
+    def _safe_check_arrays(self, faces, landmarks_list):
+        """Safely check if faces and landmarks arrays are valid and non-empty"""
+        try:
+            # Check if faces is a valid array/list and has content
+            if faces is None:
+                return False, False
+            if hasattr(faces, '__len__'):
+                faces_valid = len(faces) > 0
+            else:
+                faces_valid = False
+                
+            # Check if landmarks_list is a valid array/list and has content
+            if landmarks_list is None:
+                return faces_valid, False
+            if hasattr(landmarks_list, '__len__'):
+                landmarks_valid = len(landmarks_list) > 0
+            else:
+                landmarks_valid = False
+                
+            return faces_valid, landmarks_valid
+        except Exception:
+            return False, False
+    
+    def _safe_get_state_name(self, state):
+        """Safely get the state name with error handling"""
+        try:
+            if state is None or not hasattr(state, 'name'):
+                return None
+            return state.name
+        except Exception as e:
+            print(f"Error getting state name: {e}")
+            return None
+    
+    def _safe_state_transition(self, state, target_states):
+        """Safely check if state is in target states"""
+        try:
+            state_name = self._safe_get_state_name(state)
+            if state_name is None:
+                return False
+            return state_name in target_states
+        except Exception as e:
+            print(f"Error in state transition check: {e}")
+            return False
     
     def _extract_landmarks(self, gray, faces):
         """Extract landmarks from detected faces"""
@@ -598,10 +753,15 @@ class CameraInterface:
         if not state or not hasattr(state, 'name'):
             return
             
-        state_name = state.name
+        try:
+            state_name = state.name
+        except Exception as e:
+            print(f"Error accessing state name: {e}")
+            return
         
         # Check compliance when waiting for face
-        if (state_name == 'WAITING_FOR_FACE' and faces and landmarks_list and 
+        faces_valid, landmarks_valid = self._safe_check_arrays(faces, landmarks_list)
+        if (self._safe_state_transition(state, ['WAITING_FOR_FACE']) and faces_valid and landmarks_valid and 
             len(faces) == 1 and len(landmarks_list) == 1):
             try:
                 compliance_status = self.face_detector.get_compliance_status(landmarks_list[0], frame)
@@ -611,10 +771,10 @@ class CameraInterface:
                 print(f"Compliance check error: {e}")
         
         # Handle photo capture initiation
-        if (state_name == 'COMPLETED' and self.capture_countdown == 0 and not self.photo_captured):
+        if (self._safe_state_transition(state, ['COMPLETED']) and self.capture_countdown == 0 and not self.photo_captured):
             print("🎯 Starting photo capture countdown...")
             self.start_capture_countdown()
-        elif (state_name == 'COMPLETED' and self.photo_captured):
+        elif (self._safe_state_transition(state, ['COMPLETED']) and self.photo_captured):
             print("📸 Photo captured! Moving to completion state...")
             self.liveness_detector.mark_capture_complete()
     
@@ -631,7 +791,9 @@ class CameraInterface:
             self.update_countdown()
             if self.capture_countdown == 0:
                 print("Countdown finished! Initiating photo capture...")
-                if landmarks_list and len(landmarks_list) == 1:
+                # Fix: Remove reference to undefined 'faces' variable
+                landmarks_valid = self._safe_check_arrays([], landmarks_list)[1]  # Only check landmarks
+                if landmarks_valid and len(landmarks_list) == 1:
                     # Capture photo
                     captured_photo = self.capture_photo(frame, landmarks_list[0])
                     print("✅ Photo captured successfully! Starting quality check...")
@@ -665,22 +827,25 @@ class CameraInterface:
     
     def _handle_photo_review_auto_proceed(self):
         """Automatically proceed to the next state if photo review is completed."""
-        if (self.liveness_detector.state.name == 'PHOTO_REVIEW' and 
-            not self.liveness_detector.has_photo_quality_issues()):
-            # Quality check completed successfully, auto-proceed after delay
-            if not hasattr(self, '_photo_review_start_time'):
-                self._photo_review_start_time = time.time()
-            
-            if time.time() - self._photo_review_start_time > 3:  # 3 seconds delay
-                print("✅ Quality check completed - Auto-proceeding to completion...")
-                # Save the photo after auto-approval
-                saved_path = self.save_captured_photo()
-                if saved_path:
-                    self.liveness_detector.mark_capture_complete()
-                else:
-                    print("❌ Failed to save photo - cannot proceed")
-                # Reset timer
-                self._photo_review_start_time = None
+        try:
+            if (self._safe_state_transition(self.liveness_detector.state, ['PHOTO_REVIEW']) and 
+                not self.liveness_detector.has_photo_quality_issues()):
+                # Quality check completed successfully, auto-proceed after delay
+                if not hasattr(self, '_photo_review_start_time'):
+                    self._photo_review_start_time = time.time()
+                
+                if time.time() - self._photo_review_start_time > 3:  # 3 seconds delay
+                    print("✅ Quality check completed - Auto-proceeding to completion...")
+                    # Save the photo after auto-approval
+                    saved_path = self.save_captured_photo()
+                    if saved_path:
+                        self.liveness_detector.mark_capture_complete()
+                    else:
+                        print("❌ Failed to save photo - cannot proceed")
+                    # Reset timer
+                    self._photo_review_start_time = None
+        except Exception as e:
+            print(f"Error in photo review auto-proceed: {e}")
     
 
     
