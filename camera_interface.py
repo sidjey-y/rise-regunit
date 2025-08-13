@@ -29,18 +29,159 @@ class CameraInterface:
         self.CAMERA_HEIGHT = 720
         
     def initialize_camera(self, camera_index=0):
-        self.cap = cv2.VideoCapture(camera_index)
-        if not self.cap.isOpened():
-            raise Exception("Could not open camera")
+        """Initialize camera with error handling and recovery"""
+        try:
+            self.cap = cv2.VideoCapture(camera_index)
+            if not self.cap.isOpened():
+                raise Exception("Could not open camera")
+            
+            # Set camera properties with validation
+            self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.CAMERA_WIDTH)
+            self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.CAMERA_HEIGHT)
+            self.cap.set(cv2.CAP_PROP_FPS, 30)
+            self.cap.set(cv2.CAP_PROP_AUTOFOCUS, 1)
+            
+            # Warm up camera with multiple reads
+            for _ in range(10):
+                ret, frame = self.cap.read()
+                if not ret or frame is None:
+                    print(f"Warning: Camera warm-up frame {_} failed")
+                    continue
+                time.sleep(0.1)  # Small delay between reads
+                
+            print("✅ Camera initialized successfully")
+            
+        except Exception as e:
+            print(f"❌ Camera initialization failed: {e}")
+            # Try fallback camera
+            self._try_fallback_camera()
+    
+    def _try_fallback_camera(self):
+        """Try alternative camera initialization methods"""
+        print("🔄 Attempting fallback camera initialization...")
         
-        # cam properties
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.CAMERA_WIDTH)
-        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.CAMERA_HEIGHT)
-        self.cap.set(cv2.CAP_PROP_FPS, 30)
-        self.cap.set(cv2.CAP_PROP_AUTOFOCUS, 1)
+        # Try different camera indices
+        for camera_index in [1, 2, -1]:
+            try:
+                if self.cap:
+                    self.cap.release()
+                
+                self.cap = cv2.VideoCapture(camera_index)
+                if self.cap.isOpened():
+                    # Test frame capture
+                    ret, frame = self.cap.read()
+                    if ret and frame is not None and frame.size > 0:
+                        print(f"✅ Fallback camera {camera_index} initialization successful")
+                        # Use default settings for fallback
+                        print("Using camera default settings (no custom properties)")
+                        return
+                    else:
+                        self.cap.release()
+                        
+            except Exception as e:
+                print(f"Fallback camera {camera_index} failed: {e}")
+                if self.cap:
+                    self.cap.release()
         
-        for _ in range(10):
-            self.cap.read()
+        # If all fallbacks fail, create a dummy camera
+        print("⚠️ All camera initialization attempts failed, creating dummy camera")
+        self._create_dummy_camera()
+    
+    def _create_dummy_camera(self):
+        """Create a dummy camera for testing when real camera fails"""
+        class DummyCamera:
+            def __init__(self):
+                self.is_opened = True
+                
+            def read(self):
+                # Return a dummy frame
+                dummy_frame = np.zeros((480, 640, 3), dtype=np.uint8)
+                cv2.putText(dummy_frame, "Camera Error - Press Q to quit", (50, 240), 
+                           cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+                return True, dummy_frame
+                
+            def isOpened(self):
+                return self.is_opened
+                
+            def release(self):
+                self.is_opened = False
+                
+            def set(self, prop, value):
+                pass  # Ignore property settings
+        
+        self.cap = DummyCamera()
+        print("✅ Dummy camera created for testing")
+    
+    def _validate_frame(self, frame):
+        """Validate frame before processing to prevent OpenCV errors"""
+        if frame is None:
+            return False, "Frame is None"
+        
+        if not isinstance(frame, np.ndarray):
+            return False, f"Frame is not numpy array: {type(frame)}"
+        
+        if frame.size == 0:
+            return False, "Frame has zero size"
+        
+        if len(frame.shape) != 3:
+            return False, f"Frame has invalid shape: {frame.shape}"
+        
+        h, w, c = frame.shape
+        if h <= 0 or w <= 0 or c != 3:
+            return False, f"Frame has invalid dimensions: {h}x{w}x{c}"
+        
+        if frame.dtype != np.uint8:
+            return False, f"Frame has invalid dtype: {frame.dtype}"
+        
+        # Check for NaN or infinite values
+        if np.any(np.isnan(frame)) or np.any(np.isinf(frame)):
+            return False, "Frame contains NaN or infinite values"
+        
+        return True, "Frame is valid"
+    
+    def _safe_camera_read(self):
+        """Safely read from camera with error handling and recovery"""
+        max_retries = 3
+        retry_count = 0
+        
+        while retry_count < max_retries:
+            try:
+                if not self.cap or not self.cap.isOpened():
+                    print("⚠️ Camera not available, attempting recovery...")
+                    self._try_fallback_camera()
+                    if not self.cap or not self.cap.isOpened():
+                        return False, None, "Camera recovery failed"
+                
+                ret, frame = self.cap.read()
+                
+                if not ret:
+                    print(f"⚠️ Camera read failed (attempt {retry_count + 1}/{max_retries})")
+                    retry_count += 1
+                    time.sleep(0.1)
+                    continue
+                
+                # Validate frame
+                is_valid, validation_msg = self._validate_frame(frame)
+                if not is_valid:
+                    print(f"⚠️ Invalid frame detected: {validation_msg} (attempt {retry_count + 1}/{max_retries})")
+                    retry_count += 1
+                    time.sleep(0.1)
+                    continue
+                
+                return True, frame, "Frame captured successfully"
+                
+            except Exception as e:
+                print(f"⚠️ Camera read error: {e} (attempt {retry_count + 1}/{max_retries})")
+                retry_count += 1
+                
+                # Try to recover camera
+                if retry_count < max_retries:
+                    print("Attempting camera recovery...")
+                    self._try_fallback_camera()
+                    time.sleep(0.5)
+        
+        print("❌ All camera read attempts failed")
+        return False, None, "Camera read failed after all retries"
             
     def release_camera(self):
         if self.cap:
@@ -257,6 +398,10 @@ class CameraInterface:
         frame = self.liveness_detector.draw_face_guide(frame)
         frame = self.liveness_detector.draw_progress(frame)
         
+        # Add blink debug visualization when in blink state
+        if state.name == 'BLINK' and len(landmarks_list) > 0:
+            frame = self.liveness_detector.draw_blink_debug(frame, landmarks_list[0])
+        
         frame = self.draw_countdown(frame)
         
         h, w = frame.shape[:2]
@@ -280,10 +425,14 @@ class CameraInterface:
             self.initialize_camera()
             
             while self.is_running:
-                ret, frame = self.cap.read()
+                # Use safe camera read with error handling
+                ret, frame, msg = self._safe_camera_read()
+                
                 if not ret:
-                    print("Failed to capture frame")
-                    break
+                    print(f"Camera read failed: {msg}")
+                    # Try to recover camera
+                    time.sleep(0.1)
+                    continue
                 
                 # mirroring
                 frame = cv2.flip(frame, 1)
@@ -367,6 +516,8 @@ class CameraInterface:
                     
         except Exception as e:
             print(f"Error in camera loop: {e}")
+            import traceback
+            traceback.print_exc()
         finally:
             self.release_camera()
             cv2.destroyAllWindows()

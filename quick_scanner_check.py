@@ -47,3 +47,4 @@ print("\nIf you see 'ACCESSIBLE' for any device, your scanner is working!")
 
 
 
+

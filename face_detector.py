@@ -3,15 +3,19 @@ import dlib
 import numpy as np
 from scipy.spatial import distance as dist
 from imutils import face_utils
+import os
 
 class FaceDetector:
     def __init__(self):
-
         # dlib's face detector and facial landmark predictor
         self.detector = dlib.get_frontal_face_detector()
         
+        # Check if landmarks file exists
+        landmarks_file = "shape_predictor_68_face_landmarks.dat"
+        if not os.path.exists(landmarks_file):
+            raise FileNotFoundError(f"Landmarks file not found: {landmarks_file}")
         
-        self.predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat") #hugging face
+        self.predictor = dlib.shape_predictor(landmarks_file) #hugging face
         
         # Facial Landmarks Map
         #- Jaw: points 0-16
@@ -33,6 +37,8 @@ class FaceDetector:
         # nose tip index
         self.NOSE_TIP = 30
         
+        # Track initialization status
+        self._initialized = True
         
         # head position estimation points, for pnp
         self.model_points = np.array([
@@ -43,7 +49,20 @@ class FaceDetector:
             (-150.0, -150.0, -125.0),    # Left Mouth corner > left, down, back
             (150.0, -150.0, -125.0)      # Right mouth corner > right, down, back
         ])
-        
+    
+    def initialize(self) -> bool:
+        """Initialize the face detector (already done in __init__)"""
+        return self._initialized
+    
+    def is_initialized(self) -> bool:
+        """Check if the face detector is properly initialized"""
+        return self._initialized
+    
+    def cleanup(self):
+        """Cleanup resources"""
+        # dlib objects don't need explicit cleanup
+        self._initialized = False
+    
     def detect_faces(self, frame):
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         faces = self.detector(gray) #green boundary, using dlib
@@ -57,36 +76,83 @@ class FaceDetector:
     
     #vertical n horizontal distance between eye n landmark
     def calculate_ear(self, eye): #Eye Aspect Ratio (EAR)
+        """Calculate Eye Aspect Ratio with improved error handling"""
+        try:
+            # Validate input
+            if eye is None or len(eye) < 6:
+                print(f"Invalid eye landmarks: {eye}")
+                return None
+            
+            # Check for invalid coordinates
+            for point in eye:
+                if len(point) != 2 or np.isnan(point[0]) or np.isnan(point[1]) or np.isinf(point[0]) or np.isinf(point[1]):
+                    print(f"Invalid eye point: {point}")
+                    return None
+            
+            #using euclidean distances between the:
 
-        #using euclidean distances between the:
-
-        # two sets of vertical eye, x and y coordinates, vertical
-        A = dist.euclidean(eye[1], eye[5])
-        B = dist.euclidean(eye[2], eye[4])
-        
-        # between the horizontal eye landmark (x, y)-coordinates
-        C = dist.euclidean(eye[0], eye[3])
-        
-        # eye aspect ratio, larger> eye open > higher ear value
-        ear = (A + B) / (2.0 * C)
-        return ear
+            # two sets of vertical eye, x and y coordinates, vertical
+            A = dist.euclidean(eye[1], eye[5])
+            B = dist.euclidean(eye[2], eye[4])
+            
+            # between the horizontal eye landmark (x, y)-coordinates
+            C = dist.euclidean(eye[0], eye[3])
+            
+            # Validate distances
+            if A <= 0 or B <= 0 or C <= 0:
+                print(f"Invalid distances: A={A}, B={B}, C={C}")
+                return None
+            
+            # eye aspect ratio, larger> eye open > higher ear value
+            ear = (A + B) / (2.0 * C)
+            
+            # Validate result
+            if np.isnan(ear) or np.isinf(ear) or ear <= 0:
+                print(f"Invalid EAR result: {ear}")
+                return None
+            
+            return ear
+            
+        except Exception as e:
+            print(f"Error calculating EAR: {e}")
+            return None
     
     #BASED ON EAR
     def is_blinking(self, landmarks):
-
-        # extract eye coordinates
-        left_eye = landmarks[self.LEFT_EYE_START:self.LEFT_EYE_END]
-        right_eye = landmarks[self.RIGHT_EYE_START:self.RIGHT_EYE_END]
-        
-        #calculate EAR for both eyes
-        left_ear = self.calculate_ear(left_eye)
-        right_ear = self.calculate_ear(right_eye)
-        
-        #average
-        ear = (left_ear + right_ear) / 2.0
-        
-        #threshold for ear
-        return ear < 0.25, ear
+        """Detect blinking with improved error handling"""
+        try:
+            # Validate landmarks
+            if landmarks is None or len(landmarks) < 48:
+                print(f"Invalid landmarks for blink detection: {landmarks is None}, length: {len(landmarks) if landmarks is not None else 0}")
+                return False, None
+            
+            # extract eye coordinates
+            left_eye = landmarks[self.LEFT_EYE_START:self.LEFT_EYE_END]
+            right_eye = landmarks[self.RIGHT_EYE_START:self.RIGHT_EYE_END]
+            
+            #calculate EAR for both eyes
+            left_ear = self.calculate_ear(left_eye)
+            right_ear = self.calculate_ear(right_eye)
+            
+            # Check if EAR calculation failed
+            if left_ear is None or right_ear is None:
+                print("EAR calculation failed for one or both eyes")
+                return False, None
+            
+            #average
+            ear = (left_ear + right_ear) / 2.0
+            
+            # Validate final EAR
+            if np.isnan(ear) or np.isinf(ear) or ear <= 0:
+                print(f"Invalid final EAR: {ear}")
+                return False, None
+            
+            #threshold for ear - more lenient threshold
+            return ear < 0.22, ear  # Reduced from 0.25 to 0.22 for better sensitivity
+            
+        except Exception as e:
+            print(f"Error in is_blinking: {e}")
+            return False, None
     
     #head position - 
     #give the angles 
@@ -552,3 +618,40 @@ class FaceDetector:
         print("="*60)
         
         return quality_issues
+    
+    def check_eye_gaze_direction(self, landmarks, frame):
+        """Check if eyes are looking at the camera"""
+        try:
+            # Extract eye landmarks
+            left_eye = landmarks[self.LEFT_EYE_START:self.LEFT_EYE_END]
+            right_eye = landmarks[self.RIGHT_EYE_START:self.RIGHT_EYE_END]
+            
+            # Calculate eye centers
+            left_eye_center = np.mean(left_eye, axis=0)
+            right_eye_center = np.mean(right_eye, axis=0)
+            
+            # Calculate face center
+            face_center_x = np.mean(landmarks[:, 0])
+            face_center_y = np.mean(landmarks[:, 1])
+            
+            # Calculate frame center
+            h, w = frame.shape[:2]
+            frame_center_x = w / 2
+            frame_center_y = h / 2
+            
+            # Check if eyes are roughly centered in the frame
+            # Allow some tolerance for natural head movement
+            tolerance = 50  # pixels
+            
+            left_eye_offset = abs(left_eye_center[0] - frame_center_x)
+            right_eye_offset = abs(right_eye_center[0] - frame_center_x)
+            
+            # If either eye is too far from center, consider it not looking at camera
+            if left_eye_offset > tolerance or right_eye_offset > tolerance:
+                return ["Eyes not centered - look directly at camera"]
+            
+            return []  # No gaze issues
+            
+        except Exception as e:
+            print(f"Error in check_eye_gaze_direction: {e}")
+            return []  # Return empty list on error
