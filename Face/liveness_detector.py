@@ -27,19 +27,19 @@ class LivenessDetector:
         # Configuration parameters - get from config if available
         if hasattr(face_detector, 'config_manager') and face_detector.config_manager:
             liveness_config = face_detector.config_manager.get('liveness', {})
-            self.DIRECTION_THRESHOLD = liveness_config.get('head_movement_threshold', 6.0)  # Reduced default
-            self.DIRECTION_FRAMES_REQUIRED = liveness_config.get('direction_frames_required', 6)  # Reduced default
+            self.DIRECTION_THRESHOLD = liveness_config.get('head_movement_threshold', 12.0)  # Increased from 6.0 - less sensitive
+            self.DIRECTION_FRAMES_REQUIRED = liveness_config.get('direction_frames_required', 10)  # Increased from 6 - more stable
             self.BLINK_FRAMES_REQUIRED = liveness_config.get('blink_frames_required', 3)
-            self.MAX_TIME_PER_STEP = liveness_config.get('max_time_per_step', 30)  # Increased from 15 to 30 seconds
+            # self.MAX_TIME_PER_STEP = liveness_config.get('max_time_per_step', 30)  # DISABLED - No timeout
             self.FACE_STABILITY_FRAMES = liveness_config.get('face_stability_frames', 5)
             self.AUTO_RESTART_ON_FAILURE = liveness_config.get('auto_restart_on_failure', True)
             self.RESTART_DELAY = liveness_config.get('restart_delay', 3.0)
             self.DEBUG_MODE = liveness_config.get('debug', {}).get('show_head_pose_values', True)
         else:
-            self.DIRECTION_THRESHOLD = 6.0  # Reduced default for better sensitivity
-            self.DIRECTION_FRAMES_REQUIRED = 6  # Reduced default for better responsiveness
+            self.DIRECTION_THRESHOLD = 12.0  # Increased from 6.0 - less sensitive, requires more head turn
+            self.DIRECTION_FRAMES_REQUIRED = 10  # Increased from 6 - more frames required for stability
             self.BLINK_FRAMES_REQUIRED = 3
-            self.MAX_TIME_PER_STEP = 30  # Increased from 15 to 30 seconds for better user experience
+            # self.MAX_TIME_PER_STEP = 30  # DISABLED - No timeout for better user experience
             self.FACE_STABILITY_FRAMES = 5
             self.AUTO_RESTART_ON_FAILURE = True
             self.RESTART_DELAY = 3.0
@@ -51,7 +51,7 @@ class LivenessDetector:
         self.last_ear_values = deque(maxlen=10)
         
         self.compliance_stable_count = 0
-        self.COMPLIANCE_FRAMES_REQUIRED = 15  # 0.5 seconds at 30fps (reduced from 30)
+        self.COMPLIANCE_FRAMES_REQUIRED = 45  # Increased from 15 - now requires 1.5 seconds at 30fps (was 0.5 seconds)
         self.last_compliance_status = None
         self.compliance_passed = False  # track if user already passed compliance
         
@@ -87,8 +87,8 @@ class LivenessDetector:
             LivenessState.SHOW_GUIDELINES: "Follow the guidelines and fix any issues shown. Process will continue automatically when compliant.",
             LivenessState.WAITING_FOR_FACE: "Position your face within the oval",
             LivenessState.BLINK: "Stay in the oval and BLINK your eyes",
-            LivenessState.LOOK_LEFT: "Stay in the oval and SLOWLY turn your head LEFT",
-            LivenessState.LOOK_RIGHT: "Stay in the oval and SLOWLYturn your head RIGHT", 
+            LivenessState.LOOK_LEFT: "Stay in the oval and turn your head LEFT (turn more)",
+            LivenessState.LOOK_RIGHT: "Stay in the oval and turn your head RIGHT (turn more)", 
             LivenessState.COMPLETED: "Stay still - Capturing...",
             LivenessState.FAILED: "Keep your face in the oval. Starting over...",
             LivenessState.CAPTURE_COMPLETE: "Facial Capture Complete!",
@@ -103,9 +103,9 @@ class LivenessDetector:
         face_center_x = np.mean(landmarks[:, 0])
         face_center_y = np.mean(landmarks[:, 1])
         
-        #if face is in center region (middle 60% of frame)
-        center_x_min, center_x_max = w * 0.2, w * 0.8
-        center_y_min, center_y_max = h * 0.2, h * 0.8
+        #More lenient center region (middle 70% of frame) to match larger oval
+        center_x_min, center_x_max = w * 0.15, w * 0.85  # Increased from 0.2-0.8 to 0.15-0.85
+        center_y_min, center_y_max = h * 0.15, h * 0.85  # Increased from 0.2-0.8 to 0.15-0.85
         
         return (center_x_min <= face_center_x <= center_x_max and 
                 center_y_min <= face_center_y <= center_y_max)
@@ -118,9 +118,10 @@ class LivenessDetector:
         face_width = np.max(landmarks[:, 0]) - np.min(landmarks[:, 0])
         face_height = np.max(landmarks[:, 1]) - np.min(landmarks[:, 1])
         
-        # face should occupy 20-60% of frame width ata
-        min_width, max_width = w * 0.2, w * 0.6
-        min_height, max_height = h * 0.2, h * 0.6
+        # More lenient face size requirements to match larger oval (20% x 30%)
+        # Allow face to be 15-75% of frame width and 15-75% of frame height
+        min_width, max_width = w * 0.15, w * 0.75   # Increased from 0.2-0.6 to 0.15-0.75
+        min_height, max_height = h * 0.15, h * 0.75  # Increased from 0.2-0.6 to 0.15-0.75
         
         return (min_width <= face_width <= max_width and 
                 min_height <= face_height <= max_height)
@@ -217,12 +218,8 @@ class LivenessDetector:
     def update(self, frame, faces, landmarks_list):
         current_time = time.time()
         
-        # for timeout - but don't timeout in WAITING_FOR_FACE state
-        if (current_time - self.step_start_time > self.MAX_TIME_PER_STEP and 
-            self.state != LivenessState.WAITING_FOR_FACE):
-            print(f"Timeout after {self.MAX_TIME_PER_STEP} seconds in state: {self.state.name}")
-            self.state = LivenessState.FAILED
-            return self.state
+        # No timeout check - users can take their time
+        # Timeout functionality completely disabled for better user experience
         
         # no face detected
         if len(faces) == 0:
@@ -255,10 +252,25 @@ class LivenessDetector:
             print(f"Error validating landmarks: {e}")
             return self.state
         
-        # face quality
+        # face quality with debug information
         try:
-            face_is_valid = (self.is_face_centered(landmarks, frame.shape) and 
-                            self.is_face_appropriate_size(landmarks, frame.shape))
+            is_centered = self.is_face_centered(landmarks, frame.shape)
+            is_appropriate_size = self.is_face_appropriate_size(landmarks, frame.shape)
+            face_is_valid = is_centered and is_appropriate_size
+            
+            # Debug information when face becomes invalid
+            if not face_is_valid:
+                h, w = frame.shape[:2]
+                face_width = np.max(landmarks[:, 0]) - np.min(landmarks[:, 0])
+                face_height = np.max(landmarks[:, 1]) - np.min(landmarks[:, 1])
+                face_center_x = np.mean(landmarks[:, 0])
+                face_center_y = np.mean(landmarks[:, 1])
+                
+                print(f"🔍 Face validation failed:")
+                print(f"   • Centered: {is_centered} (face center: {face_center_x:.0f}, {face_center_y:.0f})")
+                print(f"   • Size OK: {is_appropriate_size} (face size: {face_width:.0f}x{face_height:.0f} = {face_width/w*100:.1f}%x{face_height/h*100:.1f}%)")
+                print(f"   • Valid ranges: width 15-75%, height 15-75%")
+                
         except Exception as e:
             print(f"Error checking face validity: {e}")
             face_is_valid = False
@@ -341,14 +353,8 @@ class LivenessDetector:
                         print("✅ Simple blink detected! Moving to LOOK_LEFT")
                         return self.state
                 
-                # Add timeout protection for blink state
-                if self.blink_frame_count > 300:  # 10 seconds at 30fps
-                    print("⚠️ Blink timeout - forcing progression")
-                    self.completed_steps['blinked'] = True
-                    self.state = LivenessState.LOOK_LEFT
-                    self.step_start_time = current_time
-                    self.direction_frame_count = 0
-                    return self.state
+                # No timeout protection for blink - users can take their time
+                # Blink timeout functionality disabled for better user experience
                     
             except Exception as e:
                 print(f"Error in BLINK state: {e}")
@@ -362,16 +368,16 @@ class LivenessDetector:
             pitch, yaw, roll = self.face_detector.get_head_pose(landmarks, frame.shape)
             
             # Enhanced debug logging for troubleshooting
-            if self.DEBUG_MODE and self.direction_frame_count % 3 == 0:  # Log more frequently
+            if self.DEBUG_MODE and self.direction_frame_count % 5 == 0:  # Log every 5 frames
                 if yaw is not None:
                     print(f"LOOK_LEFT - Yaw: {yaw:.2f}°, Threshold: -{self.DIRECTION_THRESHOLD}°, Progress: {self.direction_frame_count}/{self.DIRECTION_FRAMES_REQUIRED}")
                 else:
                     print(f"LOOK_LEFT - Yaw: None (head pose detection failed)")
             
-            # Check if looking left (negative yaw means left turn)
+            # Check if looking left (negative yaw means left turn) - less sensitive now
             if yaw is not None and yaw < -self.DIRECTION_THRESHOLD:
                 self.direction_frame_count += 1
-                if self.direction_frame_count % 3 == 0:  # Log more frequently
+                if self.direction_frame_count % 5 == 0:  # Log every 5 frames
                     print(f"LOOK_LEFT - Detected left turn: {yaw:.2f}° (frame {self.direction_frame_count}/{self.DIRECTION_FRAMES_REQUIRED})")
                 if self.direction_frame_count >= self.DIRECTION_FRAMES_REQUIRED:
                     self.completed_steps['looked_left'] = True
@@ -380,7 +386,7 @@ class LivenessDetector:
                     self.direction_frame_count = 0
                     print("LOOK_LEFT - Completed! Moving to LOOK_RIGHT")
             else:
-                if self.direction_frame_count > 0 and self.direction_frame_count % 3 == 0:
+                if self.direction_frame_count > 0 and self.direction_frame_count % 5 == 0:
                     if yaw is not None:
                         print(f"LOOK_LEFT - Reset counter (yaw: {yaw:.2f}° not < -{self.DIRECTION_THRESHOLD}°)")
                     else:
@@ -392,16 +398,16 @@ class LivenessDetector:
             pitch, yaw, roll = self.face_detector.get_head_pose(landmarks, frame.shape)
             
             # Enhanced debug logging for troubleshooting
-            if self.DEBUG_MODE and self.direction_frame_count % 3 == 0:  # Log more frequently
+            if self.DEBUG_MODE and self.direction_frame_count % 5 == 0:  # Log every 5 frames
                 if yaw is not None:
                     print(f"LOOK_RIGHT - Yaw: {yaw:.2f}°, Threshold: +{self.DIRECTION_THRESHOLD}°, Progress: {self.direction_frame_count}/{self.DIRECTION_FRAMES_REQUIRED}")
                 else:
                     print(f"LOOK_RIGHT - Yaw: None (head pose detection failed)")
             
-            # Check if looking right (positive yaw means right turn)
+            # Check if looking right (positive yaw means right turn) - less sensitive now
             if yaw is not None and yaw > self.DIRECTION_THRESHOLD:
                 self.direction_frame_count += 1
-                if self.direction_frame_count % 3 == 0:  # Log more frequently
+                if self.direction_frame_count % 5 == 0:  # Log every 5 frames
                     print(f"LOOK_RIGHT - Detected right turn: {yaw:.2f}° (frame {self.direction_frame_count}/{self.DIRECTION_FRAMES_REQUIRED})")
                 if self.direction_frame_count >= self.DIRECTION_FRAMES_REQUIRED:
                     self.completed_steps['looked_right'] = True
@@ -409,7 +415,7 @@ class LivenessDetector:
                     self.step_start_time = current_time
                     print("LOOK_RIGHT - Completed! Moving to COMPLETED")
             else:
-                if self.direction_frame_count > 0 and self.direction_frame_count % 3 == 0:
+                if self.direction_frame_count > 0 and self.direction_frame_count % 5 == 0:
                     if yaw is not None:
                         print(f"LOOK_RIGHT - Reset counter (yaw: {yaw:.2f}° not > +{self.DIRECTION_THRESHOLD}°)")
                     else:
@@ -432,23 +438,8 @@ class LivenessDetector:
                 print("Liveness test restarted automatically")
                 return self.state
         
-        # Add timeout protection for head turn states to prevent infinite loops
-        if (self.state in [LivenessState.LOOK_LEFT, LivenessState.LOOK_RIGHT] and 
-            current_time - self.step_start_time > self.MAX_TIME_PER_STEP):
-            print(f"Head turn timeout after {self.MAX_TIME_PER_STEP}s in {self.state.name}")
-            print("Forcing progression to next step...")
-            
-            if self.state == LivenessState.LOOK_LEFT:
-                self.completed_steps['looked_left'] = True
-                self.state = LivenessState.LOOK_RIGHT
-                self.step_start_time = current_time
-                self.direction_frame_count = 0
-                print("FORCED: LOOK_LEFT completed, moving to LOOK_RIGHT")
-            elif self.state == LivenessState.LOOK_RIGHT:
-                self.completed_steps['looked_right'] = True
-                self.state = LivenessState.COMPLETED
-                self.step_start_time = current_time
-                print("FORCED: LOOK_RIGHT completed, moving to COMPLETED")
+        # No timeout protection - users can take their time with head turns
+        # Timeout functionality disabled for better user experience
         
         return self.state
     
@@ -544,10 +535,8 @@ class LivenessDetector:
         if self.state == LivenessState.FAILED and self.AUTO_RESTART_ON_FAILURE:
             return True
         
-        # Restart if timeout occurred and we're in a liveness state
-        if (self.state in [LivenessState.BLINK, LivenessState.LOOK_LEFT, LivenessState.LOOK_RIGHT] and 
-            time.time() - self.step_start_time > self.MAX_TIME_PER_STEP):
-            return True
+        # No timeout-based restart - users can take their time
+        # Timeout functionality completely disabled
         
         return False
     
@@ -594,29 +583,63 @@ class LivenessDetector:
         
         step_text = f"Step {current_step}/3"
         if self.state == LivenessState.COMPLETED:
-            step_text = "COMPLETE"
+            step_text = "CAPTURING..."
         elif self.state == LivenessState.CAPTURE_COMPLETE:
-            step_text = "CAPTURE COMPLETE"
+            step_text = "COMPLETE ✓"
         elif self.state == LivenessState.PHOTO_REVIEW:
-            step_text = "QUALITY CHECK"
+            step_text = "REVIEWING..."
         elif self.state == LivenessState.FAILED:
-            step_text = "FAILED"
+            step_text = "FAILED ✗"
         elif self.state == LivenessState.WAITING_FOR_FACE and completed_count > 0:
-            step_text = "STAY IN OVAL!"
+            step_text = "STAY IN POSITION!"
         
         #  color based on state
         if self.state == LivenessState.WAITING_FOR_FACE and completed_count > 0:
-            text_color = (0, 0, 255)  # Red warning
+            text_color = (0, 100, 255)  # Orange warning
+            bg_color = (0, 0, 0)
         elif self.state == LivenessState.COMPLETED:
-            text_color = (0, 255, 0)  # Yellow
+            text_color = (0, 255, 255)  # Cyan for capturing
+            bg_color = (0, 0, 0)
         elif self.state == LivenessState.CAPTURE_COMPLETE:
-            text_color = (0, 255, 0)  # Yellow
+            text_color = (0, 255, 0)  # Green for success
+            bg_color = (0, 0, 0)
         elif self.state == LivenessState.FAILED:
-            text_color = (0, 0, 255)  # Red
+            text_color = (0, 0, 255)  # Red for failure
+            bg_color = (0, 0, 0)
         else:
-            text_color = (255, 255, 255)  # White
+            text_color = (255, 255, 255)  # White for normal
+            bg_color = (0, 0, 0)
         
-        cv2.putText(frame, step_text, (20, 40), cv2.FONT_HERSHEY_SIMPLEX, 1.2, text_color, 3)
+        # Better font scaling based on resolution
+        base_font_scale = 1.0
+        if w > 1400:  # High resolution
+            font_scale = base_font_scale * 1.2
+        elif w > 1000:  # Medium resolution
+            font_scale = base_font_scale
+        else:  # Low resolution
+            font_scale = base_font_scale * 0.8
+        
+        thickness = max(2, int(2 if w > 1400 else 2))
+        
+        # Modern progress display with background
+        text_size = cv2.getTextSize(step_text, cv2.FONT_HERSHEY_SIMPLEX, font_scale, thickness)[0]
+        
+        # Position in top-left with modern styling
+        padding = 15
+        bg_x1, bg_y1 = 10, 10
+        bg_x2, bg_y2 = text_size[0] + 40, 60
+        
+        # Semi-transparent modern background
+        overlay = frame.copy()
+        cv2.rectangle(overlay, (bg_x1, bg_y1), (bg_x2, bg_y2), bg_color, -1)
+        frame = cv2.addWeighted(frame, 0.7, overlay, 0.3, 0)
+        
+        # Add subtle border
+        border_color = (100, 100, 100) if self.state not in [LivenessState.FAILED, LivenessState.CAPTURE_COMPLETE] else text_color
+        cv2.rectangle(frame, (bg_x1, bg_y1), (bg_x2, bg_y2), border_color, 2)
+        
+        cv2.putText(frame, step_text, (25, 40), cv2.FONT_HERSHEY_SIMPLEX, 
+                   font_scale, text_color, thickness)
         
         return frame
     
@@ -651,13 +674,30 @@ class LivenessDetector:
             "- Neutral expression, eyes open",
             "- Mouth closed (slight smile OK, no teeth)",
             "",
+            "IMPORTANT: Hold steady position for 1.5 seconds",
+            "when all checks are green to proceed automatically",
+            "",
             "<< BASIC CHECKS MUST BE GREEN >>",
         ]
         
         # starting position for left side (guidelines)
-        font_scale = 0.7
-        thickness = 2
-        line_height = 30
+        # Better font scaling based on resolution
+        if w > 1400:  # High resolution
+            font_scale = 0.8
+            font_scale_title = 1.3
+            thickness = 2
+            line_height = 35
+        elif w > 1000:  # Medium resolution
+            font_scale = 0.7
+            font_scale_title = 1.1
+            thickness = 2
+            line_height = 30
+        else:  # Low resolution
+            font_scale = 0.6
+            font_scale_title = 0.9
+            thickness = 2
+            line_height = 25
+            
         start_y = 50
         start_x = 50
         
@@ -666,7 +706,6 @@ class LivenessDetector:
             y = start_y + (i * line_height)
             
             if line == "PHOTO REQUIREMENTS":
-                font_scale_title = 1.1
                 text_size = cv2.getTextSize(line, cv2.FONT_HERSHEY_SIMPLEX, font_scale_title, 3)[0]
                 x = (w//2 - text_size[0]) // 2 
                 cv2.putText(frame, line, (x, y), cv2.FONT_HERSHEY_SIMPLEX, 
@@ -682,6 +721,12 @@ class LivenessDetector:
                 x = (w//2 - text_size[0]) // 2
                 cv2.putText(frame, line, (x, y), cv2.FONT_HERSHEY_SIMPLEX, 
                            font_scale, (0, 165, 255), thickness)
+            elif "IMPORTANT:" in line:
+                cv2.putText(frame, line, (start_x, y), cv2.FONT_HERSHEY_SIMPLEX, 
+                           font_scale, (255, 165, 0), thickness)  # Orange for important info
+            elif "when all checks are green" in line:
+                cv2.putText(frame, line, (start_x, y), cv2.FONT_HERSHEY_SIMPLEX, 
+                           font_scale, (255, 165, 0), thickness)  # Orange for important info
             elif "Process continues automatically" in line:
                 text_size = cv2.getTextSize(line, cv2.FONT_HERSHEY_SIMPLEX, font_scale, thickness)[0]
                 x = (w//2 - text_size[0]) // 2
@@ -709,23 +754,37 @@ class LivenessDetector:
             
         h, w = frame.shape[:2]
         
-        # right side area 
+        # right side area with better scaling
         right_start_x = w // 2 + 50
         start_y = 100
         
+        # Adaptive font scaling
+        if w > 1400:  # High resolution
+            title_font_scale = 1.2
+            main_font_scale = 0.9
+            small_font_scale = 0.7
+        elif w > 1000:  # Medium resolution
+            title_font_scale = 1.0
+            main_font_scale = 0.8
+            small_font_scale = 0.6
+        else:  # Low resolution
+            title_font_scale = 0.8
+            main_font_scale = 0.7
+            small_font_scale = 0.5
+        
         cv2.putText(frame, "REAL-TIME CHECK", (right_start_x, start_y), 
-                   cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 255), 2)
+                   cv2.FONT_HERSHEY_SIMPLEX, title_font_scale, (0, 255, 255), 2)
         
         y_offset = start_y + 50
         
         if compliance_status is None:
             # No face detected
             cv2.putText(frame, "No face detected", (right_start_x, y_offset), 
-                       cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
+                       cv2.FONT_HERSHEY_SIMPLEX, main_font_scale, (0, 0, 255), 2)
             cv2.putText(frame, "Please position yourself", (right_start_x, y_offset + 30), 
-                       cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2)
+                       cv2.FONT_HERSHEY_SIMPLEX, main_font_scale, (255, 255, 255), 2)
             cv2.putText(frame, "in front of the camera", (right_start_x, y_offset + 60), 
-                       cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2)
+                       cv2.FONT_HERSHEY_SIMPLEX, main_font_scale, (255, 255, 255), 2)
         else:
             face_issues = compliance_status['face_coverage_issues']
             status_items = [
@@ -735,22 +794,22 @@ class LivenessDetector:
             
             for item_label, item_status, color in status_items:
                 cv2.putText(frame, item_label, (right_start_x, y_offset), 
-                           cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
-                cv2.putText(frame, item_status, (right_start_x + 120, y_offset), 
-                           cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
-                y_offset += 40
+                           cv2.FONT_HERSHEY_SIMPLEX, small_font_scale, (255, 255, 255), 2)
+                cv2.putText(frame, item_status, (right_start_x + int(120 * (main_font_scale/0.8)), y_offset), 
+                           cv2.FONT_HERSHEY_SIMPLEX, small_font_scale, color, 2)
+                y_offset += int(40 * (main_font_scale/0.8))
             
             #specific issues
             if compliance_status['issues']:
                 y_offset += 20
                 cv2.putText(frame, "ISSUES TO FIX:", (right_start_x, y_offset), 
-                           cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
+                           cv2.FONT_HERSHEY_SIMPLEX, main_font_scale, (0, 0, 255), 2)
                 y_offset += 30
                 
                 for issue in compliance_status['issues'][:3]: 
                     cv2.putText(frame, f"• {issue}", (right_start_x, y_offset), 
-                               cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 100, 100), 2)
-                    y_offset += 25
+                               cv2.FONT_HERSHEY_SIMPLEX, small_font_scale, (255, 100, 100), 2)
+                    y_offset += int(25 * (main_font_scale/0.8))
             
             #status with progression info
             y_offset += 30
@@ -763,7 +822,7 @@ class LivenessDetector:
                     overall_text = "✓ PROCEEDING TO LIVENESS..."
                     overall_color = (0, 255, 0)
                 else:
-                    overall_text = f"✓ COMPLIANT - {remaining_seconds:.1f}s to proceed"
+                    overall_text = f"✓ COMPLIANT - {remaining_seconds:.1f}s remaining"
                     overall_color = (0, 255, 0)
                     
                     # progress bar
@@ -778,14 +837,19 @@ class LivenessDetector:
                     progress_width = int(bar_width * progress_ratio)
                     cv2.rectangle(frame, (bar_x, bar_y), (bar_x + progress_width, bar_y + bar_height), (0, 255, 0), -1)
                     
-                    cv2.putText(frame, "Auto-progression", (right_start_x, y_offset + 65), 
-                               cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1)
+                    # Add progress percentage
+                    progress_percentage = int(progress_ratio * 100)
+                    cv2.putText(frame, f"{progress_percentage}%", (bar_x + bar_width + 10, bar_y + 8), 
+                               cv2.FONT_HERSHEY_SIMPLEX, small_font_scale * 0.8, (255, 255, 255), 1)
+                    
+                    cv2.putText(frame, "Hold steady for auto-progression", (right_start_x, y_offset + 65), 
+                               cv2.FONT_HERSHEY_SIMPLEX, small_font_scale, (255, 255, 255), 1)
             else:
                 overall_text = "✗ FIX ALL ISSUES ABOVE"
                 overall_color = (0, 0, 255)
             
             cv2.putText(frame, overall_text, (right_start_x, y_offset), 
-                       cv2.FONT_HERSHEY_SIMPLEX, 0.8, overall_color, 2)
+                       cv2.FONT_HERSHEY_SIMPLEX, main_font_scale, overall_color, 2)
         
         return frame
 
@@ -804,26 +868,78 @@ class LivenessDetector:
         cv2.rectangle(overlay, (0, 0), (w, h), (0, 0, 0), -1)
         frame = cv2.addWeighted(frame, 0.3, overlay, 0.7, 0)
         
+        # Better scaling for photo review
+        if w > 1400:  # High resolution
+            title_font_scale = 1.4
+            main_font_scale = 1.3
+            sub_font_scale = 1.0
+        elif w > 1000:  # Medium resolution
+            title_font_scale = 1.2
+            main_font_scale = 1.1
+            sub_font_scale = 0.9
+        else:  # Low resolution
+            title_font_scale = 1.0
+            main_font_scale = 0.9
+            sub_font_scale = 0.8
+        
         # Title
         title = "Photo Quality Review"
-        font_scale = 1.2
-        text_size = cv2.getTextSize(title, cv2.FONT_HERSHEY_SIMPLEX, font_scale, 3)[0]
+        text_size = cv2.getTextSize(title, cv2.FONT_HERSHEY_SIMPLEX, title_font_scale, 3)[0]
         title_x = (w - text_size[0]) // 2
         cv2.putText(frame, title, (title_x, 80), cv2.FONT_HERSHEY_SIMPLEX, 
-                   font_scale, (0, 255, 255), 3)
+                   title_font_scale, (0, 255, 255), 3)
         
         y_offset = 150
+        
+        if len(self.photo_quality_issues) == 0:
             # No issues found
-        cv2.putText(frame, "✓ PHOTO QUALITY APPROVED", (50, y_offset), 
-                       cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 255, 0), 3)
-        y_offset += 80
+            cv2.putText(frame, "✓ PHOTO QUALITY APPROVED", (50, y_offset), 
+                           cv2.FONT_HERSHEY_SIMPLEX, main_font_scale, (0, 255, 0), 3)
+            y_offset += 80
+                
+            cv2.putText(frame, "Photo meets international standards:", (50, y_offset), 
+                           cv2.FONT_HERSHEY_SIMPLEX, sub_font_scale, (255, 255, 255), 2)
+            y_offset += 40
             
-        cv2.putText(frame, "Photo meets quality requirements", (50, y_offset), 
-                       cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255, 255, 255), 2)
-        y_offset += 60
+            # List the standards met
+            standards = [
+                "• ICAO 9303 (Passport photo requirements)",
+                "• ISO/IEC 19794-5 (Facial image quality)",
+                "• Government ID photo standards"
+            ]
             
-        cv2.putText(frame, "Proceeding to completion...", (50, y_offset), 
-                       cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
+            for standard in standards:
+                cv2.putText(frame, standard, (70, y_offset), 
+                           cv2.FONT_HERSHEY_SIMPLEX, sub_font_scale * 0.8, (200, 255, 200), 2)
+                y_offset += 30
+                
+            y_offset += 20
+            cv2.putText(frame, "Proceeding to completion...", (50, y_offset), 
+                           cv2.FONT_HERSHEY_SIMPLEX, sub_font_scale, (0, 255, 0), 2)
+        else:
+            # Quality issues detected
+            cv2.putText(frame, "⚠ QUALITY ISSUES DETECTED", (50, y_offset), 
+                           cv2.FONT_HERSHEY_SIMPLEX, main_font_scale, (0, 165, 255), 3)
+            y_offset += 80
+            
+            cv2.putText(frame, f"Found {len(self.photo_quality_issues)} issue(s) to fix:", (50, y_offset), 
+                           cv2.FONT_HERSHEY_SIMPLEX, sub_font_scale, (255, 255, 255), 2)
+            y_offset += 50
+            
+            # Show first 5 issues
+            for i, issue in enumerate(self.photo_quality_issues[:5]):
+                cv2.putText(frame, f"{i+1}. {issue}", (70, y_offset), 
+                           cv2.FONT_HERSHEY_SIMPLEX, sub_font_scale * 0.8, (255, 200, 100), 2)
+                y_offset += 35
+            
+            if len(self.photo_quality_issues) > 5:
+                cv2.putText(frame, f"... and {len(self.photo_quality_issues) - 5} more issues", 
+                           (70, y_offset), cv2.FONT_HERSHEY_SIMPLEX, sub_font_scale * 0.8, (255, 200, 100), 2)
+                y_offset += 35
+            
+            y_offset += 20
+            cv2.putText(frame, "Press 'A' to approve anyway or 'R' to retake", (50, y_offset), 
+                           cv2.FONT_HERSHEY_SIMPLEX, sub_font_scale, (255, 255, 0), 2)
         
         return frame
     
@@ -838,48 +954,73 @@ class LivenessDetector:
             
         h, w = frame.shape[:2]
         
-        # Make oval smaller and more proportional to face size
-        # Reduced from 0.15/0.25 to 0.12/0.18 for better face fit
-        center_x, center_y = w // 2, h // 2 - 30  # Moved up slightly
-        axes = (int(w * 0.12), int(h * 0.18))  # Smaller, more proportional oval
+        # Don't draw the oval during capture states to avoid UI clutter
+        if self.state in [LivenessState.COMPLETED, LivenessState.CAPTURE_COMPLETE, LivenessState.PHOTO_REVIEW]:
+            return frame
         
-        # change oval color based on state
-        if self.state == LivenessState.COMPLETED:
-            oval_color = (0, 255, 0)  # green for success
-        elif self.state == LivenessState.CAPTURE_COMPLETE:
-            oval_color = (0, 255, 0)  # green for capture complete
-        elif self.state == LivenessState.FAILED:
+        # Optimized oval size - larger and more user-friendly
+        center_x, center_y = w // 2, h // 2 - 40  # Moved up more to avoid bottom text
+        axes = (int(w * 0.20), int(h * 0.30))  # Larger oval size - increased from 0.15, 0.22
+        
+        # change oval color based on state with better visual design
+        if self.state == LivenessState.FAILED:
             oval_color = (0, 0, 255)  # red for failure
+            thickness = 3
+        elif self.state == LivenessState.WAITING_FOR_FACE:
+            oval_color = (0, 255, 255)  # cyan for positioning
+            thickness = 2
         else:
-            oval_color = (0, 255, 255)  # yellow during liveness checks
+            oval_color = (255, 255, 0)  # yellow during liveness checks
+            thickness = 3
             
-        cv2.ellipse(frame, (center_x, center_y), axes, 0, 0, 360, oval_color, 3)
+        # Draw oval with subtle transparency effect
+        overlay = frame.copy()
+        cv2.ellipse(overlay, (center_x, center_y), axes, 0, 0, 360, oval_color, thickness)
+        cv2.ellipse(overlay, (center_x, center_y), (axes[0]-10, axes[1]-10), 0, 0, 360, oval_color, 1)
+        frame = cv2.addWeighted(frame, 0.8, overlay, 0.2, 0)
         
-        # draw instruction text
+        # draw instruction text with better positioning and styling
         instruction = self.get_current_instruction()
         
-        if self.state == LivenessState.COMPLETED:
-            font_scale = 1.5
-            color = (0, 255, 255)  #yellow
-        elif self.state == LivenessState.CAPTURE_COMPLETE:
-            font_scale = 1.5
-            color = (0, 255, 0)  
-        elif self.state == LivenessState.FAILED:
-            font_scale = 1.2
-            color = (0, 0, 255)  
+        # Skip drawing instruction during capture states to reduce clutter
+        if self.state in [LivenessState.COMPLETED, LivenessState.CAPTURE_COMPLETE, LivenessState.PHOTO_REVIEW]:
+            return frame
+        
+        # Adjust font size based on screen resolution
+        base_font_scale = 0.8
+        if w > 1400:  # High resolution (1920x1080, etc.)
+            font_scale = base_font_scale * 1.1
+        elif w > 1000:  # Medium resolution
+            font_scale = base_font_scale
+        else:  # Low resolution
+            font_scale = base_font_scale * 0.9
+        
+        if self.state == LivenessState.FAILED:
+            color = (0, 0, 255)  # Red for failure
+            font_scale *= 1.1  # Slightly larger for alerts
         else:
-            font_scale = 1.2
-            color = (255, 255, 255) 
+            color = (255, 255, 255)  # White for normal instructions
         
-        text_size = cv2.getTextSize(instruction, cv2.FONT_HERSHEY_SIMPLEX, font_scale, 3)[0]
+        # Position text at bottom with better spacing
+        text_size = cv2.getTextSize(instruction, cv2.FONT_HERSHEY_SIMPLEX, font_scale, 2)[0]
         text_x = (w - text_size[0]) // 2
-        text_y = h - 80
+        text_y = h - 80  # More space from bottom
         
+        # Modern text background with rounded corners effect
         padding = 20
-        cv2.rectangle(frame, (text_x - padding, text_y - 40), 
-                     (text_x + text_size[0] + padding, text_y + 15), (0, 0, 0), -1)
+        bg_x1, bg_y1 = text_x - padding, text_y - 30
+        bg_x2, bg_y2 = text_x + text_size[0] + padding, text_y + 15
+        
+        # Create semi-transparent background
+        overlay = frame.copy()
+        cv2.rectangle(overlay, (bg_x1, bg_y1), (bg_x2, bg_y2), (0, 0, 0), -1)
+        frame = cv2.addWeighted(frame, 0.7, overlay, 0.3, 0)
+        
+        # Add subtle border
+        cv2.rectangle(frame, (bg_x1, bg_y1), (bg_x2, bg_y2), (80, 80, 80), 2)
+        
         cv2.putText(frame, instruction, (text_x, text_y), 
-                   cv2.FONT_HERSHEY_SIMPLEX, font_scale, color, 3)
+                   cv2.FONT_HERSHEY_SIMPLEX, font_scale, color, 2)
         
         return frame
     
@@ -919,8 +1060,8 @@ class LivenessDetector:
                 cv2.putText(frame, f"Roll: {roll:.1f}°", (10, 90), 
                            cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
                 
-                # Show threshold line
-                cv2.putText(frame, f"Threshold: ±{self.DIRECTION_THRESHOLD:.1f}°", (10, 120), 
+                # Show threshold line with updated value
+                cv2.putText(frame, f"Threshold: ±{self.DIRECTION_THRESHOLD:.0f}°", (10, 120), 
                            cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 0), 2)
                 
                 # Color code based on direction

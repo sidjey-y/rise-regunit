@@ -373,92 +373,127 @@ class CameraInterface:
                        cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
             return fallback_frame
             
-        if self.capture_countdown > 0:
-            h, w = frame.shape[:2]
-            ui_scale = self.get_ui_scale_factor(frame)
+        h, w = frame.shape[:2]
+        ui_scale = self.get_ui_scale_factor(frame)
             
-            # countdown with much better scaling - not too large
-            font_scale = 1.5 * ui_scale  # Reduced from 2.5 to 1.5
-            thickness = max(1, int(2 * ui_scale))  # Reduced from 3 to 2
+        if self.capture_countdown > 0:
+            # Clean countdown display without background oval interference
+            
+            # countdown with professional styling
+            font_scale = 3.0 * ui_scale  # Larger, more prominent
+            thickness = max(3, int(4 * ui_scale))  # Thick, bold text
             text = str(self.capture_countdown)
             text_size = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, font_scale, thickness)[0]
             
             x = (w - text_size[0]) // 2
-            y = (h + text_size[1]) // 2
+            y = (h + text_size[1]) // 2 - 50  # Moved up to avoid oval
             
-            circle_radius = int(60 * ui_scale)  # Reduced from 80 to 60
-            circle_thickness = max(1, int(2 * ui_scale))  # Reduced from 3 to 2
+            # Modern circular background with gradient effect
+            circle_radius = int(100 * ui_scale)  # Larger circle
+            center = (w//2, h//2 - 50)
             
-            # Draw black circle background
-            cv2.circle(frame, (w//2, h//2), circle_radius, (0, 0, 0), -1)
-            cv2.circle(frame, (w//2, h//2), circle_radius, (0, 255, 0), circle_thickness)
+            # Create layered circle effect
+            overlay = frame.copy()
+            cv2.circle(overlay, center, circle_radius + 10, (0, 0, 0), -1)  # Outer shadow
+            cv2.circle(overlay, center, circle_radius, (20, 20, 20), -1)    # Dark background
+            cv2.circle(overlay, center, circle_radius - 5, (0, 200, 0), 5)   # Green ring
+            frame = cv2.addWeighted(frame, 0.7, overlay, 0.3, 0)
             
-            # Draw countdown number
+            # Draw countdown number with shadow effect
+            cv2.putText(frame, text, (x+2, y+2), cv2.FONT_HERSHEY_SIMPLEX, 
+                       font_scale, (0, 0, 0), thickness)  # Shadow
             cv2.putText(frame, text, (x, y), cv2.FONT_HERSHEY_SIMPLEX, 
-                       font_scale, (0, 255, 0), thickness)
+                       font_scale, (0, 255, 0), thickness)  # Main text
             
-            # Add "GET READY" message above countdown
-            ready_text = "GET READY!"
-            ready_font_scale = 0.8 * ui_scale  # Reduced from 1.0 to 0.8
-            ready_thickness = max(1, int(1 * ui_scale))  # Reduced from 2 to 1
+            # Add "LOOK AT CAMERA" message above countdown with emphasis
+            ready_text = "LOOK AT CAMERA"
+            ready_font_scale = 1.4 * ui_scale  # Larger, more prominent
+            ready_thickness = max(2, int(3 * ui_scale))  # Thicker text
             ready_text_size = cv2.getTextSize(ready_text, cv2.FONT_HERSHEY_SIMPLEX, ready_font_scale, ready_thickness)[0]
             ready_x = (w - ready_text_size[0]) // 2
-            ready_y = y - 40  # Reduced from 60 to 40
+            ready_y = y - circle_radius - 40
             
+            # Background for "LOOK AT CAMERA" text with more emphasis
+            cv2.rectangle(frame, (ready_x - 20, ready_y - 30), 
+                         (ready_x + ready_text_size[0] + 20, ready_y + 10), (0, 0, 0), -1)
+            cv2.rectangle(frame, (ready_x - 20, ready_y - 30), 
+                         (ready_x + ready_text_size[0] + 20, ready_y + 10), (255, 255, 0), 3)  # Yellow border
             cv2.putText(frame, ready_text, (ready_x, ready_y), cv2.FONT_HERSHEY_SIMPLEX, 
-                       ready_font_scale, (255, 255, 255), ready_thickness)
-        elif self.photo_captured:
-            # Show completion message instead of countdown
-            h, w = frame.shape[:2]
-            ui_scale = self.get_ui_scale_factor(frame)
+                       ready_font_scale, (255, 255, 0), ready_thickness)  # Yellow text
             
-            # Draw completion message with much better scaling
-            completion_text = "PHOTO CAPTURED!"
-            font_scale = 1.0 * ui_scale  # Reduced from 1.5 to 1.0
-            thickness = max(1, int(1 * ui_scale))  # Reduced from 2 to 1
+            # Secondary instruction below countdown
+            secondary_text = "Stay still & look directly at lens"
+            secondary_font_scale = 0.8 * ui_scale
+            secondary_text_size = cv2.getTextSize(secondary_text, cv2.FONT_HERSHEY_SIMPLEX, secondary_font_scale, 2)[0]
+            secondary_x = (w - secondary_text_size[0]) // 2
+            secondary_y = y + circle_radius + 50
+            
+            cv2.rectangle(frame, (secondary_x - 10, secondary_y - 20), 
+                         (secondary_x + secondary_text_size[0] + 10, secondary_y + 5), (0, 0, 0), -1)
+            cv2.putText(frame, secondary_text, (secondary_x, secondary_y), cv2.FONT_HERSHEY_SIMPLEX, 
+                       secondary_font_scale, (255, 255, 255), 2)
+            
+        elif self.photo_captured:
+            # Professional completion message
+            completion_text = "PHOTO CAPTURED"
+            font_scale = 2.0 * ui_scale
+            thickness = max(3, int(3 * ui_scale))
             text_size = cv2.getTextSize(completion_text, cv2.FONT_HERSHEY_SIMPLEX, font_scale, thickness)[0]
             
             x = (w - text_size[0]) // 2
-            y = (h + text_size[1]) // 2
+            y = h // 2
             
-            circle_radius = int(60 * ui_scale)  # Reduced from 80 to 60
-            circle_thickness = max(1, int(2 * ui_scale))  # Reduced from 3 to 2
-            cv2.circle(frame, (w//2, h//2), circle_radius, (0, 0, 0), -1)
-            cv2.circle(frame, (w//2, h//2), circle_radius, (0, 255, 0), circle_thickness)
+            # Success circle with modern design
+            circle_radius = int(120 * ui_scale)
+            center = (w//2, h//2)
             
-            # Draw completion text
-            cv2.putText(frame, completion_text, (x, y), cv2.FONT_HERSHEY_SIMPLEX, 
-                       font_scale, (0, 255, 0), thickness)
+            # Layered success indicator
+            overlay = frame.copy()
+            cv2.circle(overlay, center, circle_radius + 15, (0, 0, 0), -1)    # Outer shadow
+            cv2.circle(overlay, center, circle_radius, (0, 50, 0), -1)        # Dark green background
+            cv2.circle(overlay, center, circle_radius - 8, (0, 255, 0), 6)    # Bright green ring
+            frame = cv2.addWeighted(frame, 0.6, overlay, 0.4, 0)
             
-            # Add success message below
-            success_text = "Quality assessment completed!"
-            success_font_scale = 0.6 * ui_scale  # Reduced from 0.8 to 0.6
-            success_thickness = max(1, int(1 * ui_scale))  # Keep at 1
-            success_text_size = cv2.getTextSize(success_text, cv2.FONT_HERSHEY_SIMPLEX, success_font_scale, success_thickness)[0]
+            # Checkmark symbol
+            check_size = int(40 * ui_scale)
+            check_center = (center[0], center[1] - 20)
+            pts1 = np.array([
+                [check_center[0] - check_size, check_center[1]],
+                [check_center[0] - check_size//3, check_center[1] + check_size//2],
+                [check_center[0] + check_size, check_center[1] - check_size//2]
+            ], np.int32)
+            cv2.polylines(frame, [pts1], False, (255, 255, 255), max(4, int(6 * ui_scale)))
+            
+            # Success text below
+            success_text = "Quality Check Complete"
+            success_font_scale = 1.0 * ui_scale
+            success_text_size = cv2.getTextSize(success_text, cv2.FONT_HERSHEY_SIMPLEX, success_font_scale, 2)[0]
             success_x = (w - success_text_size[0]) // 2
-            success_y = y + 30  # Reduced from 50 to 30
+            success_y = center[1] + circle_radius + 40
             
             cv2.putText(frame, success_text, (success_x, success_y), cv2.FONT_HERSHEY_SIMPLEX, 
-                       success_font_scale, (255, 255, 255), success_thickness)
+                       success_font_scale, (255, 255, 255), 2)
         
         return frame
     
     def get_ui_scale_factor(self, frame):
-        """Much smaller text scaling - keep text appropriately sized for different resolutions"""
+        """Improved UI scaling that provides appropriate sizes for different resolutions"""
         # Safety check: ensure frame is not None
         if frame is None:
             print("Warning: get_ui_scale_factor called with None frame")
-            return 0.08  # Return much smaller default scale
+            return 1.0  # Return reasonable default scale
             
         h, w = frame.shape[:2]
         
-        # Much smaller scaling based on resolution
-        if w > 1400:  # Fullscreen mode (1920x1080, 2560x1440, etc.)
-            return 0.08  # Much smaller scale for high resolution
-        elif w > 1000:  # Medium resolution
-            return 0.12
-        else:  # Low resolution
-            return 0.15
+        # Better scaling based on resolution - more practical sizes
+        if w > 1800:  # Very high resolution (4K, etc.)
+            return 1.5
+        elif w > 1400:  # High resolution (1920x1080, 2560x1440, etc.)
+            return 1.2
+        elif w > 1000:  # Medium resolution (1280x720, 1366x768, etc.)
+            return 1.0
+        else:  # Low resolution (800x600, etc.)
+            return 0.8
     
     def get_display_scale_factor(self):
         """Get the current display scale factor for coordinate scaling"""
@@ -577,27 +612,62 @@ class CameraInterface:
         h, w = frame.shape[:2]
         state_color = self.liveness_detector.get_state_color()
         
-        # Scale UI elements based on screen size
-        circle_radius = int(15 * ui_scale)  # Reduced from 20 to 15
-        circle_x = w - int(40 * ui_scale)  # Reduced from 50 to 40
-        circle_y = int(40 * ui_scale)  # Reduced from 50 to 40
+        # Modern status indicator in top-right
+        ui_scale = self.get_ui_scale_factor(frame)
+        circle_radius = int(15 * ui_scale)  
+        circle_x = w - int(60 * ui_scale)  
+        circle_y = int(60 * ui_scale)  
         
+        # Create modern status indicator with glow effect
+        overlay = frame.copy()
+        # Outer glow
+        cv2.circle(overlay, (circle_x, circle_y), circle_radius + 5, state_color, -1)
+        frame = cv2.addWeighted(frame, 0.8, overlay, 0.2, 0)
+        
+        # Main status circle
         cv2.circle(frame, (circle_x, circle_y), circle_radius, state_color, -1)
-        cv2.circle(frame, (circle_x, circle_y), circle_radius, (255, 255, 255), max(1, int(1 * ui_scale)))  # Reduced from 2 to 1
+        cv2.circle(frame, (circle_x, circle_y), circle_radius, (255, 255, 255), max(2, int(2 * ui_scale)))
         
-        # Simple controls text like reference file
-        if w > 1400:  # Fullscreen mode
-            controls_text = "Q: Quit  |  R: Restart  |  F: Exit Fullscreen"
-            cv2.putText(frame, controls_text, (10, h - 20), 
-                       cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255, 255, 255), 1)  # Reduced from 0.5 to 0.4
+        # Add status text next to indicator
+        status_text = ""
+        if hasattr(self.liveness_detector, 'state'):
+            state_name = self.liveness_detector.state.name
+            if state_name == "WAITING_FOR_FACE":
+                status_text = "Position Face"
+            elif state_name == "BLINK":
+                status_text = "Blink"
+            elif state_name == "LOOK_LEFT":
+                status_text = "Look Left"
+            elif state_name == "LOOK_RIGHT":
+                status_text = "Look Right"
+            elif state_name == "COMPLETED":
+                status_text = "Capturing"
+            elif state_name == "CAPTURE_COMPLETE":
+                status_text = "Complete"
+            elif state_name == "FAILED":
+                status_text = "Failed"
         
-        mode_text = ""
-        font_scale = 0.4 * ui_scale  # Reduced from 0.5 to 0.4
-        text_thickness = max(1, int(1 * ui_scale))
-        text_y = h - int(50 * ui_scale) if w > 1400 else h - int(20 * ui_scale)  # Reduced from 60 to 50
+        if status_text and w > 800:  # Only show on larger screens
+            font_scale = 0.5 * ui_scale
+            text_size = cv2.getTextSize(status_text, cv2.FONT_HERSHEY_SIMPLEX, font_scale, 1)[0]
+            text_x = circle_x - text_size[0] - 25
+            text_y = circle_y + 5
+            
+            # Text background
+            bg_padding = 8
+            cv2.rectangle(frame, (text_x - bg_padding, text_y - 15), 
+                         (text_x + text_size[0] + bg_padding, text_y + 5), (0, 0, 0), -1)
+            cv2.putText(frame, status_text, (text_x, text_y), 
+                       cv2.FONT_HERSHEY_SIMPLEX, font_scale, (255, 255, 255), 1)
         
-        cv2.putText(frame, mode_text, (int(10 * ui_scale), text_y), 
-                   cv2.FONT_HERSHEY_SIMPLEX, font_scale, (255, 255, 0), text_thickness)
+        # Improved controls text with better positioning
+        if w > 1200:  # Only show on larger screens to avoid clutter
+            controls_text = "Q: Quit  |  R: Reset  |  F: Toggle Fullscreen"
+            font_scale = 0.5 * ui_scale
+            cv2.putText(frame, controls_text, (15, h - 15), 
+                       cv2.FONT_HERSHEY_SIMPLEX, font_scale, (200, 200, 200), max(1, int(ui_scale)))
+        
+        return frame
         
         return frame
     
@@ -940,26 +1010,42 @@ class CameraInterface:
                     
                     # 🔍 AUTO-PROCEED FROM PHOTO REVIEW (after quality check)
                     if (state and hasattr(state, 'name') and 
-                        state.name == 'PHOTO_REVIEW' and 
-                        not self.liveness_detector.has_photo_quality_issues()):
-                        # Quality check completed successfully, auto-proceed
-                        if time.time() - self.liveness_detector.photo_review_start_time > 3:  # 3 seconds delay
-                            print("✅ Quality check completed - Auto-proceeding to completion...")
-                            self.liveness_detector.mark_capture_complete()
+                        state.name == 'PHOTO_REVIEW'):
+                        
+                        # Only auto-proceed if there are NO quality issues
+                        if not self.liveness_detector.has_photo_quality_issues():
+                            # Quality check passed - auto-proceed after 3 seconds
+                            if time.time() - self.liveness_detector.photo_review_start_time > 3:
+                                print("✅ Quality check passed - Auto-proceeding to completion...")
+                                self.liveness_detector.mark_capture_complete()
+                        else:
+                            # Quality issues detected - stay in review mode, require manual action
+                            print(f"⚠️  Quality issues detected: {len(self.liveness_detector.get_photo_quality_issues())} issues")
+                            print("Manual approval required - press 'A' to approve or 'R' to retake")
                     
 
                     
                     # Display frame
                     try:
-                        # Add keyboard shortcuts help text to frame
+                        # Add keyboard shortcuts help text with improved positioning (moved to avoid overlap)
                         if frame is not None:
                             h, w = frame.shape[:2]
-                            help_text = [
-                                "Q: Quit | R: Reset | M: Manual Advance | S: Skip to Complete | A: Approve Photo"
-                            ]
-                            for i, text in enumerate(help_text):
-                                y_pos = h - 20 - (len(help_text) - 1 - i) * 20
-                                cv2.putText(frame, text, (10, y_pos), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255, 255, 255), 1)  # Reduced from 0.5 to 0.4
+                            ui_scale = self.get_ui_scale_factor(frame)
+                            
+                            # Only show detailed help on larger screens
+                            if w > 1200:
+                                help_text = [
+                                    "Controls: Q=Quit | R=Reset | M=Manual | S=Skip | A=Approve"
+                                ]
+                                for i, text in enumerate(help_text):
+                                    y_pos = h - 50  # Moved up to avoid overlap with instruction text
+                                    # Add background for better readability
+                                    text_size = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, 
+                                                               0.4 * ui_scale, 1)[0]
+                                    cv2.rectangle(frame, (5, y_pos - 15), 
+                                                 (text_size[0] + 15, y_pos + 5), (0, 0, 0), -1)
+                                    cv2.putText(frame, text, (10, y_pos), cv2.FONT_HERSHEY_SIMPLEX, 
+                                               0.4 * ui_scale, (180, 180, 180), max(1, int(ui_scale)))
                         
                         cv2.imshow(window_name, frame)
                     except Exception as e:
@@ -1000,6 +1086,8 @@ class CameraInterface:
                             # Approve photo and proceed (when in photo review)
                             if (hasattr(self.liveness_detector, 'state') and 
                                 self.liveness_detector.state.name == 'PHOTO_REVIEW'):
+                                if self.liveness_detector.has_photo_quality_issues():
+                                    print(f"⚠️  Manual approval granted despite {len(self.liveness_detector.get_photo_quality_issues())} quality issues")
                                 print("✅ Manual approval - Proceeding to completion...")
                                 self.liveness_detector.mark_capture_complete()
                             else:

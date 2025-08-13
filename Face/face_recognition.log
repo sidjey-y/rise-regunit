@@ -485,3 +485,87 @@
 2025-08-13 21:27:38,081 - FaceRecognitionSystem - INFO - Starting camera (index: 0)...
 2025-08-13 21:28:20,392 - FaceRecognitionSystem - INFO - System cleanup completed
 2025-08-13 21:28:20,396 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-13 21:36:21,940 - FaceRecognitionSystem - INFO - Face recognition system initialized successfully
+2025-08-13 21:36:21,959 - FaceRecognitionSystem - INFO - Checking system requirements...
+2025-08-13 21:36:21,960 - FaceRecognitionSystem - INFO - All required Python packages are available
+2025-08-13 21:36:21,962 - FaceRecognitionSystem - INFO - Camera will be checked when starting the system
+2025-08-13 21:36:21,962 - FaceRecognitionSystem - INFO - Starting camera (index: 0)...
+2025-08-13 21:37:14,562 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-13 21:37:14,562 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-13 21:45:47,206 - FaceRecognitionSystem - INFO - Face recognition system initialized successfully
+2025-08-13 21:45:47,223 - FaceRecognitionSystem - INFO - Checking system requirements...
+2025-08-13 21:45:47,223 - FaceRecognitionSystem - INFO - All required Python packages are available
+2025-08-13 21:45:47,223 - FaceRecognitionSystem - INFO - Camera will be checked when starting the system
+2025-08-13 21:45:47,223 - FaceRecognitionSystem - INFO - Starting camera (index: 0)...
+2025-08-13 21:46:30,370 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-13 21:46:30,371 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-13 21:51:22,644 - FaceRecognitionSystem - INFO - Face recognition system initialized successfully
+2025-08-13 21:51:22,653 - FaceRecognitionSystem - INFO - Checking system requirements...
+2025-08-13 21:51:22,654 - FaceRecognitionSystem - INFO - All required Python packages are available
+2025-08-13 21:51:22,654 - FaceRecognitionSystem - INFO - Camera will be checked when starting the system
+2025-08-13 21:51:22,654 - FaceRecognitionSystem - INFO - Starting camera (index: 0)...
+2025-08-13 21:52:25,248 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-13 21:52:25,248 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-13 21:57:09,384 - FaceRecognitionSystem - INFO - Face recognition system initialized successfully
+2025-08-13 21:57:09,403 - FaceRecognitionSystem - INFO - Checking system requirements...
+2025-08-13 21:57:09,403 - FaceRecognitionSystem - INFO - All required Python packages are available
+2025-08-13 21:57:09,403 - FaceRecognitionSystem - INFO - Camera will be checked when starting the system
+2025-08-13 21:57:09,403 - FaceRecognitionSystem - INFO - Starting camera (index: 0)...
+2025-08-13 21:57:57,106 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-13 21:57:57,106 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-13 21:58:23,273 - FaceRecognitionSystem - INFO - Face recognition system initialized successfully
+2025-08-13 21:58:23,274 - FaceRecognitionSystem - INFO - Checking system requirements...
+2025-08-13 21:58:23,297 - FaceRecognitionSystem - INFO - All required Python packages are available
+2025-08-13 21:58:23,298 - FaceRecognitionSystem - INFO - Camera will be checked when starting the system
+2025-08-13 21:58:23,299 - FaceRecognitionSystem - INFO - Starting camera (index: 0)...
+2025-08-13 21:58:40,119 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-13 21:58:40,121 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-13 22:01:09,438 - FaceRecognitionSystem - INFO - Face recognition system initialized successfully
+2025-08-13 22:01:09,438 - FaceRecognitionSystem - INFO - Checking system requirements...
+2025-08-13 22:01:09,438 - FaceRecognitionSystem - INFO - All required Python packages are available
+2025-08-13 22:01:09,439 - FaceRecognitionSystem - INFO - Camera will be checked when starting the system
+2025-08-13 22:01:09,439 - FaceRecognitionSystem - INFO - Starting camera (index: 0)...
+2025-08-13 22:02:30,200 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-13 22:02:30,201 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-13 22:06:46,851 - FaceRecognitionSystem - INFO - Face recognition system initialized successfully
+2025-08-13 22:06:46,851 - FaceRecognitionSystem - INFO - Checking system requirements...
+2025-08-13 22:06:46,852 - FaceRecognitionSystem - INFO - All required Python packages are available
+2025-08-13 22:06:46,853 - FaceRecognitionSystem - INFO - Camera will be checked when starting the system
+2025-08-13 22:06:46,853 - FaceRecognitionSystem - INFO - Starting camera (index: 0)...
+2025-08-13 22:07:40,863 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-13 22:07:40,865 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-13 22:11:10,906 - FaceRecognitionSystem - INFO - Face recognition system initialized successfully
+2025-08-13 22:11:10,907 - FaceRecognitionSystem - INFO - Checking system requirements...
+2025-08-13 22:11:10,908 - FaceRecognitionSystem - INFO - All required Python packages are available
+2025-08-13 22:11:10,908 - FaceRecognitionSystem - INFO - Camera will be checked when starting the system
+2025-08-13 22:11:10,908 - FaceRecognitionSystem - INFO - Starting camera (index: 0)...
+2025-08-13 22:12:16,423 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-13 22:12:16,423 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-13 22:17:14,833 - FaceRecognitionSystem - INFO - Face recognition system initialized successfully
+2025-08-13 22:17:14,849 - FaceRecognitionSystem - INFO - Checking system requirements...
+2025-08-13 22:17:14,850 - FaceRecognitionSystem - INFO - All required Python packages are available
+2025-08-13 22:17:14,851 - FaceRecognitionSystem - INFO - Camera will be checked when starting the system
+2025-08-13 22:17:14,852 - FaceRecognitionSystem - INFO - Starting camera (index: 0)...
+2025-08-13 22:18:04,828 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-13 22:18:04,829 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-13 22:20:20,822 - FaceRecognitionSystem - INFO - Face recognition system initialized successfully
+2025-08-13 22:20:20,845 - FaceRecognitionSystem - INFO - Checking system requirements...
+2025-08-13 22:20:20,845 - FaceRecognitionSystem - INFO - All required Python packages are available
+2025-08-13 22:20:20,846 - FaceRecognitionSystem - INFO - Camera will be checked when starting the system
+2025-08-13 22:20:20,846 - FaceRecognitionSystem - INFO - Starting camera (index: 0)...
+2025-08-13 22:21:00,497 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-13 22:21:00,498 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-13 22:27:46,238 - FaceRecognitionSystem - INFO - Face recognition system initialized successfully
+2025-08-13 22:27:46,261 - FaceRecognitionSystem - INFO - Checking system requirements...
+2025-08-13 22:27:46,262 - FaceRecognitionSystem - INFO - All required Python packages are available
+2025-08-13 22:27:46,263 - FaceRecognitionSystem - INFO - Camera will be checked when starting the system
+2025-08-13 22:27:46,281 - FaceRecognitionSystem - INFO - Starting camera (index: 0)...
+2025-08-13 22:29:49,427 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-13 22:29:49,458 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-13 22:32:01,764 - FaceRecognitionSystem - INFO - Face recognition system initialized successfully
+2025-08-13 22:32:01,788 - FaceRecognitionSystem - INFO - Checking system requirements...
+2025-08-13 22:32:01,788 - FaceRecognitionSystem - INFO - All required Python packages are available
+2025-08-13 22:32:01,789 - FaceRecognitionSystem - INFO - Camera will be checked when starting the system
+2025-08-13 22:32:01,790 - FaceRecognitionSystem - INFO - Starting camera (index: 0)...
+2025-08-13 22:32:31,100 - FaceRecognitionSystem - INFO - System cleanup completed
+2025-08-13 22:32:31,102 - FaceRecognitionSystem - INFO - System cleanup completed
