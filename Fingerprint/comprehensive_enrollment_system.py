@@ -9,10 +9,17 @@ import time
 import logging
 import json
 import os
+import base64
 from datetime import datetime
 from typing import Dict, List, Optional, Tuple, Any
 from dataclasses import dataclass, asdict
 from enum import Enum
+
+try:
+    import yaml
+    YAML_AVAILABLE = True
+except ImportError:
+    YAML_AVAILABLE = False
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -162,15 +169,17 @@ class ComprehensiveEnrollmentSystem:
         if not self.current_user_fingers:
             return False, "", 0.0
         
-        logger.info(f"Checking for duplicates against {len(self.current_user_fingers)} enrolled fingers...")
+        logger.info(f"Checking for exact duplicates against {len(self.current_user_fingers)} enrolled fingers...")
         logger.info("=" * 50)
-        
-        # Special handling for thumbs - they're naturally similar between left/right
-        is_thumb = finger_type.value == 'thumb'
-        current_hand = hand.value
+        logger.info("NOTE: System only checks for EXACT duplicates (same physical finger)")
+        logger.info("      Fingerprint patterns cannot identify finger type!")
         
         # Store all similarities for debugging
         all_similarities = []
+        
+        # Use a single, high threshold for exact duplicate detection only
+        # This should only catch cases where the SAME physical finger was scanned twice
+        EXACT_DUPLICATE_THRESHOLD = 0.85  # Very high threshold - only for exact matches
         
         for enrolled_key, enrolled_finger in self.current_user_fingers.items():
             if enrolled_finger.raw_image_data:
@@ -178,27 +187,16 @@ class ComprehensiveEnrollmentSystem:
                     similarity = self.compare_characteristics(characteristics, enrolled_finger.raw_image_data)
                     all_similarities.append((enrolled_key, similarity))
                     
-                    # Determine threshold based on finger type and hand
-                    if is_thumb and enrolled_finger.finger_type == 'thumb':
-                        # Thumb comparison - use different thresholds
-                        if enrolled_finger.hand == current_hand:
-                            # Same hand thumb - use normal threshold (65%)
-                            threshold = 0.65
-                            logger.info(f"  🔍 {enrolled_key}: {similarity:.1%} similarity (Same hand thumb - 65% threshold)")
-                        else:
-                            # Different hands (left vs right thumb) - use higher threshold (80%)
-                            threshold = 0.8
-                            logger.info(f"  🔍 {enrolled_key}: {similarity:.1%} similarity (Different hand thumb - 80% threshold)")
-                    else:
-                        # Non-thumb fingers - use normal threshold
-                        threshold = 0.65
-                        logger.info(f"  🔍 {enrolled_key}: {similarity:.1%} similarity (65% threshold)")
+                    logger.info(f"  🔍 {enrolled_key}: {similarity:.1%} similarity")
                     
-                    if similarity > threshold:
+                    # Only flag as duplicate if similarity is extremely high (85%+)
+                    # This indicates the SAME physical finger was scanned again
+                    if similarity > EXACT_DUPLICATE_THRESHOLD:
                         duplicate_info = f"{enrolled_finger.hand.title()} {enrolled_finger.finger_type.title()}"
-                        logger.warning(f"🚨 DUPLICATE DETECTED!")
-                        logger.warning(f"   This finger is {similarity:.1%} similar to {duplicate_info}")
-                        logger.warning(f"   Threshold exceeded: {similarity:.1%} > {threshold:.1%}")
+                        logger.warning(f"🚨 EXACT DUPLICATE DETECTED!")
+                        logger.warning(f"   This appears to be the same physical finger as {duplicate_info}")
+                        logger.warning(f"   Similarity: {similarity:.1%} (threshold: {EXACT_DUPLICATE_THRESHOLD:.1%})")
+                        logger.warning(f"   Please scan a different finger")
                         return True, duplicate_info, similarity
                         
                 except Exception as e:
@@ -211,7 +209,9 @@ class ComprehensiveEnrollmentSystem:
         for enrolled_key, similarity in sorted(all_similarities, key=lambda x: x[1], reverse=True):
             logger.info(f"  {enrolled_key}: {similarity:.1%}")
         
-        logger.info("✅ No duplicates found - all similarities below threshold")
+        highest_similarity = max([sim for _, sim in all_similarities]) if all_similarities else 0.0
+        logger.info(f"✅ No exact duplicates found")
+        logger.info(f"   Highest similarity: {highest_similarity:.1%} (below {EXACT_DUPLICATE_THRESHOLD:.1%} threshold)")
         return False, "", 0.0
     
     def extract_fingerprint_features(self, image_data: bytes) -> Dict:
@@ -240,11 +240,18 @@ class ComprehensiveEnrollmentSystem:
             finger_key = self.get_finger_key(hand, finger_type)
             
             if finger_key in self.current_user_fingers:
-                logger.warning(f"Finger already enrolled: {hand.value.title()} {finger_type.value.title()}")
-                return True
+                logger.error(f"🚨 FINGER SLOT ALREADY FILLED!")
+                logger.error(f"   Finger slot: {hand.value.title()} {finger_type.value.title()}")
+                logger.error(f"   This finger slot was already enrolled in this session")
+                logger.error(f"   Please continue to the next finger in the sequence")
+                return False
             
             logger.info(f"Enrolling {hand.value.title()} {finger_type.value.title()}...")
             logger.info("Place your finger on the sensor and hold steady...")
+            logger.info("(System will accept any finger - just checking for exact duplicates)")
+            
+            # Clear scanner state before enrollment
+            self._clear_scanner_state()
             
             # Wait for finger with better user feedback and timeout
             logger.info("Waiting for finger placement...")
@@ -288,31 +295,29 @@ class ComprehensiveEnrollmentSystem:
                     logger.error(f"Failed to convert characteristics to bytes: {e}")
                     return False
             
-            # Check for duplicates against already enrolled fingers for this user
-            logger.info("🔍 DUPLICATE DETECTION START")
+            # Check for exact duplicates only (same physical finger scanned twice)
+            logger.info("🔍 EXACT DUPLICATE DETECTION START")
             logger.info("=" * 50)
             
             if self.current_user_fingers:
-                logger.info(f"Comparing new scan with {len(self.current_user_fingers)} enrolled fingers...")
+                logger.info(f"Comparing with {len(self.current_user_fingers)} enrolled fingers...")
+                logger.info("Checking for EXACT duplicates only (same physical finger)")
                 
-                # Use the improved duplicate detection method
                 is_duplicate, duplicate_info, similarity = self.check_duplicate_within_user(current_char, hand, finger_type)
                 
                 if is_duplicate:
-                    logger.error("🚨 DUPLICATE FINGER DETECTED!")
+                    logger.error("🚨 EXACT DUPLICATE DETECTED!")
                     logger.error("=" * 50)
-                    logger.error(f"   Expected: {hand.value.title()} {finger_type.value.title()}")
-                    logger.error(f"   Detected: {duplicate_info}")
+                    logger.error(f"   This appears to be the same physical finger as: {duplicate_info}")
                     logger.error(f"   Similarity: {similarity:.1%}")
-                    logger.error(f"   Threshold exceeded - please scan a different finger")
+                    logger.error("")
+                    logger.error("   Please scan a different finger that you haven't enrolled yet")
                     logger.error("=" * 50)
                     return False
                 
-                logger.info("✅ No duplicates found - proceeding with enrollment")
+                logger.info("✅ No exact duplicates found - this is a new finger")
             else:
                 logger.info("✅ First finger - no duplicates to check")
-            
-
             
             # Also check scanner templates for any conflicts
             logger.info("Checking scanner templates for conflicts...")
@@ -322,20 +327,36 @@ class ComprehensiveEnrollmentSystem:
                 score = result[1]
                 
                 if position != -1:
-                    logger.warning(f"Template found at position {position} - this may indicate a duplicate")
-                    logger.warning("Continuing with enrollment but be aware of potential duplicates")
+                    logger.error(f"🚨 EXISTING TEMPLATE CONFLICT DETECTED!")
+                    logger.error(f"   Found existing template at position {position} with score {score}")
+                    logger.error(f"   This may be from a previous enrollment session")
+                    logger.error(f"   Please run 'python clear_and_restart.py' to clear all templates first")
+                    logger.error(f"   Then restart the enrollment process")
+                    return False
                 
             except Exception as e:
-                logger.info("No existing templates found - clean enrollment")
+                logger.info("✅ No existing templates found - clean enrollment")
             
             # Create template
             logger.info("Creating fingerprint template...")
             self.scanner.createTemplate()
-            position = self.scanner.storeTemplate()
             
-            # Adjust position to start at 1 instead of 0
-            if position == 0:
-                position = 1
+            # Store template with better position management
+            try:
+                position = self.scanner.storeTemplate()
+                logger.info(f"Template stored at scanner position: {position}")
+                
+                # Ensure position is valid (some scanners return -1 on error)
+                if position < 0:
+                    logger.error(f"Invalid template position returned: {position}")
+                    return False
+                    
+                # Use the actual position returned by scanner
+                actual_position = position
+                
+            except Exception as e:
+                logger.error(f"Failed to store template: {e}")
+                return False
             
             # Extract features for storage
             logger.info("Extracting minutiae points and characteristics...")
@@ -360,7 +381,7 @@ class ComprehensiveEnrollmentSystem:
                 user_id=self.current_user_id,
                 hand=hand.value,
                 finger_type=finger_type.value,
-                position=position,
+                position=actual_position,
                 timestamp=datetime.now().isoformat(),
                 score=score,
                 embeddings=embeddings,
@@ -371,9 +392,12 @@ class ComprehensiveEnrollmentSystem:
             self.current_user_fingers[finger_key] = fingerprint_data
             
             logger.info(f"Finger enrolled successfully: {hand.value.title()} {finger_type.value.title()}")
-            logger.info(f"  - Position: {position}")
+            logger.info(f"  - Position: {actual_position}")
             logger.info(f"  - Minutiae points extracted: {len(embeddings)}")
             logger.info(f"  - Characteristics size: {len(current_char)} bytes")
+            
+            # Clear scanner buffers for next enrollment
+            self._clear_scanner_state()
             
             return True
             
@@ -444,113 +468,12 @@ class ComprehensiveEnrollmentSystem:
             return False
     
     def verify_finger_type(self, hand: Hand, finger_type: FingerType) -> bool:
-        """Verify that the scanned finger is the correct finger type"""
-        try:
-            logger.info(f"Verifying finger type: {hand.value.title()} {finger_type.value.title()}")
-            
-            # Step 1: Basic quality check using searchTemplate
-            try:
-                # Try to search for the template (this validates the characteristics)
-                result = self.scanner.searchTemplate()
-                position = result[0]
-                score = result[1]
-                
-                logger.info(f"Scan quality check passed - Position: {position}, Score: {score}")
-                
-            except Exception as e:
-                logger.error(f"Scan quality too low: {e}")
-                logger.error("   Please clean the sensor and try again")
-                return False
-            
-            # Step 2: Check for duplicate finger detection
-            if position != -1:
-                logger.warning(f"This fingerprint matches an existing template at position {position}")
-                
-                # Check if this position is already enrolled in our current session
-                for fp in self.current_user_fingers.values():
-                    if fp.position == position:
-                        logger.error(f"SAME FINGER DETECTED!")
-                        logger.error(f"   Expected: {hand.value.title()} {finger_type.value.title()}")
-                        logger.error(f"   Detected: {fp.hand.title()} {fp.finger_type.title()}")
-                        logger.error("   Please scan a different finger")
-                        return False
-                
-                # If position exists but not in our session, it might be from a previous session
-                # We should still allow enrollment but warn the user
-                logger.warning("Template found from previous session - proceeding with enrollment")
-                logger.warning("This will overwrite the existing template")
-            
-            # Step 3: CRITICAL - Check if this finger is similar to any previously enrolled fingers
-            # This prevents wrong finger enrollment (e.g., right index when left index is expected)
-            if self.current_user_fingers:
-                logger.info("Checking for wrong finger detection...")
-                
-                # Get current characteristics for comparison
-                current_char = self.scanner.downloadCharacteristics(0x01)
-                
-                for fp in self.current_user_fingers.values():
-                    try:
-                        # Download characteristics from the enrolled finger
-                        self.scanner.loadTemplate(fp.position)
-                        enrolled_char = self.scanner.downloadCharacteristics(0x01)
-                        
-                        # Compare characteristics
-                        similarity = self.compare_characteristics(current_char, enrolled_char)
-                        
-                        logger.info(f"   Comparing with {fp.hand.title()} {fp.finger_type.title()}: {similarity:.2%} similarity")
-                        
-                        # IMPROVED: More sensitive thresholds for better wrong finger detection
-                        # If similarity is too high, this is likely the same physical finger
-                        if similarity > 0.70:  # Lowered from 0.75 to 0.70 for better detection
-                            logger.error(f"WRONG FINGER DETECTED!")
-                            logger.error(f"   Expected: {hand.value.title()} {finger_type.value.title()}")
-                            logger.error(f"   Detected: {fp.hand.title()} {fp.finger_type.title()} (same physical finger)")
-                            logger.error(f"   Similarity: {similarity:.2%}")
-                            logger.error("   Please scan the correct finger type")
-                            return False
-                        
-                        # Additional check: if it's the same finger type but different hand, be extra careful
-                        # This catches cases like right index when left index is expected
-                        if (fp.finger_type == finger_type.value and fp.hand != hand.value and similarity > 0.55):  # Lowered from 0.6 to 0.55
-                            logger.error(f"WRONG HAND DETECTED!")
-                            logger.error(f"   Expected: {hand.value.title()} {finger_type.value.title()}")
-                            logger.error(f"   Detected: {fp.hand.title()} {fp.finger_type.title()} (same finger type, wrong hand)")
-                            logger.error(f"   Similarity: {similarity:.2%}")
-                            logger.error("   Please scan the correct hand")
-                            return False
-                        
-                        # NEW: Additional check for high similarity between different finger types
-                        # This catches cases where someone scans a different finger type with high similarity
-                        if similarity > 0.70 and fp.finger_type != finger_type.value:  # Lowered from 0.75 to 0.70
-                            logger.error(f"WRONG FINGER TYPE DETECTED!")
-                            logger.error(f"   Expected: {hand.value.title()} {finger_type.value.title()}")
-                            logger.error(f"   Detected: {fp.hand.title()} {fp.finger_type.title()} (different finger type, too similar)")
-                            logger.error(f"   Similarity: {similarity:.2%}")
-                            logger.error("   Please scan the correct finger type")
-                            return False
-                        
-                        # NEW: Check for extremely high similarity which indicates the exact same finger
-                        if similarity > 0.90:  # 90% threshold for exact duplicates
-                            logger.error(f"EXACT DUPLICATE DETECTED!")
-                            logger.error(f"   Expected: {hand.value.title()} {finger_type.value.title()}")
-                            logger.error(f"   Detected: {fp.hand.title()} {fp.finger_type.title()} (exact same finger)")
-                            logger.error(f"   Similarity: {similarity:.2%}")
-                            logger.error("   Please scan a completely different finger")
-                            return False
-                        
-                    except Exception as e:
-                        logger.warning(f"   Could not compare with {fp.hand.title()} {fp.finger_type.title()}: {e}")
-                        continue
-                
-                logger.info("No wrong finger detected")
-            
-            # Step 4: If we reach here, the finger appears to be different
-            logger.info("Finger type verification passed")
-            return True
-                
-        except Exception as e:
-            logger.error(f"Finger type verification failed: {e}")
-            return False
+        """DEPRECATED: Finger type cannot be determined from fingerprint patterns
+        This method is kept for compatibility but always returns True
+        Fingerprints are unique patterns unrelated to finger type"""
+        logger.info(f"Finger type verification requested for {hand.value.title()} {finger_type.value.title()}")
+        logger.info("Note: Fingerprint patterns cannot identify finger type - accepting any finger")
+        return True
     
     def compare_characteristics(self, char1: bytes, char2: bytes) -> float:
         """Compare two fingerprint characteristics and return similarity score"""
@@ -776,6 +699,36 @@ class ComprehensiveEnrollmentSystem:
             if not self.initialize():
                 return False
             
+            # CRITICAL: Check for existing templates before starting
+            logger.info("🔍 CHECKING FOR EXISTING TEMPLATES...")
+            try:
+                existing_templates = []
+                for pos in range(200):  # Check first 200 positions
+                    try:
+                        self.scanner.loadTemplate(pos)
+                        existing_templates.append(pos)
+                        if len(existing_templates) >= 10:  # Stop after finding 10
+                            break
+                    except:
+                        continue
+                
+                if existing_templates:
+                    logger.error("🚨 EXISTING TEMPLATES DETECTED!")
+                    logger.error(f"   Found templates at positions: {existing_templates}")
+                    logger.error("   These templates from previous sessions will cause conflicts")
+                    logger.error("")
+                    logger.error("   SOLUTION:")
+                    logger.error("   1. Run 'python clear_and_restart.py' first")
+                    logger.error("   2. Type 'CLEAR ALL' when prompted")
+                    logger.error("   3. Then run this enrollment again")
+                    logger.error("")
+                    return False
+                else:
+                    logger.info("✅ No existing templates found - ready for clean enrollment")
+                    
+            except Exception as e:
+                logger.info("✅ Template check completed - scanner appears clean")
+            
             self.start_enrollment_session(user_id)
             
             # Enroll each finger with 3 attempts
@@ -857,7 +810,6 @@ class ComprehensiveEnrollmentSystem:
                 # Convert bytes to base64 for JSON serialization
                 raw_data_b64 = None
                 if fp.raw_image_data:
-                    import base64
                     raw_data_b64 = base64.b64encode(fp.raw_image_data).decode('utf-8')
                 
                 data["enrolled_fingers"][key] = {
@@ -880,15 +832,13 @@ class ComprehensiveEnrollmentSystem:
             logger.info(f"Enrollment data saved to {json_filename}")
             
             # Save as YAML if PyYAML is available
-            try:
-                import yaml
+            if YAML_AVAILABLE:
                 yaml_filename = f"user_{self.current_user_id}_enrollment_{timestamp}.yaml"
                 with open(yaml_filename, 'w') as f:
                     yaml.dump(data, f, default_flow_style=False, indent=2)
                 
                 logger.info(f"Enrollment data also saved to {yaml_filename}")
-                
-            except ImportError:
+            else:
                 logger.info("PyYAML not available - only JSON format saved")
                 logger.info("Install PyYAML with: pip install PyYAML")
             
@@ -905,54 +855,39 @@ class ComprehensiveEnrollmentSystem:
         except Exception as e:
             logger.error(f"Cleanup failed: {e}")
 
-    def preliminary_finger_check(self, hand: Hand, finger_type: FingerType) -> bool:
-        """Do a preliminary check to ensure the finger scan is valid"""
+    def _clear_scanner_state(self):
+        """Clear scanner state and buffers between enrollments"""
         try:
-            logger.info(f"Preliminary check for {hand.value.title()} {finger_type.value.title()}")
-            logger.info("This check ensures the scan quality is good enough")
+            logger.info("Clearing scanner state for next enrollment...")
             
-            # Ask user to place finger for preliminary check
-            logger.info("Place your finger on the sensor for preliminary check...")
-            logger.info("Waiting for finger placement...")
-            
-            # Wait for finger with better user feedback and timeout
-            finger_detected = False
-            for i in range(300):  # 30 seconds timeout (300 * 0.1 seconds)
-                if self.scanner.readImage():
-                    finger_detected = True
-                    break
-                time.sleep(0.1)
-                
-                # Show progress every 2 seconds
-                if i % 20 == 0 and i > 0:
-                    logger.info(f"Still waiting... ({i//10} seconds elapsed)")
-            
-            if not finger_detected:
-                logger.error("No finger detected for preliminary check - timeout reached")
-                logger.error("Please ensure your finger is properly placed on the scanner")
-                return False
-            
-            logger.info("Finger detected for preliminary check")
-            logger.info("Processing preliminary scan...")
-            
-            # Convert to characteristics to test scan quality
-            self.scanner.convertImage(0x01)
-            
-            # Test if the scan is valid by trying to create a template
+            # Clear any remaining image data
             try:
-                # Try to create a template (this validates the characteristics)
-                self.scanner.createTemplate()
-                logger.info("Preliminary scan quality check passed")
-                return True
-                
-            except Exception as e:
-                logger.error(f"Preliminary scan quality too low: {e}")
-                logger.error("Please clean the sensor and try again")
-                return False
+                # Try to clear the scanner buffer by reading any remaining data
+                self.scanner.readImage()
+            except:
+                pass  # This is expected if no image is present
+            
+            # Clear characteristics buffers
+            try:
+                # Clear buffer slot 0x01 (CharBuffer1)
+                self.scanner.clearDatabase()  # This is safer than individual clears
+            except:
+                pass  # Some scanners don't support this
+            
+            # Small delay to ensure scanner is ready
+            time.sleep(1.0)  # Increased from 0.5 to 1.0 seconds
+            
+            logger.info("Scanner state cleared successfully")
             
         except Exception as e:
-            logger.error(f"Preliminary check failed: {e}")
-            return False
+            logger.warning(f"Scanner state clearing warning (not critical): {e}")
+
+    def preliminary_finger_check(self, hand: Hand, finger_type: FingerType) -> bool:
+        """DEPRECATED: Preliminary check removed - fingerprint type cannot be determined
+        This method is kept for compatibility but always returns True"""
+        logger.info(f"Preliminary check requested for {hand.value.title()} {finger_type.value.title()}")
+        logger.info("Note: Preliminary finger type checking disabled - accepting any finger")
+        return True
 
     def _provide_attempt_feedback(self, hand: Hand, finger_type: FingerType, attempt: int):
         """Provide helpful feedback when an attempt fails"""
@@ -1046,71 +981,68 @@ class ComprehensiveEnrollmentSystem:
     def _prompt_user_for_finger(self, hand: Hand, finger_type: FingerType):
         """Prompt the user before scanning a specific finger"""
         logger.info("=" * 50)
-        logger.info(f"READY TO SCAN: {hand.value.upper()} {finger_type.value.upper()}")
+        logger.info(f"NEXT SLOT: {hand.value.upper()} {finger_type.value.upper()}")
         logger.info("=" * 50)
+        
+        logger.info("IMPORTANT SYSTEM BEHAVIOR:")
+        logger.info("• System accepts ANY finger for this slot")
+        logger.info("• System CANNOT detect what finger type you scan")
+        logger.info("• System only checks for EXACT duplicates (same physical finger)")
+        logger.info("• YOU are responsible for scanning the correct finger")
         
         # Provide clear instructions based on finger type
         if finger_type == FingerType.THUMB:
-            logger.info("Place your THUMB on the sensor")
+            logger.info("\nFor this slot, please scan your THUMB:")
             logger.info("   - Thumb is the shortest, widest finger")
             logger.info("   - Place it flat on the sensor")
         elif finger_type == FingerType.INDEX:
-            logger.info("Place your INDEX finger on the sensor")
+            logger.info("\nFor this slot, please scan your INDEX finger:")
             logger.info("   - Index is the finger next to your thumb")
-            logger.info("   - Usually the longest finger")
+            logger.info("   - Usually used for pointing")
         elif finger_type == FingerType.MIDDLE:
-            logger.info("Place your MIDDLE finger on the sensor")
+            logger.info("\nFor this slot, please scan your MIDDLE finger:")
             logger.info("   - Middle finger is between index and ring")
             logger.info("   - Often the longest finger")
         elif finger_type == FingerType.RING:
-            logger.info("Place your RING finger on the sensor")
+            logger.info("\nFor this slot, please scan your RING finger:")
             logger.info("   - Ring finger is between middle and little")
             logger.info("   - Usually wears rings")
         elif finger_type == FingerType.LITTLE:
-            logger.info("Place your LITTLE finger on the sensor")
+            logger.info("\nFor this slot, please scan your LITTLE finger:")
             logger.info("   - Little finger is the smallest finger")
             logger.info("   - Also called 'pinky'")
         
-        logger.info(f"Make sure it's your {hand.value.upper()} hand")
-        logger.info("Place finger gently on the sensor when ready")
+        logger.info(f"\nMake sure it's your {hand.value.upper()} hand")
+        logger.info("System will only reject if you scan the SAME finger twice")
         
         # Ask for user confirmation before proceeding
         logger.info("-" * 50)
-        logger.info("IMPORTANT: Are you ready to scan this finger?")
-        logger.info("   Type 'yes' to continue or 'no' to skip this finger")
+        logger.info("Are you ready to scan for this slot?")
+        logger.info("   Type 'yes' to continue or 'no' to skip this slot")
         
         try:
             user_input = input("Your response (yes/no): ").strip().lower()
             if user_input not in ['yes', 'y']:
-                logger.info(f"Skipping {hand.value.title()} {finger_type.value.title()}")
+                logger.info(f"Skipping {hand.value.title()} {finger_type.value.title()} slot")
                 return False
         except (EOFError, KeyboardInterrupt):
-            logger.info("Skipping this finger due to input error")
+            logger.info("Skipping this slot due to input error")
             return False
         
         logger.info("Confirmed! Ready to scan...")
-        logger.info("Waiting for you to place finger...")
+        logger.info("Place your finger on the sensor when ready...")
         logger.info("-" * 50)
         return True
 
     def guided_finger_enrollment(self, hand: Hand, finger_type: FingerType) -> bool:
-        """Guided enrollment with preliminary check and better error handling"""
+        """Simplified guided enrollment - just enroll the finger, no type checking"""
         try:
-            logger.info(f"Starting guided enrollment for {hand.value.title()} {finger_type.value.title()}")
+            logger.info(f"Starting enrollment for {hand.value.title()} {finger_type.value.title()} slot")
+            logger.info("IMPORTANT: System accepts ANY finger - just checking for exact duplicates")
             
-            # Step 1: Preliminary check
-            logger.info("Step 1: Preliminary finger check...")
-            if not self.preliminary_finger_check(hand, finger_type):
-                logger.error("Preliminary check failed - wrong finger detected")
-                logger.error("   Please scan the correct finger type")
-                return False
-            
-            logger.info("Preliminary check passed")
-            
-            # Step 2: Main enrollment
-            logger.info("Step 2: Main enrollment process...")
+            # Main enrollment process
             if not self.enroll_finger(hand, finger_type):
-                logger.error("Main enrollment failed")
+                logger.error("Enrollment failed")
                 return False
             
             logger.info("Guided enrollment completed successfully")

@@ -1,0 +1,1151 @@
+enrolled_fingers:
+  left_index:
+    embeddings:
+      center_x: 128
+      center_y: 128
+      extraction_timestamp: '2025-08-14T16:30:26.751442'
+      minutiae_count: 0
+      orientation: 0.0
+      quality_score: 85
+    finger_type: index
+    hand: left
+    minutiae_points:
+    - confidence: 0.8
+      coordinates:
+      - 0
+      - 0
+      data: 03014e10
+      position: 0
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 4
+      - 0
+      data: 7b00c1fe
+      position: 4
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 8
+      - 0
+      data: 80fe00fe
+      position: 8
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 12
+      - 0
+      data: 007e003e
+      position: 12
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 16
+      - 0
+      data: 001e001e
+      position: 16
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 20
+      - 0
+      data: 000e000e
+      position: 20
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 24
+      - 0
+      data: '00060006'
+      position: 24
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 28
+      - 0
+      data: '00060006'
+      position: 28
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 32
+      - 0
+      data: '00020006'
+      position: 32
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 36
+      - 0
+      data: '00060006'
+      position: 36
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 56
+      - 0
+      data: 49128b1e
+      position: 56
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 60
+      - 0
+      data: 43a6a1de
+      position: 60
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 64
+      - 0
+      data: 5430a3be
+      position: 64
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 68
+      - 0
+      data: 0f35d95e
+      position: 68
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 72
+      - 0
+      data: 0f3e96de
+      position: 72
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 76
+      - 0
+      data: 329b8b9f
+      position: 76
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 80
+      - 0
+      data: 289ccb9f
+      position: 80
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 84
+      - 0
+      data: 0a9d093f
+      position: 84
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 88
+      - 0
+      data: 3c204b5f
+      position: 88
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 92
+      - 0
+      data: 0aaa1c97
+      position: 92
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 96
+      - 0
+      data: 2f2d507f
+      position: 96
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 100
+      - 0
+      data: 1fb157ff
+      position: 100
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 104
+      - 0
+      data: 0aa1e03b
+      position: 104
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 108
+      - 0
+      data: 232a9639
+      position: 108
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 112
+      - 0
+      data: '28226235'
+      position: 112
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 116
+      - 0
+      data: 1a1fa0f1
+      position: 116
+      type: ridge_ending
+    position: 25
+    raw_image_data_b64: AwFOEHsAwf6A/gD+AH4APgAeAB4ADgAOAAYABgAGAAYAAgAGAAYABgAAAAAAAAAAAAAAAAAAAABJEoseQ6ah3lQwo74PNdleDz6W3jKbi58onMufCp0JPzwgS18KqhyXLy1Qfx+xV/8KoeA7IyqWOSgiYjUaH6DxAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+    score: 108
+    timestamp: '2025-08-14T16:30:26.752447'
+    user_id: user1
+  left_little:
+    embeddings:
+      center_x: 128
+      center_y: 128
+      extraction_timestamp: '2025-08-14T16:30:52.144660'
+      minutiae_count: 0
+      orientation: 0.0
+      quality_score: 85
+    finger_type: little
+    hand: left
+    minutiae_points:
+    - confidence: 0.8
+      coordinates:
+      - 0
+      - 0
+      data: 03014c22
+      position: 0
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 4
+      - 0
+      data: 740080fe
+      position: 4
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 8
+      - 0
+      data: 007e003e
+      position: 8
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 12
+      - 0
+      data: 001e000e
+      position: 12
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 16
+      - 0
+      data: '00060002'
+      position: 16
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 20
+      - 0
+      data: '00020000'
+      position: 20
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 32
+      - 0
+      data: 00008000
+      position: 32
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 36
+      - 0
+      data: 8002c006
+      position: 36
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 56
+      - 0
+      data: 2206099e
+      position: 56
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 60
+      - 0
+      data: 438c88be
+      position: 60
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 64
+      - 0
+      data: 291088de
+      position: 64
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 68
+      - 0
+      data: 561ea03e
+      position: 68
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 72
+      - 0
+      data: 71244b9e
+      position: 72
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 76
+      - 0
+      data: 3fbf297e
+      position: 76
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 80
+      - 0
+      data: 1841991e
+      position: 80
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 84
+      - 0
+      data: 0e074a7f
+      position: 84
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 88
+      - 0
+      data: 350a08bf
+      position: 88
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 92
+      - 0
+      data: 47991f5f
+      position: 92
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 96
+      - 0
+      data: 319cca7f
+      position: 96
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 100
+      - 0
+      data: 54354ddf
+      position: 100
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 104
+      - 0
+      data: 2bc3d75f
+      position: 104
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 108
+      - 0
+      data: 2fbe811c
+      position: 108
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 112
+      - 0
+      data: 52bb639d
+      position: 112
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 116
+      - 0
+      data: 259f8bfa
+      position: 116
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 120
+      - 0
+      data: 0e10ca3b
+      position: 120
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 124
+      - 0
+      data: 23372bfb
+      position: 124
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 128
+      - 0
+      data: 363f16d3
+      position: 128
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 132
+      - 0
+      data: 411e8cf2
+      position: 132
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 136
+      - 0
+      data: 182e8318
+      position: 136
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 140
+      - 0
+      data: 4020e193
+      position: 140
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 144
+      - 0
+      data: 44220a79
+      position: 144
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 148
+      - 0
+      data: 4b3d52f6
+      position: 148
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 152
+      - 0
+      data: 18ad5a17
+      position: 152
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 156
+      - 0
+      data: 4a3c2597
+      position: 156
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 160
+      - 0
+      data: 3a3222d4
+      position: 160
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 164
+      - 0
+      data: 14a502cd
+      position: 164
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 168
+      - 0
+      data: 14975faf
+      position: 168
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 172
+      - 0
+      data: 101ee9af
+      position: 172
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 176
+      - 0
+      data: 0c94a14d
+      position: 176
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 180
+      - 0
+      data: 20a9da6d
+      position: 180
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 184
+      - 0
+      data: 23ad9a2a
+      position: 184
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 188
+      - 0
+      data: 0b158746
+      position: 188
+      type: ridge_ending
+    position: 28
+    raw_image_data_b64: AwFMInQAgP4AfgA+AB4ADgAGAAIAAgAAAAAAAAAAAAAAAIAAgALABgAAAAAAAAAAAAAAAAAAAAAiBgmeQ4yIvikQiN5WHqA+cSRLnj+/KX4YQZkeDgdKfzUKCL9HmR9fMZzKf1Q1Td8rw9dfL76BHFK7Y50ln4v6DhDKOyM3K/s2PxbTQR6M8hgugxhAIOGTRCIKeUs9UvYYrVoXSjwllzoyItQUpQLNFJdfrxAe6a8MlKFNIKnabSOtmioLFYdGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+    score: 81
+    timestamp: '2025-08-14T16:30:52.144660'
+    user_id: user1
+  left_middle:
+    embeddings:
+      center_x: 128
+      center_y: 128
+      extraction_timestamp: '2025-08-14T16:30:37.132018'
+      minutiae_count: 0
+      orientation: 0.0
+      quality_score: 85
+    finger_type: middle
+    hand: left
+    minutiae_points:
+    - confidence: 0.8
+      coordinates:
+      - 0
+      - 0
+      data: 0301690f
+      position: 0
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 4
+      - 0
+      data: 7a0080fe
+      position: 4
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 8
+      - 0
+      data: 00fe007e
+      position: 8
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 12
+      - 0
+      data: 003e001e
+      position: 12
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 16
+      - 0
+      data: 000e000e
+      position: 16
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 20
+      - 0
+      data: 0006c002
+      position: 20
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 24
+      - 0
+      data: fc02fc00
+      position: 24
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 28
+      - 0
+      data: fc00fc00
+      position: 28
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 32
+      - 0
+      data: fe00fe00
+      position: 32
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 36
+      - 0
+      data: fe02ff06
+      position: 36
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 56
+      - 0
+      data: 200a8bfe
+      position: 56
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 60
+      - 0
+      data: 0b0b4cbe
+      position: 60
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 64
+      - 0
+      data: 399da0fe
+      position: 64
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 68
+      - 0
+      data: 69294b5e
+      position: 68
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 72
+      - 0
+      data: 300e0abf
+      position: 72
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 76
+      - 0
+      data: 3f90ca7f
+      position: 76
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 80
+      - 0
+      data: 1e930aff
+      position: 80
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 84
+      - 0
+      data: 099b21df
+      position: 84
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 88
+      - 0
+      data: 4a3a4fbd
+      position: 88
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 92
+      - 0
+      data: 4b3e22bd
+      position: 92
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 96
+      - 0
+      data: 42a6e23a
+      position: 96
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 100
+      - 0
+      data: 43238ab3
+      position: 100
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 104
+      - 0
+      data: 4a2860fb
+      position: 104
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 108
+      - 0
+      data: 4d240892
+      position: 108
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 112
+      - 0
+      data: 4f26a033
+      position: 112
+      type: ridge_ending
+    position: 26
+    raw_image_data_b64: AwFpD3oAgP4A/gB+AD4AHgAOAA4ABsAC/AL8APwA/AD+AP4A/gL/BgAAAAAAAAAAAAAAAAAAAAAgCov+CwtMvjmdoP5pKUteMA4Kvz+Qyn8ekwr/CZsh30o6T71LPiK9QqbiOkMjirNKKGD7TSQIkk8moDMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+    score: -1
+    timestamp: '2025-08-14T16:30:37.134259'
+    user_id: user1
+  left_ring:
+    embeddings:
+      center_x: 128
+      center_y: 128
+      extraction_timestamp: '2025-08-14T16:30:44.383879'
+      minutiae_count: 0
+      orientation: 0.0
+      quality_score: 85
+    finger_type: ring
+    hand: left
+    minutiae_points:
+    - confidence: 0.8
+      coordinates:
+      - 0
+      - 0
+      data: 03014d17
+      position: 0
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 4
+      - 0
+      data: 7700fffe
+      position: 4
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 8
+      - 0
+      data: 00fe00fe
+      position: 8
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 12
+      - 0
+      data: 007e003e
+      position: 12
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 16
+      - 0
+      data: 001e000e
+      position: 16
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 20
+      - 0
+      data: '00060006'
+      position: 20
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 24
+      - 0
+      data: '00020002'
+      position: 24
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 28
+      - 0
+      data: '00020002'
+      position: 28
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 32
+      - 0
+      data: '00020002'
+      position: 32
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 36
+      - 0
+      data: 0002800e
+      position: 36
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 56
+      - 0
+      data: 3888a1d6
+      position: 56
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 60
+      - 0
+      data: 41a7a2de
+      position: 60
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 64
+      - 0
+      data: 43abcdde
+      position: 64
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 68
+      - 0
+      data: 54ad8d3e
+      position: 68
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 72
+      - 0
+      data: 5db00d1e
+      position: 72
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 76
+      - 0
+      data: 163295be
+      position: 76
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 80
+      - 0
+      data: 083fc07e
+      position: 80
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 84
+      - 0
+      data: 624263be
+      position: 84
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 88
+      - 0
+      data: 15978b1f
+      position: 88
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 92
+      - 0
+      data: 27a20ebf
+      position: 92
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 96
+      - 0
+      data: 66a54cbf
+      position: 96
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 100
+      - 0
+      data: 22b1125f
+      position: 100
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 104
+      - 0
+      data: 6ebba3bf
+      position: 104
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 108
+      - 0
+      data: 123fd6bf
+      position: 108
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 112
+      - 0
+      data: 2d8ecb1a
+      position: 112
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 116
+      - 0
+      data: 18ad55ba
+      position: 116
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 120
+      - 0
+      data: 683e633a
+      position: 120
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 124
+      - 0
+      data: 310da49b
+      position: 124
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 128
+      - 0
+      data: 179ce1b9
+      position: 128
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 132
+      - 0
+      data: 109ce137
+      position: 132
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 136
+      - 0
+      data: 233aa9ac
+      position: 136
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 140
+      - 0
+      data: 09225f2f
+      position: 140
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 144
+      - 0
+      data: 141ee20a
+      position: 144
+      type: ridge_ending
+    position: 27
+    raw_image_data_b64: AwFNF3cA//4A/gD+AH4APgAeAA4ABgAGAAIAAgACAAIAAgACAAKADgAAAAAAAAAAAAAAAAAAAAA4iKHWQaei3kOrzd5UrY0+XbANHhYylb4IP8B+YkJjvhWXix8nog6/ZqVMvyKxEl9uu6O/Ej/Wvy2OyxoYrVW6aD5jOjENpJsXnOG5EJzhNyM6qawJIl8vFB7iCgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+    score: -1
+    timestamp: '2025-08-14T16:30:44.383879'
+    user_id: user1
+  left_thumb:
+    embeddings:
+      center_x: 128
+      center_y: 128
+      extraction_timestamp: '2025-08-14T16:30:18.078855'
+      minutiae_count: 0
+      orientation: 0.0
+      quality_score: 85
+    finger_type: thumb
+    hand: left
+    minutiae_points:
+    - confidence: 0.8
+      coordinates:
+      - 0
+      - 0
+      data: 03015e14
+      position: 0
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 4
+      - 0
+      data: 8500e03e
+      position: 4
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 8
+      - 0
+      data: 001e000e
+      position: 8
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 12
+      - 0
+      data: '00060006'
+      position: 12
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 16
+      - 0
+      data: '00020002'
+      position: 16
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 20
+      - 0
+      data: '00020002'
+      position: 20
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 56
+      - 0
+      data: 1eb4c0fe
+      position: 56
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 60
+      - 0
+      data: 380a611f
+      position: 60
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 64
+      - 0
+      data: 1c8a9dff
+      position: 64
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 68
+      - 0
+      data: 268fdd9f
+      position: 68
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 72
+      - 0
+      data: 22169b5f
+      position: 72
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 76
+      - 0
+      data: 1698c2ff
+      position: 76
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 80
+      - 0
+      data: 5e99cf5f
+      position: 80
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 84
+      - 0
+      data: 2e1a597f
+      position: 84
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 88
+      - 0
+      data: 39a156ff
+      position: 88
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 92
+      - 0
+      data: 582411ff
+      position: 92
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 96
+      - 0
+      data: 67a8e59f
+      position: 96
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 100
+      - 0
+      data: 65b0d1df
+      position: 100
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 104
+      - 0
+      data: 7137519f
+      position: 104
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 108
+      - 0
+      data: 5eba685f
+      position: 108
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 112
+      - 0
+      data: 3f42ebff
+      position: 112
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 116
+      - 0
+      data: 3e90d77d
+      position: 116
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 120
+      - 0
+      data: 4994d21d
+      position: 120
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 124
+      - 0
+      data: 2a0b9efa
+      position: 124
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 128
+      - 0
+      data: 310c405a
+      position: 128
+      type: ridge_ending
+    - confidence: 0.8
+      coordinates:
+      - 132
+      - 0
+      data: 4413141b
+      position: 132
+      type: ridge_ending
+    position: 24
+    raw_image_data_b64: AwFeFIUA4D4AHgAOAAYABgACAAIAAgACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAetMD+OAphHxyKnf8mj92fIhabXxaYwv9emc9fLhpZfzmhVv9YJBH/Z6jln2Ww0d9xN1GfXrpoXz9C6/8+kNd9SZTSHSoLnvoxDEBaRBMUGwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+    score: 108
+    timestamp: '2025-08-14T16:30:18.080858'
+    user_id: user1
+user_info:
+  completion_time: '16:34:10'
+  enrollment_date: '2025-08-14'
+  session_duration_seconds: 244.30136680603027
+  total_fingers_enrolled: 5
+  user_id: user1

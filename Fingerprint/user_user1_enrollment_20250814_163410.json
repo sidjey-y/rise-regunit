@@ -1,0 +1,1626 @@
+{
+  "user_info": {
+    "user_id": "user1",
+    "enrollment_date": "2025-08-14",
+    "completion_time": "16:34:10",
+    "total_fingers_enrolled": 5,
+    "session_duration_seconds": 244.30136680603027
+  },
+  "enrolled_fingers": {
+    "left_thumb": {
+      "user_id": "user1",
+      "hand": "left",
+      "finger_type": "thumb",
+      "position": 24,
+      "timestamp": "2025-08-14T16:30:18.080858",
+      "score": 108,
+      "embeddings": {
+        "minutiae_count": 0,
+        "quality_score": 85,
+        "orientation": 0.0,
+        "center_x": 128,
+        "center_y": 128,
+        "extraction_timestamp": "2025-08-14T16:30:18.078855"
+      },
+      "raw_image_data_b64": "AwFeFIUA4D4AHgAOAAYABgACAAIAAgACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAetMD+OAphHxyKnf8mj92fIhabXxaYwv9emc9fLhpZfzmhVv9YJBH/Z6jln2Ww0d9xN1GfXrpoXz9C6/8+kNd9SZTSHSoLnvoxDEBaRBMUGwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "minutiae_points": [
+        {
+          "position": 0,
+          "type": "ridge_ending",
+          "coordinates": [
+            0,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "03015e14"
+        },
+        {
+          "position": 4,
+          "type": "ridge_ending",
+          "coordinates": [
+            4,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "8500e03e"
+        },
+        {
+          "position": 8,
+          "type": "ridge_ending",
+          "coordinates": [
+            8,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "001e000e"
+        },
+        {
+          "position": 12,
+          "type": "ridge_ending",
+          "coordinates": [
+            12,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "00060006"
+        },
+        {
+          "position": 16,
+          "type": "ridge_ending",
+          "coordinates": [
+            16,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "00020002"
+        },
+        {
+          "position": 20,
+          "type": "ridge_ending",
+          "coordinates": [
+            20,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "00020002"
+        },
+        {
+          "position": 56,
+          "type": "ridge_ending",
+          "coordinates": [
+            56,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "1eb4c0fe"
+        },
+        {
+          "position": 60,
+          "type": "ridge_ending",
+          "coordinates": [
+            60,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "380a611f"
+        },
+        {
+          "position": 64,
+          "type": "ridge_ending",
+          "coordinates": [
+            64,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "1c8a9dff"
+        },
+        {
+          "position": 68,
+          "type": "ridge_ending",
+          "coordinates": [
+            68,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "268fdd9f"
+        },
+        {
+          "position": 72,
+          "type": "ridge_ending",
+          "coordinates": [
+            72,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "22169b5f"
+        },
+        {
+          "position": 76,
+          "type": "ridge_ending",
+          "coordinates": [
+            76,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "1698c2ff"
+        },
+        {
+          "position": 80,
+          "type": "ridge_ending",
+          "coordinates": [
+            80,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "5e99cf5f"
+        },
+        {
+          "position": 84,
+          "type": "ridge_ending",
+          "coordinates": [
+            84,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "2e1a597f"
+        },
+        {
+          "position": 88,
+          "type": "ridge_ending",
+          "coordinates": [
+            88,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "39a156ff"
+        },
+        {
+          "position": 92,
+          "type": "ridge_ending",
+          "coordinates": [
+            92,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "582411ff"
+        },
+        {
+          "position": 96,
+          "type": "ridge_ending",
+          "coordinates": [
+            96,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "67a8e59f"
+        },
+        {
+          "position": 100,
+          "type": "ridge_ending",
+          "coordinates": [
+            100,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "65b0d1df"
+        },
+        {
+          "position": 104,
+          "type": "ridge_ending",
+          "coordinates": [
+            104,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "7137519f"
+        },
+        {
+          "position": 108,
+          "type": "ridge_ending",
+          "coordinates": [
+            108,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "5eba685f"
+        },
+        {
+          "position": 112,
+          "type": "ridge_ending",
+          "coordinates": [
+            112,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "3f42ebff"
+        },
+        {
+          "position": 116,
+          "type": "ridge_ending",
+          "coordinates": [
+            116,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "3e90d77d"
+        },
+        {
+          "position": 120,
+          "type": "ridge_ending",
+          "coordinates": [
+            120,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "4994d21d"
+        },
+        {
+          "position": 124,
+          "type": "ridge_ending",
+          "coordinates": [
+            124,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "2a0b9efa"
+        },
+        {
+          "position": 128,
+          "type": "ridge_ending",
+          "coordinates": [
+            128,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "310c405a"
+        },
+        {
+          "position": 132,
+          "type": "ridge_ending",
+          "coordinates": [
+            132,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "4413141b"
+        }
+      ]
+    },
+    "left_index": {
+      "user_id": "user1",
+      "hand": "left",
+      "finger_type": "index",
+      "position": 25,
+      "timestamp": "2025-08-14T16:30:26.752447",
+      "score": 108,
+      "embeddings": {
+        "minutiae_count": 0,
+        "quality_score": 85,
+        "orientation": 0.0,
+        "center_x": 128,
+        "center_y": 128,
+        "extraction_timestamp": "2025-08-14T16:30:26.751442"
+      },
+      "raw_image_data_b64": "AwFOEHsAwf6A/gD+AH4APgAeAB4ADgAOAAYABgAGAAYAAgAGAAYABgAAAAAAAAAAAAAAAAAAAABJEoseQ6ah3lQwo74PNdleDz6W3jKbi58onMufCp0JPzwgS18KqhyXLy1Qfx+xV/8KoeA7IyqWOSgiYjUaH6DxAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "minutiae_points": [
+        {
+          "position": 0,
+          "type": "ridge_ending",
+          "coordinates": [
+            0,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "03014e10"
+        },
+        {
+          "position": 4,
+          "type": "ridge_ending",
+          "coordinates": [
+            4,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "7b00c1fe"
+        },
+        {
+          "position": 8,
+          "type": "ridge_ending",
+          "coordinates": [
+            8,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "80fe00fe"
+        },
+        {
+          "position": 12,
+          "type": "ridge_ending",
+          "coordinates": [
+            12,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "007e003e"
+        },
+        {
+          "position": 16,
+          "type": "ridge_ending",
+          "coordinates": [
+            16,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "001e001e"
+        },
+        {
+          "position": 20,
+          "type": "ridge_ending",
+          "coordinates": [
+            20,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "000e000e"
+        },
+        {
+          "position": 24,
+          "type": "ridge_ending",
+          "coordinates": [
+            24,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "00060006"
+        },
+        {
+          "position": 28,
+          "type": "ridge_ending",
+          "coordinates": [
+            28,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "00060006"
+        },
+        {
+          "position": 32,
+          "type": "ridge_ending",
+          "coordinates": [
+            32,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "00020006"
+        },
+        {
+          "position": 36,
+          "type": "ridge_ending",
+          "coordinates": [
+            36,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "00060006"
+        },
+        {
+          "position": 56,
+          "type": "ridge_ending",
+          "coordinates": [
+            56,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "49128b1e"
+        },
+        {
+          "position": 60,
+          "type": "ridge_ending",
+          "coordinates": [
+            60,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "43a6a1de"
+        },
+        {
+          "position": 64,
+          "type": "ridge_ending",
+          "coordinates": [
+            64,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "5430a3be"
+        },
+        {
+          "position": 68,
+          "type": "ridge_ending",
+          "coordinates": [
+            68,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "0f35d95e"
+        },
+        {
+          "position": 72,
+          "type": "ridge_ending",
+          "coordinates": [
+            72,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "0f3e96de"
+        },
+        {
+          "position": 76,
+          "type": "ridge_ending",
+          "coordinates": [
+            76,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "329b8b9f"
+        },
+        {
+          "position": 80,
+          "type": "ridge_ending",
+          "coordinates": [
+            80,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "289ccb9f"
+        },
+        {
+          "position": 84,
+          "type": "ridge_ending",
+          "coordinates": [
+            84,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "0a9d093f"
+        },
+        {
+          "position": 88,
+          "type": "ridge_ending",
+          "coordinates": [
+            88,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "3c204b5f"
+        },
+        {
+          "position": 92,
+          "type": "ridge_ending",
+          "coordinates": [
+            92,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "0aaa1c97"
+        },
+        {
+          "position": 96,
+          "type": "ridge_ending",
+          "coordinates": [
+            96,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "2f2d507f"
+        },
+        {
+          "position": 100,
+          "type": "ridge_ending",
+          "coordinates": [
+            100,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "1fb157ff"
+        },
+        {
+          "position": 104,
+          "type": "ridge_ending",
+          "coordinates": [
+            104,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "0aa1e03b"
+        },
+        {
+          "position": 108,
+          "type": "ridge_ending",
+          "coordinates": [
+            108,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "232a9639"
+        },
+        {
+          "position": 112,
+          "type": "ridge_ending",
+          "coordinates": [
+            112,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "28226235"
+        },
+        {
+          "position": 116,
+          "type": "ridge_ending",
+          "coordinates": [
+            116,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "1a1fa0f1"
+        }
+      ]
+    },
+    "left_middle": {
+      "user_id": "user1",
+      "hand": "left",
+      "finger_type": "middle",
+      "position": 26,
+      "timestamp": "2025-08-14T16:30:37.134259",
+      "score": -1,
+      "embeddings": {
+        "minutiae_count": 0,
+        "quality_score": 85,
+        "orientation": 0.0,
+        "center_x": 128,
+        "center_y": 128,
+        "extraction_timestamp": "2025-08-14T16:30:37.132018"
+      },
+      "raw_image_data_b64": "AwFpD3oAgP4A/gB+AD4AHgAOAA4ABsAC/AL8APwA/AD+AP4A/gL/BgAAAAAAAAAAAAAAAAAAAAAgCov+CwtMvjmdoP5pKUteMA4Kvz+Qyn8ekwr/CZsh30o6T71LPiK9QqbiOkMjirNKKGD7TSQIkk8moDMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "minutiae_points": [
+        {
+          "position": 0,
+          "type": "ridge_ending",
+          "coordinates": [
+            0,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "0301690f"
+        },
+        {
+          "position": 4,
+          "type": "ridge_ending",
+          "coordinates": [
+            4,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "7a0080fe"
+        },
+        {
+          "position": 8,
+          "type": "ridge_ending",
+          "coordinates": [
+            8,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "00fe007e"
+        },
+        {
+          "position": 12,
+          "type": "ridge_ending",
+          "coordinates": [
+            12,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "003e001e"
+        },
+        {
+          "position": 16,
+          "type": "ridge_ending",
+          "coordinates": [
+            16,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "000e000e"
+        },
+        {
+          "position": 20,
+          "type": "ridge_ending",
+          "coordinates": [
+            20,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "0006c002"
+        },
+        {
+          "position": 24,
+          "type": "ridge_ending",
+          "coordinates": [
+            24,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "fc02fc00"
+        },
+        {
+          "position": 28,
+          "type": "ridge_ending",
+          "coordinates": [
+            28,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "fc00fc00"
+        },
+        {
+          "position": 32,
+          "type": "ridge_ending",
+          "coordinates": [
+            32,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "fe00fe00"
+        },
+        {
+          "position": 36,
+          "type": "ridge_ending",
+          "coordinates": [
+            36,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "fe02ff06"
+        },
+        {
+          "position": 56,
+          "type": "ridge_ending",
+          "coordinates": [
+            56,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "200a8bfe"
+        },
+        {
+          "position": 60,
+          "type": "ridge_ending",
+          "coordinates": [
+            60,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "0b0b4cbe"
+        },
+        {
+          "position": 64,
+          "type": "ridge_ending",
+          "coordinates": [
+            64,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "399da0fe"
+        },
+        {
+          "position": 68,
+          "type": "ridge_ending",
+          "coordinates": [
+            68,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "69294b5e"
+        },
+        {
+          "position": 72,
+          "type": "ridge_ending",
+          "coordinates": [
+            72,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "300e0abf"
+        },
+        {
+          "position": 76,
+          "type": "ridge_ending",
+          "coordinates": [
+            76,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "3f90ca7f"
+        },
+        {
+          "position": 80,
+          "type": "ridge_ending",
+          "coordinates": [
+            80,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "1e930aff"
+        },
+        {
+          "position": 84,
+          "type": "ridge_ending",
+          "coordinates": [
+            84,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "099b21df"
+        },
+        {
+          "position": 88,
+          "type": "ridge_ending",
+          "coordinates": [
+            88,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "4a3a4fbd"
+        },
+        {
+          "position": 92,
+          "type": "ridge_ending",
+          "coordinates": [
+            92,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "4b3e22bd"
+        },
+        {
+          "position": 96,
+          "type": "ridge_ending",
+          "coordinates": [
+            96,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "42a6e23a"
+        },
+        {
+          "position": 100,
+          "type": "ridge_ending",
+          "coordinates": [
+            100,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "43238ab3"
+        },
+        {
+          "position": 104,
+          "type": "ridge_ending",
+          "coordinates": [
+            104,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "4a2860fb"
+        },
+        {
+          "position": 108,
+          "type": "ridge_ending",
+          "coordinates": [
+            108,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "4d240892"
+        },
+        {
+          "position": 112,
+          "type": "ridge_ending",
+          "coordinates": [
+            112,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "4f26a033"
+        }
+      ]
+    },
+    "left_ring": {
+      "user_id": "user1",
+      "hand": "left",
+      "finger_type": "ring",
+      "position": 27,
+      "timestamp": "2025-08-14T16:30:44.383879",
+      "score": -1,
+      "embeddings": {
+        "minutiae_count": 0,
+        "quality_score": 85,
+        "orientation": 0.0,
+        "center_x": 128,
+        "center_y": 128,
+        "extraction_timestamp": "2025-08-14T16:30:44.383879"
+      },
+      "raw_image_data_b64": "AwFNF3cA//4A/gD+AH4APgAeAA4ABgAGAAIAAgACAAIAAgACAAKADgAAAAAAAAAAAAAAAAAAAAA4iKHWQaei3kOrzd5UrY0+XbANHhYylb4IP8B+YkJjvhWXix8nog6/ZqVMvyKxEl9uu6O/Ej/Wvy2OyxoYrVW6aD5jOjENpJsXnOG5EJzhNyM6qawJIl8vFB7iCgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "minutiae_points": [
+        {
+          "position": 0,
+          "type": "ridge_ending",
+          "coordinates": [
+            0,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "03014d17"
+        },
+        {
+          "position": 4,
+          "type": "ridge_ending",
+          "coordinates": [
+            4,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "7700fffe"
+        },
+        {
+          "position": 8,
+          "type": "ridge_ending",
+          "coordinates": [
+            8,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "00fe00fe"
+        },
+        {
+          "position": 12,
+          "type": "ridge_ending",
+          "coordinates": [
+            12,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "007e003e"
+        },
+        {
+          "position": 16,
+          "type": "ridge_ending",
+          "coordinates": [
+            16,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "001e000e"
+        },
+        {
+          "position": 20,
+          "type": "ridge_ending",
+          "coordinates": [
+            20,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "00060006"
+        },
+        {
+          "position": 24,
+          "type": "ridge_ending",
+          "coordinates": [
+            24,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "00020002"
+        },
+        {
+          "position": 28,
+          "type": "ridge_ending",
+          "coordinates": [
+            28,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "00020002"
+        },
+        {
+          "position": 32,
+          "type": "ridge_ending",
+          "coordinates": [
+            32,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "00020002"
+        },
+        {
+          "position": 36,
+          "type": "ridge_ending",
+          "coordinates": [
+            36,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "0002800e"
+        },
+        {
+          "position": 56,
+          "type": "ridge_ending",
+          "coordinates": [
+            56,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "3888a1d6"
+        },
+        {
+          "position": 60,
+          "type": "ridge_ending",
+          "coordinates": [
+            60,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "41a7a2de"
+        },
+        {
+          "position": 64,
+          "type": "ridge_ending",
+          "coordinates": [
+            64,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "43abcdde"
+        },
+        {
+          "position": 68,
+          "type": "ridge_ending",
+          "coordinates": [
+            68,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "54ad8d3e"
+        },
+        {
+          "position": 72,
+          "type": "ridge_ending",
+          "coordinates": [
+            72,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "5db00d1e"
+        },
+        {
+          "position": 76,
+          "type": "ridge_ending",
+          "coordinates": [
+            76,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "163295be"
+        },
+        {
+          "position": 80,
+          "type": "ridge_ending",
+          "coordinates": [
+            80,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "083fc07e"
+        },
+        {
+          "position": 84,
+          "type": "ridge_ending",
+          "coordinates": [
+            84,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "624263be"
+        },
+        {
+          "position": 88,
+          "type": "ridge_ending",
+          "coordinates": [
+            88,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "15978b1f"
+        },
+        {
+          "position": 92,
+          "type": "ridge_ending",
+          "coordinates": [
+            92,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "27a20ebf"
+        },
+        {
+          "position": 96,
+          "type": "ridge_ending",
+          "coordinates": [
+            96,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "66a54cbf"
+        },
+        {
+          "position": 100,
+          "type": "ridge_ending",
+          "coordinates": [
+            100,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "22b1125f"
+        },
+        {
+          "position": 104,
+          "type": "ridge_ending",
+          "coordinates": [
+            104,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "6ebba3bf"
+        },
+        {
+          "position": 108,
+          "type": "ridge_ending",
+          "coordinates": [
+            108,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "123fd6bf"
+        },
+        {
+          "position": 112,
+          "type": "ridge_ending",
+          "coordinates": [
+            112,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "2d8ecb1a"
+        },
+        {
+          "position": 116,
+          "type": "ridge_ending",
+          "coordinates": [
+            116,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "18ad55ba"
+        },
+        {
+          "position": 120,
+          "type": "ridge_ending",
+          "coordinates": [
+            120,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "683e633a"
+        },
+        {
+          "position": 124,
+          "type": "ridge_ending",
+          "coordinates": [
+            124,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "310da49b"
+        },
+        {
+          "position": 128,
+          "type": "ridge_ending",
+          "coordinates": [
+            128,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "179ce1b9"
+        },
+        {
+          "position": 132,
+          "type": "ridge_ending",
+          "coordinates": [
+            132,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "109ce137"
+        },
+        {
+          "position": 136,
+          "type": "ridge_ending",
+          "coordinates": [
+            136,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "233aa9ac"
+        },
+        {
+          "position": 140,
+          "type": "ridge_ending",
+          "coordinates": [
+            140,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "09225f2f"
+        },
+        {
+          "position": 144,
+          "type": "ridge_ending",
+          "coordinates": [
+            144,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "141ee20a"
+        }
+      ]
+    },
+    "left_little": {
+      "user_id": "user1",
+      "hand": "left",
+      "finger_type": "little",
+      "position": 28,
+      "timestamp": "2025-08-14T16:30:52.144660",
+      "score": 81,
+      "embeddings": {
+        "minutiae_count": 0,
+        "quality_score": 85,
+        "orientation": 0.0,
+        "center_x": 128,
+        "center_y": 128,
+        "extraction_timestamp": "2025-08-14T16:30:52.144660"
+      },
+      "raw_image_data_b64": "AwFMInQAgP4AfgA+AB4ADgAGAAIAAgAAAAAAAAAAAAAAAIAAgALABgAAAAAAAAAAAAAAAAAAAAAiBgmeQ4yIvikQiN5WHqA+cSRLnj+/KX4YQZkeDgdKfzUKCL9HmR9fMZzKf1Q1Td8rw9dfL76BHFK7Y50ln4v6DhDKOyM3K/s2PxbTQR6M8hgugxhAIOGTRCIKeUs9UvYYrVoXSjwllzoyItQUpQLNFJdfrxAe6a8MlKFNIKnabSOtmioLFYdGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "minutiae_points": [
+        {
+          "position": 0,
+          "type": "ridge_ending",
+          "coordinates": [
+            0,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "03014c22"
+        },
+        {
+          "position": 4,
+          "type": "ridge_ending",
+          "coordinates": [
+            4,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "740080fe"
+        },
+        {
+          "position": 8,
+          "type": "ridge_ending",
+          "coordinates": [
+            8,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "007e003e"
+        },
+        {
+          "position": 12,
+          "type": "ridge_ending",
+          "coordinates": [
+            12,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "001e000e"
+        },
+        {
+          "position": 16,
+          "type": "ridge_ending",
+          "coordinates": [
+            16,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "00060002"
+        },
+        {
+          "position": 20,
+          "type": "ridge_ending",
+          "coordinates": [
+            20,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "00020000"
+        },
+        {
+          "position": 32,
+          "type": "ridge_ending",
+          "coordinates": [
+            32,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "00008000"
+        },
+        {
+          "position": 36,
+          "type": "ridge_ending",
+          "coordinates": [
+            36,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "8002c006"
+        },
+        {
+          "position": 56,
+          "type": "ridge_ending",
+          "coordinates": [
+            56,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "2206099e"
+        },
+        {
+          "position": 60,
+          "type": "ridge_ending",
+          "coordinates": [
+            60,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "438c88be"
+        },
+        {
+          "position": 64,
+          "type": "ridge_ending",
+          "coordinates": [
+            64,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "291088de"
+        },
+        {
+          "position": 68,
+          "type": "ridge_ending",
+          "coordinates": [
+            68,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "561ea03e"
+        },
+        {
+          "position": 72,
+          "type": "ridge_ending",
+          "coordinates": [
+            72,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "71244b9e"
+        },
+        {
+          "position": 76,
+          "type": "ridge_ending",
+          "coordinates": [
+            76,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "3fbf297e"
+        },
+        {
+          "position": 80,
+          "type": "ridge_ending",
+          "coordinates": [
+            80,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "1841991e"
+        },
+        {
+          "position": 84,
+          "type": "ridge_ending",
+          "coordinates": [
+            84,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "0e074a7f"
+        },
+        {
+          "position": 88,
+          "type": "ridge_ending",
+          "coordinates": [
+            88,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "350a08bf"
+        },
+        {
+          "position": 92,
+          "type": "ridge_ending",
+          "coordinates": [
+            92,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "47991f5f"
+        },
+        {
+          "position": 96,
+          "type": "ridge_ending",
+          "coordinates": [
+            96,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "319cca7f"
+        },
+        {
+          "position": 100,
+          "type": "ridge_ending",
+          "coordinates": [
+            100,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "54354ddf"
+        },
+        {
+          "position": 104,
+          "type": "ridge_ending",
+          "coordinates": [
+            104,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "2bc3d75f"
+        },
+        {
+          "position": 108,
+          "type": "ridge_ending",
+          "coordinates": [
+            108,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "2fbe811c"
+        },
+        {
+          "position": 112,
+          "type": "ridge_ending",
+          "coordinates": [
+            112,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "52bb639d"
+        },
+        {
+          "position": 116,
+          "type": "ridge_ending",
+          "coordinates": [
+            116,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "259f8bfa"
+        },
+        {
+          "position": 120,
+          "type": "ridge_ending",
+          "coordinates": [
+            120,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "0e10ca3b"
+        },
+        {
+          "position": 124,
+          "type": "ridge_ending",
+          "coordinates": [
+            124,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "23372bfb"
+        },
+        {
+          "position": 128,
+          "type": "ridge_ending",
+          "coordinates": [
+            128,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "363f16d3"
+        },
+        {
+          "position": 132,
+          "type": "ridge_ending",
+          "coordinates": [
+            132,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "411e8cf2"
+        },
+        {
+          "position": 136,
+          "type": "ridge_ending",
+          "coordinates": [
+            136,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "182e8318"
+        },
+        {
+          "position": 140,
+          "type": "ridge_ending",
+          "coordinates": [
+            140,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "4020e193"
+        },
+        {
+          "position": 144,
+          "type": "ridge_ending",
+          "coordinates": [
+            144,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "44220a79"
+        },
+        {
+          "position": 148,
+          "type": "ridge_ending",
+          "coordinates": [
+            148,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "4b3d52f6"
+        },
+        {
+          "position": 152,
+          "type": "ridge_ending",
+          "coordinates": [
+            152,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "18ad5a17"
+        },
+        {
+          "position": 156,
+          "type": "ridge_ending",
+          "coordinates": [
+            156,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "4a3c2597"
+        },
+        {
+          "position": 160,
+          "type": "ridge_ending",
+          "coordinates": [
+            160,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "3a3222d4"
+        },
+        {
+          "position": 164,
+          "type": "ridge_ending",
+          "coordinates": [
+            164,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "14a502cd"
+        },
+        {
+          "position": 168,
+          "type": "ridge_ending",
+          "coordinates": [
+            168,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "14975faf"
+        },
+        {
+          "position": 172,
+          "type": "ridge_ending",
+          "coordinates": [
+            172,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "101ee9af"
+        },
+        {
+          "position": 176,
+          "type": "ridge_ending",
+          "coordinates": [
+            176,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "0c94a14d"
+        },
+        {
+          "position": 180,
+          "type": "ridge_ending",
+          "coordinates": [
+            180,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "20a9da6d"
+        },
+        {
+          "position": 184,
+          "type": "ridge_ending",
+          "coordinates": [
+            184,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "23ad9a2a"
+        },
+        {
+          "position": 188,
+          "type": "ridge_ending",
+          "coordinates": [
+            188,
+            0
+          ],
+          "confidence": 0.8,
+          "data": "0b158746"
+        }
+      ]
+    }
+  }
+}
